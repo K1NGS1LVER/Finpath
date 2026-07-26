@@ -63,8 +63,6 @@ function JourneyGoalNode({
   const rippleCounter = useRef(0);
   const dragStartPos = useRef<{ x: number; y: number } | null>(null);
   const prefersReducedMotion = useReducedMotion();
-  // ponytail: clamp keeps the per-index float stagger under the 400ms cap regardless of goal count.
-  const floatDuration = Math.min(0.4, 0.3 + index * 0.02);
 
   const progress =
     goal.targetAmount > 0 ? Math.round((goal.currentAmount / goal.targetAmount) * 100) : 0;
@@ -133,7 +131,7 @@ function JourneyGoalNode({
         className="node-float"
         style={{
           animationDelay: `${index * 0.35}s`,
-          animationDuration: `${floatDuration}s`,
+          animationDuration: `${3.5 + index * 0.4}s`,
           animationPlayState:
             prefersReducedMotion || isDragging || !isActiveGoal ? 'paused' : 'running',
         }}
