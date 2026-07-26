@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { motion } from 'motion/react';
 import { Wallet } from 'lucide-react';
 import type { IncomeProfile } from '@/lib/types';
 import { DRAG_CLICK_THRESHOLD } from './constants';
@@ -7,7 +6,6 @@ import { DRAG_CLICK_THRESHOLD } from './constants';
 interface JourneyIncomeNodeProps {
   x: number;
   y: number;
-  dragging: boolean;
   income: IncomeProfile;
   formatCurrency: (amount: number) => string;
   onPointerDown: (e: React.MouseEvent | React.TouchEvent, nodeId: string) => void;
@@ -17,7 +15,6 @@ interface JourneyIncomeNodeProps {
 export default function JourneyIncomeNode({
   x,
   y,
-  dragging,
   income,
   formatCurrency,
   onPointerDown,
@@ -38,12 +35,9 @@ export default function JourneyIncomeNode({
   const total = income.total || 0;
 
   return (
-    <motion.div
+    <div
       className="absolute pointer-events-auto"
-      style={{ width: 220 }}
-      initial={false}
-      animate={{ left: x, top: y }}
-      transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 22 }}
+      style={{ left: x, top: y, width: 220 }}
       onMouseDown={(e) => {
         dragStartPos.current = { x: e.clientX, y: e.clientY };
         onPointerDown(e, 'income');
@@ -95,6 +89,6 @@ export default function JourneyIncomeNode({
           {sources.length > 1 ? `${sources.length} income streams` : '1 income source'}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

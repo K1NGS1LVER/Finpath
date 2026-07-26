@@ -484,7 +484,6 @@ export default function Journey({ onPennyClick }: { onPennyClick?: () => void })
                   <JourneyIncomeNode
                     x={canvas.incomePos.x}
                     y={canvas.incomePos.y}
-                    dragging={canvas.dragging === 'income'}
                     income={income}
                     formatCurrency={formatInrCompact}
                     onPointerDown={canvas.handlePointerDown}
