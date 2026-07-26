@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router';
+import { MotionConfig } from 'motion/react';
 import Landing from './screens/Landing';
 import Onboarding from './screens/Onboarding';
 import Loading from './screens/Loading';
@@ -494,11 +495,13 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <ErrorBoundary animate={false}>
-        <AppContent />
-      </ErrorBoundary>
-    </BrowserRouter>
+    <MotionConfig reducedMotion="user">
+      <BrowserRouter>
+        <ScrollToTop />
+        <ErrorBoundary animate={false}>
+          <AppContent />
+        </ErrorBoundary>
+      </BrowserRouter>
+    </MotionConfig>
   );
 }
