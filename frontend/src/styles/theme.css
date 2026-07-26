@@ -623,6 +623,7 @@
   color: var(--card-foreground);
   cursor: pointer;
   transition:
+    transform 0.4s var(--ease-bounce),
     background-color var(--duration-base) var(--ease-base),
     color var(--duration-base) var(--ease-base),
     border-color var(--duration-base) var(--ease-base),
@@ -990,11 +991,17 @@ select option {
   animation: node-float 3.5s var(--ease-in-out) infinite;
 }
 
-button:not(:disabled) {
+/* Fallback transition for buttons that don't manage their own (see .pill-button,
+   .btn-primary, .risk-btn, .preset-btn, .journey-priority-btn, .button-press below —
+   excluded here so their own narrower transition lists actually win instead of being
+   shadowed by this rule's higher specificity). `filter` dropped: no button state
+   anywhere transitions it. */
+button:not(:disabled):not(.pill-button):not(.btn-primary):not(.risk-btn):not(.preset-btn):not(
+    .journey-priority-btn
+  ):not(.button-press) {
   transition:
     transform 0.4s var(--ease-bounce),
     box-shadow 0.4s var(--ease-spring),
-    filter 0.3s var(--ease-base),
     background-color var(--duration-theme) var(--ease-base),
     color var(--duration-theme) var(--ease-base),
     border-color var(--duration-theme) var(--ease-base);
@@ -1650,6 +1657,7 @@ a.bento-card:hover,
   font-family: var(--font-display);
   cursor: pointer;
   transition:
+    transform 0.4s var(--ease-bounce),
     border-color var(--duration-fast) var(--ease-base),
     background-color var(--duration-fast) var(--ease-base),
     color var(--duration-fast) var(--ease-base);
@@ -1877,7 +1885,9 @@ a.bento-card:hover,
   background: var(--surface-hover);
   border: 1.5px solid transparent;
   text-align: left;
-  transition: background-color var(--duration-base) var(--ease-base);
+  transition:
+    transform 0.4s var(--ease-bounce),
+    background-color var(--duration-base) var(--ease-base);
   width: 100%;
   cursor: pointer;
 }
@@ -1940,6 +1950,7 @@ a.bento-card:hover,
   width: 100%;
   cursor: pointer;
   transition:
+    transform 0.4s var(--ease-bounce),
     background-color var(--duration-base) var(--ease-base),
     border-color var(--duration-base) var(--ease-base),
     box-shadow var(--duration-base) var(--ease-base);
