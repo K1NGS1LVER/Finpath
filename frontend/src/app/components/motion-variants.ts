@@ -67,3 +67,16 @@ export const dropdownScale: Variants = {
   hidden: { opacity: 0, scale: 0.96 },
   visible: { opacity: 1, scale: 1 },
 };
+
+/**
+ * Right-edge drawer entrance for detail panels that slide in over the
+ * canvas (e.g. Journey's income/goal detail panels) — offsets on `x`, not
+ * `y`, to match the panel's actual spatial origin (the right edge), unlike
+ * `cardEntry`'s vertical "card lift". Pair with `AnimatePresence` for a
+ * symmetric exit and gate the transition duration through
+ * `useMotionDuration` so it collapses under reduced motion.
+ */
+export const drawerEntry: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { opacity: 1, x: 0 },
+};

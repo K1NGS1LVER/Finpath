@@ -679,23 +679,29 @@ export default function Journey({ onPennyClick }: { onPennyClick?: () => void })
             onAddCustom={goals.handleAddCustom}
           />
 
-          {showIncomePanel && (
-            <JourneyIncomeDetailPanel
-              income={income}
-              onClose={() => setShowIncomePanel(false)}
-              formatCurrency={formatInrCompact}
-            />
-          )}
+          <AnimatePresence>
+            {showIncomePanel && (
+              <JourneyIncomeDetailPanel
+                income={income}
+                onClose={() => setShowIncomePanel(false)}
+                formatCurrency={formatInrCompact}
+              />
+            )}
+          </AnimatePresence>
 
-          <JourneyGoalDetailPanel
-            goal={goals.selectedGoal}
-            onClose={() => goals.setSelectedGoalId(null)}
-            onComplete={handleCompleteGoal}
-            onCompleteMonth={handleCompleteMonth}
-            onDelete={goals.handleDelete}
-            onPriorityChange={goals.handlePriorityChange}
-            activeGoalsCount={goals.activeGoals.length}
-          />
+          <AnimatePresence>
+            {goals.selectedGoal && (
+              <JourneyGoalDetailPanel
+                goal={goals.selectedGoal}
+                onClose={() => goals.setSelectedGoalId(null)}
+                onComplete={handleCompleteGoal}
+                onCompleteMonth={handleCompleteMonth}
+                onDelete={goals.handleDelete}
+                onPriorityChange={goals.handlePriorityChange}
+                activeGoalsCount={goals.activeGoals.length}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
       {tab === 'progress' && (

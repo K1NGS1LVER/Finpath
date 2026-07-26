@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router';
 import type { Goal } from '@/lib/types';
 import { getGoalIcon } from './icon-map';
 import { useFinPathStore } from '@/lib/store';
-import { cardEntry } from '@/app/components/motion-variants';
+import { useMotionDuration } from '@/lib/useReducedMotion';
+import { drawerEntry } from '@/app/components/motion-variants';
 
 function monthsToYYYYMM(months: number): string {
   const d = new Date();
@@ -137,6 +138,7 @@ export default function JourneyGoalDetailPanel({
 
   const updateGoal = useFinPathStore((s) => s.updateGoal);
   const navigate = useNavigate();
+  const panelDuration = useMotionDuration(0.3);
 
   useEffect(
     () => () => {
@@ -260,9 +262,11 @@ export default function JourneyGoalDetailPanel({
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
-      variants={cardEntry}
-      initial="initial"
-      animate="animate"
+      variants={drawerEntry}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={{ duration: panelDuration, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Panel header */}
       <div

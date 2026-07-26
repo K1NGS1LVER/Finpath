@@ -1,4 +1,7 @@
 import { X, Wallet, TrendingUp } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useMotionDuration } from '@/lib/useReducedMotion';
+import { drawerEntry } from '@/app/components/motion-variants';
 import type { IncomeProfile } from '@/lib/types';
 
 interface JourneyIncomeDetailPanelProps {
@@ -12,6 +15,8 @@ export default function JourneyIncomeDetailPanel({
   onClose,
   formatCurrency,
 }: JourneyIncomeDetailPanelProps) {
+  const panelDuration = useMotionDuration(0.3);
+
   if (!income) return null;
 
   const activeSources = [
@@ -27,11 +32,16 @@ export default function JourneyIncomeDetailPanel({
   const total = income.total || 0;
 
   return (
-    <div
-      className="absolute top-0 right-0 h-full w-full md:w-[360px] p-4 md:p-6 space-y-5 shadow-2xl z-30 overflow-y-auto transform transition-transform duration-300 journey-detail-panel"
+    <motion.div
+      className="absolute top-0 right-0 h-full w-full md:w-[360px] p-4 md:p-6 space-y-5 shadow-2xl z-30 overflow-y-auto journey-detail-panel"
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
+      variants={drawerEntry}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={{ duration: panelDuration, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-[var(--border)]">
@@ -153,6 +163,6 @@ export default function JourneyIncomeDetailPanel({
       >
         Edit income in Settings or via onboarding.
       </div>
-    </div>
+    </motion.div>
   );
 }

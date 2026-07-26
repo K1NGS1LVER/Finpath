@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { AnimatePresence } from 'motion/react';
 import { Sun, Moon, ArrowLeft, Check } from 'lucide-react';
 import FinPathLogo from '@/app/components/FinPathLogo';
 import { useNavigate } from 'react-router';
@@ -69,7 +70,11 @@ export default function Onboarding({ isDark, setIsDark }: OnboardingProps) {
 
   return (
     <div className="h-[100dvh] w-full flex flex-col md:flex-row bg-background overflow-hidden relative">
-      <ExtractionPopup popup={form.extractionPopup} onClose={form.clearExtractionPopup} />
+      <AnimatePresence>
+        {form.extractionPopup.show && (
+          <ExtractionPopup popup={form.extractionPopup} onClose={form.clearExtractionPopup} />
+        )}
+      </AnimatePresence>
 
       {/* Background blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
