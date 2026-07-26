@@ -622,7 +622,11 @@
   font-weight: var(--font-weight-medium);
   color: var(--card-foreground);
   cursor: pointer;
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    background-color var(--duration-base) var(--ease-base),
+    color var(--duration-base) var(--ease-base),
+    border-color var(--duration-base) var(--ease-base),
+    box-shadow var(--duration-base) var(--ease-base);
   white-space: nowrap;
 }
 
@@ -662,7 +666,9 @@ textarea:focus-visible {
 ═══════════════════════════════════════════════ */
 
 .button-press {
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    transform var(--duration-base) var(--ease-base),
+    opacity var(--duration-base) var(--ease-base);
 }
 
 .button-press:hover {
@@ -1035,16 +1041,16 @@ a.bento-card:hover,
   font-size: var(--btn-font-size);
   font-weight: var(--btn-font-weight);
   box-shadow: var(--btn-shadow);
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    transform var(--duration-base) var(--ease-base),
+    box-shadow var(--duration-base) var(--ease-base),
+    opacity var(--duration-base) var(--ease-base);
   cursor: pointer;
   border: none;
 }
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: var(--btn-shadow-hover);
-}
-.btn-primary:active {
-  transform: translateY(0);
 }
 .btn-primary:disabled {
   opacity: var(--btn-disabled-opacity);
@@ -1174,7 +1180,10 @@ a.bento-card:hover,
   font-size: var(--text-xs);
   font-weight: var(--font-weight-medium);
   border: 1px solid var(--border);
-  transition: all var(--duration-fast) var(--ease-base);
+  transition:
+    background-color var(--duration-fast) var(--ease-base),
+    color var(--duration-fast) var(--ease-base),
+    border-color var(--duration-fast) var(--ease-base);
   cursor: pointer;
 }
 .pill:hover {
@@ -1640,7 +1649,10 @@ a.bento-card:hover,
   font-weight: var(--font-weight-semibold);
   font-family: var(--font-display);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-base);
+  transition:
+    border-color var(--duration-fast) var(--ease-base),
+    background-color var(--duration-fast) var(--ease-base),
+    color var(--duration-fast) var(--ease-base);
   border: 1px solid var(--border);
   background: var(--surface-tint);
   color: var(--secondary);
@@ -1865,7 +1877,7 @@ a.bento-card:hover,
   background: var(--surface-hover);
   border: 1.5px solid transparent;
   text-align: left;
-  transition: all var(--duration-base) var(--ease-base);
+  transition: background-color var(--duration-base) var(--ease-base);
   width: 100%;
   cursor: pointer;
 }
@@ -1927,7 +1939,10 @@ a.bento-card:hover,
   box-shadow: var(--shadow-sm);
   width: 100%;
   cursor: pointer;
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    background-color var(--duration-base) var(--ease-base),
+    border-color var(--duration-base) var(--ease-base),
+    box-shadow var(--duration-base) var(--ease-base);
 }
 
 .preset-btn.active {
@@ -2141,7 +2156,9 @@ a.bento-card:hover,
   background: var(--surface-tint);
   border: 1px solid var(--border);
   text-align: left;
-  transition: all var(--duration-medium) var(--ease-base);
+  transition:
+    background-color var(--duration-medium) var(--ease-base),
+    border-color var(--duration-medium) var(--ease-base);
   width: 100%;
 }
 
@@ -2161,7 +2178,9 @@ a.bento-card:hover,
   align-items: center;
   justify-content: center;
   color: var(--on-accent);
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    background-color var(--duration-base) var(--ease-base),
+    border-color var(--duration-base) var(--ease-base);
   cursor: pointer;
 }
 
@@ -2229,7 +2248,9 @@ a.bento-card:hover,
   border: 1px solid var(--border);
   color: var(--card-foreground);
   font-family: var(--font-display);
-  transition: all var(--duration-base) var(--ease-base);
+  transition:
+    border-color var(--duration-base) var(--ease-base),
+    box-shadow var(--duration-base) var(--ease-base);
 }
 
 .task-amount-input.done {
@@ -2387,7 +2408,7 @@ a.bento-card:hover,
   top: 2px;
   height: 32px;
   border-radius: var(--radius-full);
-  transition: all var(--duration-slow) var(--ease-spring);
+  transition: left var(--duration-slow) var(--ease-spring);
   background: var(--accent);
   box-shadow: 0 1px 3px var(--black-18);
   width: calc(50% - var(--space-0_5));
@@ -2540,7 +2561,7 @@ a.bento-card:hover,
   border: 1px solid var(--border);
   background: var(--surface-tint);
   cursor: pointer;
-  transition: all 0.2s var(--ease-standard);
+  transition: background-color 0.2s var(--ease-standard);
   margin-bottom: var(--gap-sm);
 }
 
@@ -2559,7 +2580,9 @@ a.bento-card:hover,
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.22s var(--ease-standard);
+  transition:
+    background-color 0.22s var(--ease-standard),
+    border-color 0.22s var(--ease-standard);
   cursor: pointer;
 }
 
