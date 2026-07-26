@@ -1,6 +1,6 @@
-import { X, AlertTriangle } from "lucide-react";
-import { GOAL_PRESETS } from "./useJourneyGoals";
-import { getGoalIcon } from "./icon-map";
+import { X, AlertTriangle } from 'lucide-react';
+import { GOAL_PRESETS } from './useJourneyGoals';
+import { getGoalIcon } from './icon-map';
 import type { Goal } from '@/lib/types';
 
 interface JourneyAddGoalModalProps {
@@ -72,56 +72,67 @@ export default function JourneyAddGoalModal({
               <div>
                 <div className="font-semibold mb-0.5">You're over budget</div>
                 <span>
-                  Your existing goals already need ₹{existingMonthlyNeed.toLocaleString("en-IN")}/mo but you only have ₹{Math.max(0, monthlySurplus).toLocaleString("en-IN")}/mo available after expenses, debt, and surplus reserve. Adding more goals will significantly extend your timeline.
+                  Your existing goals already need ₹{existingMonthlyNeed.toLocaleString('en-IN')}/mo
+                  but you only have ₹{Math.max(0, monthlySurplus).toLocaleString('en-IN')}/mo
+                  available after expenses, debt, and surplus reserve. Adding more goals will
+                  significantly extend your timeline.
                 </span>
               </div>
             </div>
           )}
           {budgetRemaining > 0 && (
             <div className="flex items-center gap-2 p-3 rounded-xl text-xs md:text-sm mb-4 info-banner">
-              <span>₹{budgetRemaining.toLocaleString("en-IN")}/mo available for new goals</span>
+              <span>₹{budgetRemaining.toLocaleString('en-IN')}/mo available for new goals</span>
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-3 mb-6">
-            {GOAL_PRESETS.filter(
-              (p) => !storeGoals.some((g) => g.name === p.name),
-            ).map((preset) => {
-              const Icon = getGoalIcon(preset.icon);
-              const presetMonthly = Math.round(preset.target / preset.months);
-              const wouldExceed = (existingMonthlyNeed + presetMonthly) > Math.max(0, monthlySurplus) && monthlySurplus > 0;
-              return (
-                <button
-                  key={preset.name}
-                  onClick={() => onAddPreset(preset)}
-                  className={`p-4 rounded-xl text-left transition-all preset-card ${wouldExceed ? "opacity-60" : "hover:scale-[1.02] active:scale-[0.98]"}`}
-                  style={wouldExceed ? { border: "1px solid var(--red)" } : undefined}
-                >
-                  {/* Icon color: conditional on wouldExceed (runtime) — kept inline */}
-                  <Icon
-                    size={20}
-                    className="mb-2"
-                    style={{ color: wouldExceed ? "var(--red)" : "var(--accent)" }}
-                  />
-                  <div className="text-sm font-semibold text-[var(--card-foreground)] font-body-family">
-                    {preset.name}
-                  </div>
-                  <div className="text-xs text-[var(--secondary)] mt-1">
-                    ₹{(preset.target / 1000).toFixed(0)}K · {preset.months}mo
-                  </div>
-                  <div className={`text-[10px] mt-1 font-medium ${wouldExceed ? "text-[var(--red-text)]" : "text-[var(--secondary)]"}`}>
-                    ₹{presetMonthly.toLocaleString("en-IN")}/mo needed
-                  </div>
-                </button>
-              );
-            })}
+            {GOAL_PRESETS.filter((p) => !storeGoals.some((g) => g.name === p.name)).map(
+              (preset) => {
+                const Icon = getGoalIcon(preset.icon);
+                const presetMonthly = Math.round(preset.target / preset.months);
+                const wouldExceed =
+                  existingMonthlyNeed + presetMonthly > Math.max(0, monthlySurplus) &&
+                  monthlySurplus > 0;
+                return (
+                  <button
+                    key={preset.name}
+                    onClick={() => onAddPreset(preset)}
+                    className={`p-4 rounded-xl text-left transition-all preset-card ${wouldExceed ? 'opacity-60' : 'hover:scale-[1.02] active:scale-[0.98]'}`}
+                    style={wouldExceed ? { border: '1px solid var(--red)' } : undefined}
+                  >
+                    {/* Icon color: conditional on wouldExceed (runtime) — kept inline */}
+                    <Icon
+                      size={20}
+                      className="mb-2"
+                      style={{ color: wouldExceed ? 'var(--red)' : 'var(--accent)' }}
+                    />
+                    <div className="text-sm font-semibold text-[var(--card-foreground)] font-body-family">
+                      {preset.name}
+                    </div>
+                    <div className="text-xs text-[var(--secondary)] mt-1">
+                      ₹{(preset.target / 1000).toFixed(0)}K · {preset.months}mo
+                    </div>
+                    <div
+                      className={`text-[10px] mt-1 font-medium ${wouldExceed ? 'text-[var(--red-text)]' : 'text-[var(--secondary)]'}`}
+                    >
+                      ₹{presetMonthly.toLocaleString('en-IN')}/mo needed
+                    </div>
+                  </button>
+                );
+              },
+            )}
           </div>
 
           <div className="space-y-3 section-divider-top">
             <div className="text-sm font-semibold text-[var(--secondary)] font-body-family">
               Or create custom
             </div>
+            <label htmlFor="custom-goal-name" className="sr-only">
+              Goal name
+            </label>
             <input
+              id="custom-goal-name"
               type="text"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
@@ -129,61 +140,82 @@ export default function JourneyAddGoalModal({
               className="w-full px-4 py-3 rounded-xl outline-none text-[var(--card-foreground)] input-surface"
             />
             <div className="grid grid-cols-2 gap-3">
-              <input
-                type="number"
-                value={customTarget}
-                onChange={(e) => setCustomTarget(e.target.value)}
-                placeholder="Target ₹"
-                className="w-full px-4 py-3 rounded-xl outline-none text-[var(--card-foreground)] input-surface"
-              />
-              <input
-                type="number"
-                value={customMonths}
-                onChange={(e) => setCustomMonths(e.target.value)}
-                placeholder="Months"
-                className="w-full px-4 py-3 rounded-xl outline-none text-[var(--card-foreground)] input-surface"
-              />
+              <div>
+                <label htmlFor="custom-goal-target" className="sr-only">
+                  Target amount in rupees
+                </label>
+                <input
+                  id="custom-goal-target"
+                  type="number"
+                  value={customTarget}
+                  onChange={(e) => setCustomTarget(e.target.value)}
+                  placeholder="Target ₹"
+                  className="w-full px-4 py-3 rounded-xl outline-none text-[var(--card-foreground)] input-surface"
+                />
+              </div>
+              <div>
+                <label htmlFor="custom-goal-months" className="sr-only">
+                  Number of months
+                </label>
+                <input
+                  id="custom-goal-months"
+                  type="number"
+                  value={customMonths}
+                  onChange={(e) => setCustomMonths(e.target.value)}
+                  placeholder="Months"
+                  className="w-full px-4 py-3 rounded-xl outline-none text-[var(--card-foreground)] input-surface"
+                />
+              </div>
             </div>
-            {customTarget && customMonths && (() => {
-              const cTarget = parseInt(customTarget) || 0;
-              const cMonths = parseInt(customMonths) || 12;
-              const cMonthly = cTarget > 0 && cMonths > 0 ? Math.round(cTarget / cMonths) : 0;
-              const available = Math.max(0, monthlySurplus);
-              const totalAfter = existingMonthlyNeed + cMonthly;
-              const impossible = cMonthly > available && available > 0;
-              const overBudget = totalAfter > available && available > 0 && !impossible;
+            {customTarget &&
+              customMonths &&
+              (() => {
+                const cTarget = parseInt(customTarget) || 0;
+                const cMonths = parseInt(customMonths) || 12;
+                const cMonthly = cTarget > 0 && cMonths > 0 ? Math.round(cTarget / cMonths) : 0;
+                const available = Math.max(0, monthlySurplus);
+                const totalAfter = existingMonthlyNeed + cMonthly;
+                const impossible = cMonthly > available && available > 0;
+                const overBudget = totalAfter > available && available > 0 && !impossible;
 
-              if (impossible) {
-                const minMonths = available > 0 ? Math.ceil(cTarget / available) : 0;
-                return (
-                  <div className="flex items-start gap-2 p-3 rounded-xl text-xs error-banner">
-                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
-                    <span>
-                      This needs ₹{cMonthly.toLocaleString("en-IN")}/mo but you only have ₹{available.toLocaleString("en-IN")}/mo.
-                      {minMonths > 0 ? ` Minimum ${minMonths} months needed.` : ""}
-                    </span>
-                  </div>
-                );
-              }
-              if (overBudget) {
-                return (
-                  <div className="flex items-start gap-2 p-3 rounded-xl text-xs error-banner">
-                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
-                    <span>
-                      Total goal commitments would be ₹{totalAfter.toLocaleString("en-IN")}/mo — over your ₹{available.toLocaleString("en-IN")}/mo budget. Remove an existing goal first.
-                    </span>
-                  </div>
-                );
-              }
-              if (cMonthly > 0) {
-                return (
-                  <div className="text-xs px-1 text-[var(--secondary)]">
-                    This goal needs ₹{cMonthly.toLocaleString("en-IN")}/mo · ₹{budgetRemaining > cMonthly ? (budgetRemaining - cMonthly).toLocaleString("en-IN") : "0"}/mo would remain
-                  </div>
-                );
-              }
-              return null;
-            })()}
+                if (impossible) {
+                  const minMonths = available > 0 ? Math.ceil(cTarget / available) : 0;
+                  return (
+                    <div className="flex items-start gap-2 p-3 rounded-xl text-xs error-banner">
+                      <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+                      <span>
+                        This needs ₹{cMonthly.toLocaleString('en-IN')}/mo but you only have ₹
+                        {available.toLocaleString('en-IN')}/mo.
+                        {minMonths > 0 ? ` Minimum ${minMonths} months needed.` : ''}
+                      </span>
+                    </div>
+                  );
+                }
+                if (overBudget) {
+                  return (
+                    <div className="flex items-start gap-2 p-3 rounded-xl text-xs error-banner">
+                      <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+                      <span>
+                        Total goal commitments would be ₹{totalAfter.toLocaleString('en-IN')}/mo —
+                        over your ₹{available.toLocaleString('en-IN')}/mo budget. Remove an existing
+                        goal first.
+                      </span>
+                    </div>
+                  );
+                }
+                if (cMonthly > 0) {
+                  return (
+                    <div className="text-xs px-1 text-[var(--secondary)]">
+                      This goal needs ₹{cMonthly.toLocaleString('en-IN')}/mo · ₹
+                      {budgetRemaining > cMonthly
+                        ? (budgetRemaining - cMonthly).toLocaleString('en-IN')
+                        : '0'}
+                      /mo would remain
+                    </div>
+                  );
+                }
+                return null;
+              })()}
 
             {addGoalError && (
               <div className="flex items-start gap-2 p-3 rounded-xl text-xs error-banner">

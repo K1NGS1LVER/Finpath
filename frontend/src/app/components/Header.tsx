@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon, Menu, LogOut, User, Settings as SettingsIcon, Award } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
 import { useFinPathStore } from '@/lib/store';
 import { formatInr } from '@/lib/format';
 import { computeLevel } from '@/lib/levels';
+import { useMotionDuration } from '@/lib/useReducedMotion';
+import { dropdownScale } from '@/app/components/motion-variants';
 import { useNavigate } from 'react-router';
 
 interface HeaderProps {
@@ -24,6 +27,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownDuration = useMotionDuration(0.2);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -55,6 +59,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
     <header className="h-12 md:h-14 flex items-center justify-between md:justify-end px-4 md:px-8 z-20 relative bg-card backdrop-blur-2xl border-b border-border">
       <button
         onClick={onMenuClick}
+        aria-label="Open menu"
         className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95 md:hidden text-foreground bg-surface-hover"
       >
         <Menu size={20} className="icon-wireframe" />
@@ -125,54 +130,66 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg slashed-zero bg-[var(--accent)] text-[var(--on-accent)] shadow-[0_4px_16px_var(--accent-glow)] transition-transform hover:scale-105 active:scale-95"
             title={userName || 'Account'}
+            aria-haspopup="menu"
+            aria-expanded={dropdownOpen}
           >
             {initial}
           </button>
 
           {/* Dropdown Menu */}
-          {dropdownOpen && (
-            <div className="absolute right-0 top-14 w-64 rounded-2xl overflow-hidden z-50 bg-card border border-border shadow-lg backdrop-blur-xl">
-              {/* User Info */}
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm slashed-zero bg-[var(--accent)] text-[var(--on-accent)]">
-                    {initial}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    {user?.user_metadata?.full_name && (
-                      <div className="text-sm font-semibold text-card-foreground truncate font-body">
-                        {user.user_metadata.full_name}
+          <AnimatePresence>
+            {dropdownOpen && (
+              <motion.div
+                variants={dropdownScale}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                transition={{ duration: dropdownDuration, ease: [0.22, 1, 0.36, 1] }}
+                style={{ transformOrigin: 'top right' }}
+                className="absolute right-0 top-14 w-64 rounded-2xl overflow-hidden z-50 bg-card border border-border shadow-lg backdrop-blur-xl"
+              >
+                {/* User Info */}
+                <div className="px-5 py-4 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm slashed-zero bg-[var(--accent)] text-[var(--on-accent)]">
+                      {initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {user?.user_metadata?.full_name && (
+                        <div className="text-sm font-semibold text-card-foreground truncate font-body">
+                          {user.user_metadata.full_name}
+                        </div>
+                      )}
+                      <div className="text-xs text-secondary truncate font-body">
+                        {user?.email || 'Anonymous'}
                       </div>
-                    )}
-                    <div className="text-xs text-secondary truncate font-body">
-                      {user?.email || 'Anonymous'}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Actions */}
-              <div className="p-2">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    navigate('/settings');
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-card-foreground font-body hover:bg-surface-hover"
-                >
-                  <SettingsIcon size={18} className="icon-wireframe" />
-                  <span className="text-sm font-medium">Settings</span>
-                </button>
-                <button
-                  onClick={handleSignOut}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-red-text font-body hover:bg-red-subtle"
-                >
-                  <LogOut size={18} />
-                  <span className="text-sm font-medium">Sign Out</span>
-                </button>
-              </div>
-            </div>
-          )}
+                {/* Actions */}
+                <div className="p-2">
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      navigate('/settings');
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-card-foreground font-body hover:bg-surface-hover"
+                  >
+                    <SettingsIcon size={18} className="icon-wireframe" />
+                    <span className="text-sm font-medium">Settings</span>
+                  </button>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-red-text font-body hover:bg-red-subtle"
+                  >
+                    <LogOut size={18} />
+                    <span className="text-sm font-medium">Sign Out</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>

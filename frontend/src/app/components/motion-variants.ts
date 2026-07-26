@@ -1,4 +1,4 @@
-import type { Variants } from "motion/react";
+import type { Variants } from 'motion/react';
 
 export const pageContainer: Variants = {
   hidden: {},
@@ -44,10 +44,7 @@ export const cardHover = {
  *
  * Per-child delay = `Math.min(0.08, max / Math.max(count, 1))`.
  */
-export function cappedStagger(
-  count: number,
-  max: number = 0.5
-): { staggerChildren: number } {
+export function cappedStagger(count: number, max: number = 0.5): { staggerChildren: number } {
   return { staggerChildren: Math.min(0.08, max / Math.max(count, 1)) };
 }
 
@@ -58,4 +55,15 @@ export function cappedStagger(
 export const countUpTransition = {
   duration: 1.2,
   ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+};
+
+/**
+ * Scale-in for popover/dropdown menus anchored to a trigger button. Pair
+ * with `style={{ transformOrigin: "top right" }}` (or whichever corner sits
+ * closest to the trigger) and gate the transition duration through
+ * `useMotionDuration` so it collapses under reduced motion.
+ */
+export const dropdownScale: Variants = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: { opacity: 1, scale: 1 },
 };
