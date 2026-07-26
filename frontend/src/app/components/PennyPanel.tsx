@@ -355,7 +355,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
             <button
               onClick={() => setShowClearConfirm(true)}
               disabled={messages.length <= 1 || isLoading}
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--surface-hover)] disabled:opacity-40 disabled:hover:bg-transparent"
+              className="w-11 h-11 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--surface-hover)] disabled:opacity-40 disabled:hover:bg-transparent"
               aria-label="Clear chat history"
               title="Clear chat history"
             >
@@ -363,7 +363,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
             </button>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--surface-hover)]"
+              className="w-11 h-11 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--surface-hover)]"
               aria-label="Close Penny"
             >
               <X size={18} />

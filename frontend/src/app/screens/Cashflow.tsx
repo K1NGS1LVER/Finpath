@@ -1,27 +1,31 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  Sparkles,
-  AlertTriangle,
-  ArrowLeftRight,
-  ArrowRight,
-} from 'lucide-react';
+import { Sparkles, AlertTriangle, ArrowLeftRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { useFinPathStore } from '@/lib/store';
 import { pageContainer, pageSection } from '@/app/components/motion-variants';
 import { Sankey, ResponsiveContainer } from 'recharts';
-import {
-  CustomNode,
-  CustomLink,
-  usePalette,
-} from '@/app/components/SankeyFlow';
+import { CustomNode, CustomLink, usePalette } from '@/app/components/SankeyFlow';
 import { formatInr } from '@/lib/format';
 import { buildSankeyData, computeGoalAllocationsTotal } from '@/lib/sankey-data';
 import type { NodeKind } from '@/lib/sankey-data';
-import { ExpenseProfile } from '@/lib/types';
+import type { ExpenseProfile } from '@/lib/types';
 
-const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 const SANKEY_MARGIN = { top: 10, left: 120, right: 160, bottom: 10 };
 
@@ -33,17 +37,17 @@ type ConfirmState =
 
 export default function Cashflow() {
   const navigate = useNavigate();
-  const income = useFinPathStore(s => s.income);
-  const expenses = useFinPathStore(s => s.expenses);
-  const setIncome = useFinPathStore(s => s.setIncome);
-  const setExpenses = useFinPathStore(s => s.setExpenses);
-  const plan = useFinPathStore(s => s.plan);
-  const monthlySurplusReserve = useFinPathStore(s => s.monthlySurplusReserve);
-  const goals = useFinPathStore(s => s.goals);
-  const debts = useFinPathStore(s => s.debts);
-  const savings = useFinPathStore(s => s.savings);
-  const emergencyFund = useFinPathStore(s => s.emergencyFund);
-  const healthScore = useFinPathStore(s => s.healthScore);
+  const income = useFinPathStore((s) => s.income);
+  const expenses = useFinPathStore((s) => s.expenses);
+  const setIncome = useFinPathStore((s) => s.setIncome);
+  const setExpenses = useFinPathStore((s) => s.setExpenses);
+  const plan = useFinPathStore((s) => s.plan);
+  const monthlySurplusReserve = useFinPathStore((s) => s.monthlySurplusReserve);
+  const goals = useFinPathStore((s) => s.goals);
+  const debts = useFinPathStore((s) => s.debts);
+  const savings = useFinPathStore((s) => s.savings);
+  const emergencyFund = useFinPathStore((s) => s.emergencyFund);
+  const healthScore = useFinPathStore((s) => s.healthScore);
 
   const [hoveredNode, setHoveredNode] = useState<NodePos | null>(null);
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
@@ -63,7 +67,8 @@ export default function Cashflow() {
   const monthLabel = `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
 
   const goalAllocationsTotal = useMemo(
-    () => computeGoalAllocationsTotal({ income, expenses, debts, monthlySurplusReserve, plan, goals }),
+    () =>
+      computeGoalAllocationsTotal({ income, expenses, debts, monthlySurplusReserve, plan, goals }),
     [income, expenses, debts, monthlySurplusReserve, plan, goals],
   );
 
@@ -84,11 +89,13 @@ export default function Cashflow() {
     [income, expenses, debts, monthlySurplusReserve, plan, goals],
   );
 
-  const savingsRate = totalIncome > 0 ? Math.round(((totalIncome - totalExpenses) / totalIncome) * 100) : 0;
+  const savingsRate =
+    totalIncome > 0 ? Math.round(((totalIncome - totalExpenses) / totalIncome) * 100) : 0;
 
-  const efMonths = (totalExpenses + debtPayments) > 0
-    ? Math.floor(emergencyFund / (totalExpenses + debtPayments))
-    : 0;
+  const efMonths =
+    totalExpenses + debtPayments > 0
+      ? Math.floor(emergencyFund / (totalExpenses + debtPayments))
+      : 0;
 
   function computeViewport(x: number, y: number, w: number, h: number) {
     const rect = sankeyWrapRef.current?.getBoundingClientRect();
@@ -101,8 +108,8 @@ export default function Cashflow() {
 
   function showToast(message: string) {
     const id = ++toastIdRef.current;
-    setToasts(t => [...t, { id, message }]);
-    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
+    setToasts((t) => [...t, { id, message }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
   }
 
   // Clear confirm state + edit values when switching nodes
@@ -144,19 +151,36 @@ export default function Cashflow() {
 
   // Dismiss popovers on scroll (fixed-position elements shift with scroll)
   useEffect(() => {
-    function onScroll() { setActiveNode(null); setActiveLink(null); setHoveredNode(null); }
+    function onScroll() {
+      setActiveNode(null);
+      setActiveLink(null);
+      setHoveredNode(null);
+    }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   function handleSaveIncome(nodeName: string, newVal: number) {
     if (nodeName === 'Primary Income') {
-      setIncome({ ...income, primary: newVal, total: newVal + income.secondary + income.passive + income.variable });
+      setIncome({
+        ...income,
+        primary: newVal,
+        total: newVal + income.secondary + income.passive + income.variable,
+      });
     } else if (nodeName === 'Secondary Income') {
-      setIncome({ ...income, secondary: newVal, total: income.primary + newVal + income.passive + income.variable });
+      setIncome({
+        ...income,
+        secondary: newVal,
+        total: income.primary + newVal + income.passive + income.variable,
+      });
     } else if (nodeName === 'Passive Income') {
-      const newVariable = Math.round(newVal * income.variablePercent / 100);
-      setIncome({ ...income, passive: newVal, variable: newVariable, total: income.primary + income.secondary + newVal + newVariable });
+      const newVariable = Math.round((newVal * income.variablePercent) / 100);
+      setIncome({
+        ...income,
+        passive: newVal,
+        variable: newVariable,
+        total: income.primary + income.secondary + newVal + newVariable,
+      });
     }
     showToast(`${nodeName} updated to ${formatInr(newVal)}`);
     setActiveNode(null);
@@ -166,7 +190,8 @@ export default function Cashflow() {
 
   function handleSaveExpenses(nodeName: string, fields: Partial<ExpenseProfile>) {
     const next = { ...expenses, ...fields };
-    next.total = next.rent + next.utilities + next.food + next.transport + next.entertainment + next.other;
+    next.total =
+      next.rent + next.utilities + next.food + next.transport + next.entertainment + next.other;
     setExpenses(next);
     const changedTotal = Object.values(fields).reduce((s: number, v) => s + (v ?? 0), 0);
     showToast(`${nodeName} updated to ${formatInr(changedTotal)}`);
@@ -184,60 +209,94 @@ export default function Cashflow() {
 
     const expenseRatio = totalIncome > 0 ? Math.round((totalExpenses / totalIncome) * 100) : 0;
     if (expenseRatio > 70) {
-      insights.push(`Your expenses consume ${expenseRatio}% of income — aim to keep essential spending below 50% for a healthy buffer.`);
+      insights.push(
+        `Your expenses consume ${expenseRatio}% of income — aim to keep essential spending below 50% for a healthy buffer.`,
+      );
     } else if (expenseRatio > 50) {
-      insights.push(`Expenses are ${expenseRatio}% of your income. There's room to trim discretionary spending to boost savings.`);
+      insights.push(
+        `Expenses are ${expenseRatio}% of your income. There's room to trim discretionary spending to boost savings.`,
+      );
     } else {
-      insights.push(`Expenses account for only ${expenseRatio}% of your income — you're maintaining a lean lifestyle.`);
+      insights.push(
+        `Expenses account for only ${expenseRatio}% of your income — you're maintaining a lean lifestyle.`,
+      );
     }
 
     if (healthScore) {
       if (healthScore.savingsRate >= 20) {
-        insights.push(`Your savings rate is strong at ${savingsRate}% — keep it above 20% for long-term wealth building.`);
+        insights.push(
+          `Your savings rate is strong at ${savingsRate}% — keep it above 20% for long-term wealth building.`,
+        );
       } else {
-        insights.push(`Your savings rate could improve. Aim to save at least 20% of income for long-term financial security.`);
+        insights.push(
+          `Your savings rate could improve. Aim to save at least 20% of income for long-term financial security.`,
+        );
       }
 
       if (efMonths < 3) {
         const monthlyExpense = totalExpenses + debtPayments;
         const target = monthlyExpense * 3;
         const needed = Math.max(0, target - emergencyFund);
-        insights.push(`Build your emergency fund — save ${formatInr(needed)} more to cover 3 months of expenses.`);
+        insights.push(
+          `Build your emergency fund — save ${formatInr(needed)} more to cover 3 months of expenses.`,
+        );
       } else {
         insights.push(`Your emergency fund covers ${efMonths}+ months — great safety net.`);
       }
     }
 
     if (disposable > 0) {
-      insights.push(`You have ${formatInr(disposable)} in free cash each month — consider allocating it to goals or investments.`);
+      insights.push(
+        `You have ${formatInr(disposable)} in free cash each month — consider allocating it to goals or investments.`,
+      );
     } else if (disposable === 0 && totalIncome > 0) {
-      insights.push(`Your income is fully allocated with no free cash remaining. Review your budget for optimisation opportunities.`);
+      insights.push(
+        `Your income is fully allocated with no free cash remaining. Review your budget for optimisation opportunities.`,
+      );
     }
 
     if (savings > 0) {
-      insights.push(`Your total savings stand at ${formatInr(savings)} — consider investing idle cash for better returns.`);
+      insights.push(
+        `Your total savings stand at ${formatInr(savings)} — consider investing idle cash for better returns.`,
+      );
     }
 
     const dti = totalIncome > 0 ? Math.round((debtPayments / totalIncome) * 100) : 0;
     if (dti > 40) {
-      insights.push(`High debt-to-income ratio: ${dti}%. Prioritise paying down high-interest debts.`);
+      insights.push(
+        `High debt-to-income ratio: ${dti}%. Prioritise paying down high-interest debts.`,
+      );
     }
 
     return insights;
-  }, [totalIncome, totalExpenses, debtPayments, disposable, healthScore, emergencyFund, savings, savingsRate, efMonths]);
+  }, [
+    totalIncome,
+    totalExpenses,
+    debtPayments,
+    disposable,
+    healthScore,
+    emergencyFund,
+    savings,
+    savingsRate,
+    efMonths,
+  ]);
 
   const dti = totalIncome > 0 ? Math.round((debtPayments / totalIncome) * 100) : 0;
 
-  const activeGoals = useMemo(() =>
-    goals
-      .filter(g => g.status !== 'complete')
-      .map(g => ({
-        ...g,
-        alloc: plan?.months?.[0]?.goalAllocations?.[g.id] ?? g.monthlyAllocation ?? 0,
-        completionDate: plan?.goalCompletionDates?.[g.id] ?? null,
-        progressPct: g.targetAmount > 0 ? Math.min(100, Math.round((g.currentAmount / g.targetAmount) * 100)) : 0,
-      })),
-    [goals, plan]
+  const activeGoals = useMemo(
+    () =>
+      goals
+        .filter((g) => g.status !== 'complete')
+        .map((g) => ({
+          ...g,
+          alloc: plan?.months?.[0]?.goalAllocations?.[g.id] ?? g.monthlyAllocation ?? 0,
+          completionDate: plan?.goalCompletionDates?.[g.id] ?? null,
+          progressPct:
+            g.targetAmount > 0
+              ? Math.min(100, Math.round((g.currentAmount / g.targetAmount) * 100))
+              : 0,
+        })),
+    [goals, plan],
   );
 
   // Shared button styles
@@ -265,7 +324,12 @@ export default function Cashflow() {
   };
 
   return (
-    <motion.div className="max-w-7xl mx-auto relative text-[var(--foreground)]" variants={pageContainer} initial="hidden" animate="visible">
+    <motion.div
+      className="max-w-7xl mx-auto relative text-[var(--foreground)]"
+      variants={pageContainer}
+      initial="hidden"
+      animate="visible"
+    >
       <motion.div className="mb-6" variants={pageSection}>
         <p className="text-label">Money Flow · {monthLabel}</p>
         <h2 className="text-title slashed-zero text-[var(--card-foreground)] mt-1">Cashflow</h2>
@@ -273,9 +337,14 @@ export default function Cashflow() {
 
       <motion.div className="flex flex-col gap-4 md:gap-6 relative z-10" variants={pageSection}>
         <div className="bento-card">
-          <h3 className="text-heading slashed-zero text-[var(--card-foreground)] mb-4">Flow Diagram</h3>
+          <h3 className="text-heading slashed-zero text-[var(--card-foreground)] mb-4">
+            Flow Diagram
+          </h3>
           {sankeyData.links.length > 0 ? (
-            <div role="img" aria-label="Cashflow Sankey diagram showing income sources, essential expenses, debt and savings, and disposable income allocation">
+            <div
+              role="img"
+              aria-label="Cashflow Sankey diagram showing income sources, essential expenses, debt and savings, and disposable income allocation"
+            >
               <div
                 ref={sankeyWrapRef}
                 style={{ position: 'relative' }}
@@ -298,434 +367,855 @@ export default function Cashflow() {
                     nodeWidth={16}
                     iterations={64}
                     margin={{ top: 10, left: 120, right: 160, bottom: 10 }}
-                    node={<CustomNode
-                      palette={pal}
-                      hoveredNodeIdx={hoveredNode?.idx ?? null}
-                      onNodeHover={(idx, x, y, w, h) => {
-                        const { vx, vy } = computeViewport(x, y, w, h);
-                        setHoveredNode({ idx, x, y, w, h, vx, vy });
-                        setActiveNode(a => a?.idx === idx ? a : null);
-                      }}
-                      onNodeUnhover={() => setHoveredNode(null)}
-                      onNodeClick={(idx, x, y, w, h) => {
-                        setHoveredNode(null);
-                        setActiveLink(null);
-                        const { vx, vy } = computeViewport(x, y, w, h);
-                        setActiveNode(a => a?.idx === idx ? null : { idx, x, y, w, h, vx, vy });
-                      }}
-                    />}
-                    link={<CustomLink
-                      palette={pal}
-                      hoveredNodeIdx={hoveredNode?.idx ?? null}
-                      activeLinkIdx={activeLink?.idx ?? null}
-                      onLinkHover={(idx) => setHoveredLink(idx)}
-                      onLinkUnhover={() => setHoveredLink(null)}
-                      onLinkClick={(idx) => {
-                        if (!mousePosViewport) return;
-                        setHoveredNode(null);
-                        setActiveNode(null);
-                        setActiveLink(a => a?.idx === idx ? null : { idx, x: mousePosViewport.x, y: mousePosViewport.y });
-                      }}
-                    />}
+                    node={
+                      <CustomNode
+                        palette={pal}
+                        hoveredNodeIdx={hoveredNode?.idx ?? null}
+                        onNodeHover={(idx, x, y, w, h) => {
+                          const { vx, vy } = computeViewport(x, y, w, h);
+                          setHoveredNode({ idx, x, y, w, h, vx, vy });
+                          setActiveNode((a) => (a?.idx === idx ? a : null));
+                        }}
+                        onNodeUnhover={() => setHoveredNode(null)}
+                        onNodeClick={(idx, x, y, w, h) => {
+                          setHoveredNode(null);
+                          setActiveLink(null);
+                          const { vx, vy } = computeViewport(x, y, w, h);
+                          setActiveNode((a) =>
+                            a?.idx === idx ? null : { idx, x, y, w, h, vx, vy },
+                          );
+                        }}
+                      />
+                    }
+                    link={
+                      <CustomLink
+                        palette={pal}
+                        hoveredNodeIdx={hoveredNode?.idx ?? null}
+                        activeLinkIdx={activeLink?.idx ?? null}
+                        onLinkHover={(idx) => setHoveredLink(idx)}
+                        onLinkUnhover={() => setHoveredLink(null)}
+                        onLinkClick={(idx) => {
+                          if (!mousePosViewport) return;
+                          setHoveredNode(null);
+                          setActiveNode(null);
+                          setActiveLink((a) =>
+                            a?.idx === idx
+                              ? null
+                              : { idx, x: mousePosViewport.x, y: mousePosViewport.y },
+                          );
+                        }}
+                      />
+                    }
                   />
                 </ResponsiveContainer>
 
                 {/* Hover tooltip — portalled so bento-card overflow:hidden never clips it */}
-                {hoveredNode && createPortal((() => {
-                  const nodeName = sankeyData.nodes[hoveredNode.idx]?.name ?? '';
-                  const incomingAmount = sankeyData.links.filter(l => l.target === hoveredNode.idx).reduce((s, l) => s + l.value, 0);
-                  const outgoingAmount = sankeyData.links.filter(l => l.source === hoveredNode.idx).reduce((s, l) => s + l.value, 0);
-                  const displayAmount = incomingAmount > 0 ? incomingAmount : outgoingAmount;
-                  const pct = income?.total ? Math.round((displayAmount / income.total) * 100) : 0;
-                  const isLeftCol = hoveredNode.x < 20;
+                {hoveredNode &&
+                  createPortal(
+                    (() => {
+                      const nodeName = sankeyData.nodes[hoveredNode.idx]?.name ?? '';
+                      const incomingAmount = sankeyData.links
+                        .filter((l) => l.target === hoveredNode.idx)
+                        .reduce((s, l) => s + l.value, 0);
+                      const outgoingAmount = sankeyData.links
+                        .filter((l) => l.source === hoveredNode.idx)
+                        .reduce((s, l) => s + l.value, 0);
+                      const displayAmount = incomingAmount > 0 ? incomingAmount : outgoingAmount;
+                      const pct = income?.total
+                        ? Math.round((displayAmount / income.total) * 100)
+                        : 0;
+                      const isLeftCol = hoveredNode.x < 20;
 
-                  let tipLeft: number, tipTop: number, tipTransform: string;
-                  if (isLeftCol) {
-                    tipLeft = hoveredNode.vx + hoveredNode.w / 2 + 8;
-                    tipTop = hoveredNode.vy + hoveredNode.h / 2;
-                    tipTransform = 'translateY(-50%)';
-                  } else {
-                    const nearTop = hoveredNode.vy < 80;
-                    tipLeft = hoveredNode.vx;
-                    tipTop = nearTop ? hoveredNode.vy + hoveredNode.h + 8 : hoveredNode.vy - 8;
-                    tipTransform = nearTop ? 'translateX(-50%)' : 'translateX(-50%) translateY(-100%)';
-                  }
+                      let tipLeft: number, tipTop: number, tipTransform: string;
+                      if (isLeftCol) {
+                        tipLeft = hoveredNode.vx + hoveredNode.w / 2 + 8;
+                        tipTop = hoveredNode.vy + hoveredNode.h / 2;
+                        tipTransform = 'translateY(-50%)';
+                      } else {
+                        const nearTop = hoveredNode.vy < 80;
+                        tipLeft = hoveredNode.vx;
+                        tipTop = nearTop ? hoveredNode.vy + hoveredNode.h + 8 : hoveredNode.vy - 8;
+                        tipTransform = nearTop
+                          ? 'translateX(-50%)'
+                          : 'translateX(-50%) translateY(-100%)';
+                      }
 
-                  return (
-                    <div
-                      data-sankey-portal
-                      style={{
-                        position: 'fixed',
-                        left: tipLeft,
-                        top: tipTop,
-                        transform: tipTransform,
-                        background: 'var(--card-solid)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-base)',
-                        boxShadow: 'var(--shadow-md)',
-                        padding: '8px 12px',
-                        pointerEvents: 'none',
-                        zIndex: 9999,
-                        minWidth: 120,
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{nodeName}</div>
-                      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)' }}>{formatInr(displayAmount)}</div>
-                      <div style={{ fontSize: 'var(--text-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--accent)' }}>{pct}% of income</div>
-                    </div>
-                  );
-                })(), document.body)}
+                      return (
+                        <div
+                          data-sankey-portal
+                          style={{
+                            position: 'fixed',
+                            left: tipLeft,
+                            top: tipTop,
+                            transform: tipTransform,
+                            background: 'var(--card-solid)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-base)',
+                            boxShadow: 'var(--shadow-md)',
+                            padding: '8px 12px',
+                            pointerEvents: 'none',
+                            zIndex: 9999,
+                            minWidth: 120,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: 'var(--text-2xs)',
+                              color: 'var(--tertiary)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {nodeName}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--foreground)',
+                            }}
+                          >
+                            {formatInr(displayAmount)}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--accent)',
+                            }}
+                          >
+                            {pct}% of income
+                          </div>
+                        </div>
+                      );
+                    })(),
+                    document.body,
+                  )}
 
                 {/* Link hover tooltip — portalled, suppressed when that link is clicked */}
-                {hoveredLink !== null && mousePosViewport && hoveredLink !== activeLink?.idx && createPortal((() => {
-                  const link = sankeyData.links[hoveredLink];
-                  if (!link) return null;
-                  const srcName = sankeyData.nodes[link.source]?.name ?? '';
-                  const tgtName = sankeyData.nodes[link.target]?.name ?? '';
-                  return (
-                    <div
-                      data-sankey-portal
-                      style={{
-                        position: 'fixed',
-                        left: mousePosViewport.x,
-                        top: mousePosViewport.y - 10,
-                        transform: 'translateX(-50%) translateY(-100%)',
-                        background: 'var(--card-solid)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-sm)',
-                        boxShadow: 'var(--shadow-sm)',
-                        padding: '4px 10px',
-                        pointerEvents: 'none',
-                        zIndex: 9999,
-                        whiteSpace: 'nowrap',
-                        fontSize: 'var(--text-2xs)',
-                        fontWeight: 'var(--font-weight-semibold)',
-                        color: 'var(--foreground)',
-                      }}
-                    >
-                      {srcName} → {tgtName} · {formatInr(link.value)}
-                    </div>
-                  );
-                })(), document.body)}
+                {hoveredLink !== null &&
+                  mousePosViewport &&
+                  hoveredLink !== activeLink?.idx &&
+                  createPortal(
+                    (() => {
+                      const link = sankeyData.links[hoveredLink];
+                      if (!link) return null;
+                      const srcName = sankeyData.nodes[link.source]?.name ?? '';
+                      const tgtName = sankeyData.nodes[link.target]?.name ?? '';
+                      return (
+                        <div
+                          data-sankey-portal
+                          style={{
+                            position: 'fixed',
+                            left: mousePosViewport.x,
+                            top: mousePosViewport.y - 10,
+                            transform: 'translateX(-50%) translateY(-100%)',
+                            background: 'var(--card-solid)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-sm)',
+                            boxShadow: 'var(--shadow-sm)',
+                            padding: '4px 10px',
+                            pointerEvents: 'none',
+                            zIndex: 9999,
+                            whiteSpace: 'nowrap',
+                            fontSize: 'var(--text-2xs)',
+                            fontWeight: 'var(--font-weight-semibold)',
+                            color: 'var(--foreground)',
+                          }}
+                        >
+                          {srcName} → {tgtName} · {formatInr(link.value)}
+                        </div>
+                      );
+                    })(),
+                    document.body,
+                  )}
 
                 {/* Node click popover — portalled with viewport-clamped fixed positioning */}
-                {activeNode && createPortal((() => {
-                  const nodeName = sankeyData.nodes[activeNode.idx]?.name ?? '';
-                  const kind: NodeKind = (sankeyData.nodes[activeNode.idx] as { kind?: NodeKind })?.kind ?? 'free-cash';
-                  const incomingAmount = sankeyData.links.filter(l => l.target === activeNode.idx).reduce((s, l) => s + l.value, 0);
-                  const outgoingAmount = sankeyData.links.filter(l => l.source === activeNode.idx).reduce((s, l) => s + l.value, 0);
-                  const displayAmount = incomingAmount > 0 ? incomingAmount : outgoingAmount;
-                  const pct = income?.total ? Math.round((displayAmount / income.total) * 100) : 0;
-                  const childLinks = sankeyData.links.filter(l => l.source === activeNode.idx);
+                {activeNode &&
+                  createPortal(
+                    (() => {
+                      const nodeName = sankeyData.nodes[activeNode.idx]?.name ?? '';
+                      const kind: NodeKind =
+                        (sankeyData.nodes[activeNode.idx] as { kind?: NodeKind })?.kind ??
+                        'free-cash';
+                      const incomingAmount = sankeyData.links
+                        .filter((l) => l.target === activeNode.idx)
+                        .reduce((s, l) => s + l.value, 0);
+                      const outgoingAmount = sankeyData.links
+                        .filter((l) => l.source === activeNode.idx)
+                        .reduce((s, l) => s + l.value, 0);
+                      const displayAmount = incomingAmount > 0 ? incomingAmount : outgoingAmount;
+                      const pct = income?.total
+                        ? Math.round((displayAmount / income.total) * 100)
+                        : 0;
+                      const childLinks = sankeyData.links.filter(
+                        (l) => l.source === activeNode.idx,
+                      );
 
-                  const POPOVER_H = 220;
-                  const POPOVER_W = 260;
-                  const isLeftCol = activeNode.x < 20;
+                      const POPOVER_H = 220;
+                      const POPOVER_W = 260;
+                      const isLeftCol = activeNode.x < 20;
 
-                  let popLeft: number, popTop: number, popTransform: string;
-                  if (isLeftCol) {
-                    popLeft = Math.min(
-                      activeNode.vx + activeNode.w / 2 + 16,
-                      window.innerWidth - POPOVER_W - 8,
-                    );
-                    popTop = Math.min(
-                      Math.max(activeNode.vy + activeNode.h / 2 - POPOVER_H / 2, 8),
-                      window.innerHeight - POPOVER_H - 8,
-                    );
-                    popTransform = 'none';
-                  } else {
-                    const nodeBottomVy = activeNode.vy + activeNode.h;
-                    const canFitBelow = window.innerHeight - nodeBottomVy >= POPOVER_H + 12;
-                    popLeft = Math.min(Math.max(activeNode.vx, POPOVER_W / 2 + 8), window.innerWidth - POPOVER_W / 2 - 8);
-                    popTop = canFitBelow ? nodeBottomVy + 12 : activeNode.vy - 12;
-                    popTransform = canFitBelow ? 'translateX(-50%)' : 'translateX(-50%) translateY(-100%)';
-                  }
-
-                  const badgeColors: Record<NodeKind, { bg: string; color: string; label: string }> = {
-                    'income-leaf':  { bg: 'var(--accent-subtle)',           color: 'var(--accent)',               label: 'Income' },
-                    'income-merge': { bg: 'var(--accent-subtle)',           color: 'var(--accent)',               label: 'Income' },
-                    'expense-agg':  { bg: 'var(--amber-subtle)',            color: 'var(--amber-text)',           label: 'Expenses' },
-                    'expense-leaf': { bg: 'var(--amber-subtle)',            color: 'var(--amber-text)',           label: 'Expense' },
-                    'debt-agg':     { bg: 'var(--red-subtle)',              color: 'var(--red-text)',             label: 'Debt' },
-                    'debt-item':    { bg: 'var(--red-subtle)',              color: 'var(--red-text)',             label: 'Debt' },
-                    'goal-agg':     { bg: 'var(--tertiary-accent-subtle)',  color: 'var(--tertiary-accent-text)', label: 'Goals' },
-                    'goal-item':    { bg: 'var(--tertiary-accent-subtle)',  color: 'var(--tertiary-accent-text)', label: 'Goal' },
-                    'surplus':      { bg: 'var(--secondary-accent-subtle)', color: 'var(--secondary-accent)',     label: 'Surplus' },
-                    'disposable':   { bg: 'var(--surface-hover)',           color: 'var(--tertiary)',             label: 'Disposable' },
-                    'free-cash':    { bg: 'var(--green-subtle)',            color: 'var(--green-text)',           label: 'Free Cash' },
-                  };
-                  const badge = badgeColors[kind];
-
-                  const fieldMap: Record<string, Array<{ key: keyof ExpenseProfile; label: string }>> = {
-                    'Housing & Utilities': [{ key: 'rent', label: 'Rent / Housing' }, { key: 'utilities', label: 'Utilities' }],
-                    'Food': [{ key: 'food', label: 'Food & Groceries' }],
-                    'Transport': [{ key: 'transport', label: 'Transport' }],
-                    'Other Expenses': [{ key: 'entertainment', label: 'Entertainment' }, { key: 'other', label: 'Other' }],
-                  };
-
-                  const isAggregate = kind === 'expense-agg' || kind === 'debt-agg' || kind === 'goal-agg' || kind === 'income-merge' || kind === 'disposable';
-                  const isReadonly = kind === 'debt-item' || kind === 'goal-item' || kind === 'surplus' || kind === 'free-cash';
-
-                  // Inline helpers for input parsing
-                  const parseField = (key: string, fallback: number): number => {
-                    const raw = editValues[key] ?? String(fallback);
-                    const v = Number(raw.replace(/,/g, ''));
-                    return isNaN(v) ? 0 : v;
-                  };
-
-                  return (
-                    <motion.div
-                      key={activeNode.idx}
-                      data-sankey-portal
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.12 }}
-                      style={{
-                        position: 'fixed',
-                        left: popLeft,
-                        top: popTop,
-                        transform: popTransform,
-                        background: 'var(--card-solid)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: 'var(--shadow-lg)',
-                        padding: '12px 14px',
-                        zIndex: 9999,
-                        minWidth: 200,
-                        maxWidth: 260,
-                      }}
-                    >
-                      {/* Badge */}
-                      <div style={{ display: 'inline-block', fontSize: 'var(--text-2xs)', fontWeight: 'var(--font-weight-bold)', background: badge.bg, color: badge.color, borderRadius: 'var(--radius-xs)', padding: '2px 6px', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        {badge.label}
-                      </div>
-                      <div style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)', marginBottom: 2 }}>{nodeName}</div>
-                      <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', marginBottom: 10 }}>{pct}% of monthly income</div>
-
-                      {/* Income leaf: numeric-only input with confirmation step */}
-                      {kind === 'income-leaf' && (() => {
-                        const inputVal = editValues[nodeName] ?? String(displayAmount);
-                        const parsed = Number(inputVal.replace(/,/g, ''));
-                        const isValid = !isNaN(parsed) && parsed > 0;
-                        const confirmIncome = pendingConfirm?.type === 'income' && pendingConfirm.nodeName === nodeName ? pendingConfirm : null;
-
-                        if (confirmIncome) {
-                          return (
-                            <>
-                              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--foreground)', marginBottom: 10, lineHeight: 1.5 }}>
-                                Change <strong>{nodeName}</strong> to <strong style={{ color: 'var(--accent)' }}>{formatInr(confirmIncome.newVal)}</strong>?
-                              </div>
-                              <div style={{ display: 'flex', gap: 6 }}>
-                                <button onClick={() => handleSaveIncome(nodeName, confirmIncome.newVal)} style={confirmBtnStyle}>
-                                  Confirm
-                                </button>
-                                <button onClick={() => setPendingConfirm(null)} style={cancelBtnStyle}>
-                                  Cancel
-                                </button>
-                              </div>
-                            </>
-                          );
-                        }
-
-                        return (
-                          <>
-                            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 6 }}>
-                              <input
-                                inputMode="numeric"
-                                style={{ flex: 1, border: `1.5px solid ${isValid ? 'var(--border)' : 'var(--red)'}`, borderRadius: 'var(--radius-sm)', padding: '4px 8px', fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)', background: 'var(--surface-hover)', fontFamily: 'inherit', outline: 'none' }}
-                                value={inputVal}
-                                onChange={e => {
-                                  const clean = e.target.value.replace(/[^0-9]/g, '');
-                                  setEditValues(v => ({ ...v, [nodeName]: clean }));
-                                }}
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter' && isValid) {
-                                    setPendingConfirm({ type: 'income', nodeName, newVal: parsed });
-                                  }
-                                }}
-                              />
-                              <button
-                                disabled={!isValid}
-                                onClick={() => {
-                                  if (isValid) setPendingConfirm({ type: 'income', nodeName, newVal: parsed });
-                                }}
-                                style={{ background: isValid ? 'var(--accent)' : 'var(--surface-tint)', color: isValid ? 'var(--on-accent)' : 'var(--tertiary)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '4px 10px', fontSize: 'var(--text-2xs)', fontWeight: 'var(--font-weight-bold)', cursor: isValid ? 'pointer' : 'not-allowed' }}
-                              >
-                                Save
-                              </button>
-                            </div>
-                            {!isValid && inputVal.length > 0 && (
-                              <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--red-text)', marginBottom: 4 }}>Enter a valid amount greater than 0</div>
-                            )}
-                            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)' }}>Plan recalculates on save</div>
-                          </>
+                      let popLeft: number, popTop: number, popTransform: string;
+                      if (isLeftCol) {
+                        popLeft = Math.min(
+                          activeNode.vx + activeNode.w / 2 + 16,
+                          window.innerWidth - POPOVER_W - 8,
                         );
-                      })()}
+                        popTop = Math.min(
+                          Math.max(activeNode.vy + activeNode.h / 2 - POPOVER_H / 2, 8),
+                          window.innerHeight - POPOVER_H - 8,
+                        );
+                        popTransform = 'none';
+                      } else {
+                        const nodeBottomVy = activeNode.vy + activeNode.h;
+                        const canFitBelow = window.innerHeight - nodeBottomVy >= POPOVER_H + 12;
+                        popLeft = Math.min(
+                          Math.max(activeNode.vx, POPOVER_W / 2 + 8),
+                          window.innerWidth - POPOVER_W / 2 - 8,
+                        );
+                        popTop = canFitBelow ? nodeBottomVy + 12 : activeNode.vy - 12;
+                        popTransform = canFitBelow
+                          ? 'translateX(-50%)'
+                          : 'translateX(-50%) translateY(-100%)';
+                      }
 
-                      {/* Expense leaf: numeric-only inputs with confirmation step */}
-                      {kind === 'expense-leaf' && (() => {
-                        const fields = fieldMap[nodeName] ?? [];
-                        const confirmExpense = pendingConfirm?.type === 'expense' && pendingConfirm.nodeName === nodeName ? pendingConfirm : null;
+                      const badgeColors: Record<
+                        NodeKind,
+                        { bg: string; color: string; label: string }
+                      > = {
+                        'income-leaf': {
+                          bg: 'var(--accent-subtle)',
+                          color: 'var(--accent)',
+                          label: 'Income',
+                        },
+                        'income-merge': {
+                          bg: 'var(--accent-subtle)',
+                          color: 'var(--accent)',
+                          label: 'Income',
+                        },
+                        'expense-agg': {
+                          bg: 'var(--amber-subtle)',
+                          color: 'var(--amber-text)',
+                          label: 'Expenses',
+                        },
+                        'expense-leaf': {
+                          bg: 'var(--amber-subtle)',
+                          color: 'var(--amber-text)',
+                          label: 'Expense',
+                        },
+                        'debt-agg': {
+                          bg: 'var(--red-subtle)',
+                          color: 'var(--red-text)',
+                          label: 'Debt',
+                        },
+                        'debt-item': {
+                          bg: 'var(--red-subtle)',
+                          color: 'var(--red-text)',
+                          label: 'Debt',
+                        },
+                        'goal-agg': {
+                          bg: 'var(--tertiary-accent-subtle)',
+                          color: 'var(--tertiary-accent-text)',
+                          label: 'Goals',
+                        },
+                        'goal-item': {
+                          bg: 'var(--tertiary-accent-subtle)',
+                          color: 'var(--tertiary-accent-text)',
+                          label: 'Goal',
+                        },
+                        surplus: {
+                          bg: 'var(--secondary-accent-subtle)',
+                          color: 'var(--secondary-accent)',
+                          label: 'Surplus',
+                        },
+                        disposable: {
+                          bg: 'var(--surface-hover)',
+                          color: 'var(--tertiary)',
+                          label: 'Disposable',
+                        },
+                        'free-cash': {
+                          bg: 'var(--green-subtle)',
+                          color: 'var(--green-text)',
+                          label: 'Free Cash',
+                        },
+                      };
+                      const badge = badgeColors[kind];
 
-                        if (confirmExpense) {
-                          return (
-                            <>
-                              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--foreground)', marginBottom: 10, lineHeight: 1.5 }}>
-                                Update <strong>{nodeName}</strong> to <strong style={{ color: 'var(--amber-text)' }}>{formatInr(confirmExpense.displayTotal)}</strong>?
-                              </div>
-                              <div style={{ display: 'flex', gap: 6 }}>
-                                <button
-                                  onClick={() => handleSaveExpenses(nodeName, confirmExpense.partial)}
-                                  style={{ ...confirmBtnStyle, background: 'var(--amber)', color: 'var(--on-accent)' }}
-                                >
-                                  Confirm
-                                </button>
-                                <button onClick={() => setPendingConfirm(null)} style={cancelBtnStyle}>
-                                  Cancel
-                                </button>
-                              </div>
-                            </>
-                          );
-                        }
+                      const fieldMap: Record<
+                        string,
+                        Array<{ key: keyof ExpenseProfile; label: string }>
+                      > = {
+                        'Housing & Utilities': [
+                          { key: 'rent', label: 'Rent / Housing' },
+                          { key: 'utilities', label: 'Utilities' },
+                        ],
+                        Food: [{ key: 'food', label: 'Food & Groceries' }],
+                        Transport: [{ key: 'transport', label: 'Transport' }],
+                        'Other Expenses': [
+                          { key: 'entertainment', label: 'Entertainment' },
+                          { key: 'other', label: 'Other' },
+                        ],
+                      };
 
-                        const allParsed = fields.map(f => ({
-                          key: f.key,
-                          val: parseField(String(f.key), (expenses as unknown as Record<string, number>)[String(f.key)] ?? 0),
-                        }));
-                        const allValid = allParsed.every(({ val }) => !isNaN(val) && val >= 0);
+                      const isAggregate =
+                        kind === 'expense-agg' ||
+                        kind === 'debt-agg' ||
+                        kind === 'goal-agg' ||
+                        kind === 'income-merge' ||
+                        kind === 'disposable';
+                      const isReadonly =
+                        kind === 'debt-item' ||
+                        kind === 'goal-item' ||
+                        kind === 'surplus' ||
+                        kind === 'free-cash';
 
-                        return (
-                          <>
-                            {fields.map((f, fi) => {
-                              const currentVal = (expenses as unknown as Record<string, number>)[String(f.key)] ?? 0;
-                              const fieldKey = String(f.key);
-                              const fieldInput = editValues[fieldKey] ?? String(currentVal);
-                              const fieldParsed = Number(fieldInput.replace(/,/g, ''));
-                              const fieldValid = !isNaN(fieldParsed) && fieldParsed >= 0;
-                              return (
-                                <div key={fieldKey} style={{ marginBottom: 6 }}>
-                                  <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', marginBottom: 2 }}>{f.label}</div>
-                                  <input
-                                    inputMode="numeric"
-                                    style={{ width: '100%', border: `1.5px solid ${fieldValid ? 'var(--border)' : 'var(--red)'}`, borderRadius: 'var(--radius-sm)', padding: '4px 8px', fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)', background: 'var(--surface-hover)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
-                                    value={fieldInput}
-                                    onChange={e => {
-                                      const clean = e.target.value.replace(/[^0-9]/g, '');
-                                      setEditValues(v => ({ ...v, [fieldKey]: clean }));
-                                    }}
-                                    onKeyDown={e => {
-                                      if (e.key === 'Enter' && fi === fields.length - 1 && allValid) {
-                                        const partial: Partial<ExpenseProfile> = {};
-                                        let total = 0;
-                                        for (const p of allParsed) {
-                                          (partial as Record<string, number>)[String(p.key)] = p.val;
-                                          total += p.val;
+                      // Inline helpers for input parsing
+                      const parseField = (key: string, fallback: number): number => {
+                        const raw = editValues[key] ?? String(fallback);
+                        const v = Number(raw.replace(/,/g, ''));
+                        return isNaN(v) ? 0 : v;
+                      };
+
+                      return (
+                        <motion.div
+                          key={activeNode.idx}
+                          data-sankey-portal
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.12 }}
+                          style={{
+                            position: 'fixed',
+                            left: popLeft,
+                            top: popTop,
+                            transform: popTransform,
+                            background: 'var(--card-solid)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-md)',
+                            boxShadow: 'var(--shadow-lg)',
+                            padding: '12px 14px',
+                            zIndex: 9999,
+                            minWidth: 200,
+                            maxWidth: 260,
+                          }}
+                        >
+                          {/* Badge */}
+                          <div
+                            style={{
+                              display: 'inline-block',
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              background: badge.bg,
+                              color: badge.color,
+                              borderRadius: 'var(--radius-xs)',
+                              padding: '2px 6px',
+                              marginBottom: 6,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {badge.label}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--foreground)',
+                              marginBottom: 2,
+                            }}
+                          >
+                            {nodeName}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-2xs)',
+                              color: 'var(--tertiary)',
+                              marginBottom: 10,
+                            }}
+                          >
+                            {pct}% of monthly income
+                          </div>
+
+                          {/* Income leaf: numeric-only input with confirmation step */}
+                          {kind === 'income-leaf' &&
+                            (() => {
+                              const inputVal = editValues[nodeName] ?? String(displayAmount);
+                              const parsed = Number(inputVal.replace(/,/g, ''));
+                              const isValid = !isNaN(parsed) && parsed > 0;
+                              const confirmIncome =
+                                pendingConfirm?.type === 'income' &&
+                                pendingConfirm.nodeName === nodeName
+                                  ? pendingConfirm
+                                  : null;
+
+                              if (confirmIncome) {
+                                return (
+                                  <>
+                                    <div
+                                      style={{
+                                        fontSize: 'var(--text-xs)',
+                                        color: 'var(--foreground)',
+                                        marginBottom: 10,
+                                        lineHeight: 1.5,
+                                      }}
+                                    >
+                                      Change <strong>{nodeName}</strong> to{' '}
+                                      <strong style={{ color: 'var(--accent)' }}>
+                                        {formatInr(confirmIncome.newVal)}
+                                      </strong>
+                                      ?
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 6 }}>
+                                      <button
+                                        onClick={() =>
+                                          handleSaveIncome(nodeName, confirmIncome.newVal)
                                         }
-                                        setPendingConfirm({ type: 'expense', nodeName, partial, displayTotal: total });
-                                      }
+                                        style={confirmBtnStyle}
+                                      >
+                                        Confirm
+                                      </button>
+                                      <button
+                                        onClick={() => setPendingConfirm(null)}
+                                        style={cancelBtnStyle}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </>
+                                );
+                              }
+
+                              return (
+                                <>
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      gap: 6,
+                                      alignItems: 'center',
+                                      marginBottom: 6,
                                     }}
-                                  />
-                                  {!fieldValid && fieldInput.length > 0 && (
-                                    <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--red-text)', marginTop: 2 }}>Numbers only</div>
+                                  >
+                                    <input
+                                      inputMode="numeric"
+                                      style={{
+                                        flex: 1,
+                                        border: `1.5px solid ${isValid ? 'var(--border)' : 'var(--red)'}`,
+                                        borderRadius: 'var(--radius-sm)',
+                                        padding: '4px 8px',
+                                        fontSize: 'var(--text-xs)',
+                                        fontWeight: 'var(--font-weight-bold)',
+                                        color: 'var(--foreground)',
+                                        background: 'var(--surface-hover)',
+                                        fontFamily: 'inherit',
+                                        outline: 'none',
+                                      }}
+                                      value={inputVal}
+                                      onChange={(e) => {
+                                        const clean = e.target.value.replace(/[^0-9]/g, '');
+                                        setEditValues((v) => ({ ...v, [nodeName]: clean }));
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && isValid) {
+                                          setPendingConfirm({
+                                            type: 'income',
+                                            nodeName,
+                                            newVal: parsed,
+                                          });
+                                        }
+                                      }}
+                                    />
+                                    <button
+                                      disabled={!isValid}
+                                      onClick={() => {
+                                        if (isValid)
+                                          setPendingConfirm({
+                                            type: 'income',
+                                            nodeName,
+                                            newVal: parsed,
+                                          });
+                                      }}
+                                      style={{
+                                        background: isValid
+                                          ? 'var(--accent)'
+                                          : 'var(--surface-tint)',
+                                        color: isValid ? 'var(--on-accent)' : 'var(--tertiary)',
+                                        border: 'none',
+                                        borderRadius: 'var(--radius-sm)',
+                                        padding: '4px 10px',
+                                        fontSize: 'var(--text-2xs)',
+                                        fontWeight: 'var(--font-weight-bold)',
+                                        cursor: isValid ? 'pointer' : 'not-allowed',
+                                      }}
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                  {!isValid && inputVal.length > 0 && (
+                                    <div
+                                      style={{
+                                        fontSize: 'var(--text-2xs)',
+                                        color: 'var(--red-text)',
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      Enter a valid amount greater than 0
+                                    </div>
                                   )}
-                                </div>
+                                  <div
+                                    style={{
+                                      fontSize: 'var(--text-2xs)',
+                                      color: 'var(--tertiary)',
+                                    }}
+                                  >
+                                    Plan recalculates on save
+                                  </div>
+                                </>
                               );
-                            })}
-                            <button
-                              disabled={!allValid}
-                              onClick={() => {
-                                if (!allValid) return;
-                                const partial: Partial<ExpenseProfile> = {};
-                                let total = 0;
-                                for (const p of allParsed) {
-                                  (partial as Record<string, number>)[String(p.key)] = p.val;
-                                  total += p.val;
-                                }
-                                setPendingConfirm({ type: 'expense', nodeName, partial, displayTotal: total });
-                              }}
-                              style={{ width: '100%', background: allValid ? 'var(--amber)' : 'var(--surface-tint)', color: allValid ? 'var(--on-accent)' : 'var(--tertiary)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '5px', fontSize: 'var(--text-2xs)', fontWeight: 'var(--font-weight-bold)', cursor: allValid ? 'pointer' : 'not-allowed', marginBottom: 4 }}
-                            >
-                              Save
-                            </button>
-                            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)' }}>Plan recalculates on save</div>
-                          </>
-                        );
-                      })()}
+                            })()}
 
-                      {/* Aggregate: child breakdown list */}
-                      {isAggregate && (
-                        <>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
-                            {childLinks.map(l => (
-                              <div key={l.target} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-2xs)', color: 'var(--secondary)' }}>
-                                <span>{sankeyData.nodes[l.target]?.name}</span>
-                                <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>{formatInr(l.value)}</span>
+                          {/* Expense leaf: numeric-only inputs with confirmation step */}
+                          {kind === 'expense-leaf' &&
+                            (() => {
+                              const fields = fieldMap[nodeName] ?? [];
+                              const confirmExpense =
+                                pendingConfirm?.type === 'expense' &&
+                                pendingConfirm.nodeName === nodeName
+                                  ? pendingConfirm
+                                  : null;
+
+                              if (confirmExpense) {
+                                return (
+                                  <>
+                                    <div
+                                      style={{
+                                        fontSize: 'var(--text-xs)',
+                                        color: 'var(--foreground)',
+                                        marginBottom: 10,
+                                        lineHeight: 1.5,
+                                      }}
+                                    >
+                                      Update <strong>{nodeName}</strong> to{' '}
+                                      <strong style={{ color: 'var(--amber-text)' }}>
+                                        {formatInr(confirmExpense.displayTotal)}
+                                      </strong>
+                                      ?
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 6 }}>
+                                      <button
+                                        onClick={() =>
+                                          handleSaveExpenses(nodeName, confirmExpense.partial)
+                                        }
+                                        style={{
+                                          ...confirmBtnStyle,
+                                          background: 'var(--amber)',
+                                          color: 'var(--on-accent)',
+                                        }}
+                                      >
+                                        Confirm
+                                      </button>
+                                      <button
+                                        onClick={() => setPendingConfirm(null)}
+                                        style={cancelBtnStyle}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </>
+                                );
+                              }
+
+                              const allParsed = fields.map((f) => ({
+                                key: f.key,
+                                val: parseField(
+                                  String(f.key),
+                                  (expenses as unknown as Record<string, number>)[String(f.key)] ??
+                                    0,
+                                ),
+                              }));
+                              const allValid = allParsed.every(
+                                ({ val }) => !isNaN(val) && val >= 0,
+                              );
+
+                              return (
+                                <>
+                                  {fields.map((f, fi) => {
+                                    const currentVal =
+                                      (expenses as unknown as Record<string, number>)[
+                                        String(f.key)
+                                      ] ?? 0;
+                                    const fieldKey = String(f.key);
+                                    const fieldInput = editValues[fieldKey] ?? String(currentVal);
+                                    const fieldParsed = Number(fieldInput.replace(/,/g, ''));
+                                    const fieldValid = !isNaN(fieldParsed) && fieldParsed >= 0;
+                                    return (
+                                      <label
+                                        key={fieldKey}
+                                        style={{ display: 'block', marginBottom: 6 }}
+                                      >
+                                        <div
+                                          style={{
+                                            fontSize: 'var(--text-2xs)',
+                                            color: 'var(--tertiary)',
+                                            marginBottom: 2,
+                                          }}
+                                        >
+                                          {f.label}
+                                        </div>
+                                        <input
+                                          inputMode="numeric"
+                                          style={{
+                                            width: '100%',
+                                            border: `1.5px solid ${fieldValid ? 'var(--border)' : 'var(--red)'}`,
+                                            borderRadius: 'var(--radius-sm)',
+                                            padding: '4px 8px',
+                                            fontSize: 'var(--text-xs)',
+                                            fontWeight: 'var(--font-weight-bold)',
+                                            color: 'var(--foreground)',
+                                            background: 'var(--surface-hover)',
+                                            fontFamily: 'inherit',
+                                            outline: 'none',
+                                            boxSizing: 'border-box',
+                                          }}
+                                          value={fieldInput}
+                                          onChange={(e) => {
+                                            const clean = e.target.value.replace(/[^0-9]/g, '');
+                                            setEditValues((v) => ({ ...v, [fieldKey]: clean }));
+                                          }}
+                                          onKeyDown={(e) => {
+                                            if (
+                                              e.key === 'Enter' &&
+                                              fi === fields.length - 1 &&
+                                              allValid
+                                            ) {
+                                              const partial: Partial<ExpenseProfile> = {};
+                                              let total = 0;
+                                              for (const p of allParsed) {
+                                                (partial as Record<string, number>)[String(p.key)] =
+                                                  p.val;
+                                                total += p.val;
+                                              }
+                                              setPendingConfirm({
+                                                type: 'expense',
+                                                nodeName,
+                                                partial,
+                                                displayTotal: total,
+                                              });
+                                            }
+                                          }}
+                                        />
+                                        {!fieldValid && fieldInput.length > 0 && (
+                                          <div
+                                            style={{
+                                              fontSize: 'var(--text-2xs)',
+                                              color: 'var(--red-text)',
+                                              marginTop: 2,
+                                            }}
+                                          >
+                                            Numbers only
+                                          </div>
+                                        )}
+                                      </label>
+                                    );
+                                  })}
+                                  <button
+                                    disabled={!allValid}
+                                    onClick={() => {
+                                      if (!allValid) return;
+                                      const partial: Partial<ExpenseProfile> = {};
+                                      let total = 0;
+                                      for (const p of allParsed) {
+                                        (partial as Record<string, number>)[String(p.key)] = p.val;
+                                        total += p.val;
+                                      }
+                                      setPendingConfirm({
+                                        type: 'expense',
+                                        nodeName,
+                                        partial,
+                                        displayTotal: total,
+                                      });
+                                    }}
+                                    style={{
+                                      width: '100%',
+                                      background: allValid ? 'var(--amber)' : 'var(--surface-tint)',
+                                      color: allValid ? 'var(--on-accent)' : 'var(--tertiary)',
+                                      border: 'none',
+                                      borderRadius: 'var(--radius-sm)',
+                                      padding: '5px',
+                                      fontSize: 'var(--text-2xs)',
+                                      fontWeight: 'var(--font-weight-bold)',
+                                      cursor: allValid ? 'pointer' : 'not-allowed',
+                                      marginBottom: 4,
+                                    }}
+                                  >
+                                    Save
+                                  </button>
+                                  <div
+                                    style={{
+                                      fontSize: 'var(--text-2xs)',
+                                      color: 'var(--tertiary)',
+                                    }}
+                                  >
+                                    Plan recalculates on save
+                                  </div>
+                                </>
+                              );
+                            })()}
+
+                          {/* Aggregate: child breakdown list */}
+                          {isAggregate && (
+                            <>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: 4,
+                                  marginBottom: 8,
+                                }}
+                              >
+                                {childLinks.map((l) => (
+                                  <div
+                                    key={l.target}
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      fontSize: 'var(--text-2xs)',
+                                      color: 'var(--secondary)',
+                                    }}
+                                  >
+                                    <span>{sankeyData.nodes[l.target]?.name}</span>
+                                    <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>
+                                      {formatInr(l.value)}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                          <div style={{ borderTop: '1px solid var(--border)', paddingTop: 6, display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)' }}>
-                            <span>Total</span>
-                            <span>{formatInr(displayAmount)}</span>
-                          </div>
-                          {childLinks.length > 0 && kind === 'expense-agg' && (
-                            <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', marginTop: 6 }}>Click a sub-node to edit amounts</div>
+                              <div
+                                style={{
+                                  borderTop: '1px solid var(--border)',
+                                  paddingTop: 6,
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  fontSize: 'var(--text-xs)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--foreground)',
+                                }}
+                              >
+                                <span>Total</span>
+                                <span>{formatInr(displayAmount)}</span>
+                              </div>
+                              {childLinks.length > 0 && kind === 'expense-agg' && (
+                                <div
+                                  style={{
+                                    fontSize: 'var(--text-2xs)',
+                                    color: 'var(--tertiary)',
+                                    marginTop: 6,
+                                  }}
+                                >
+                                  Click a sub-node to edit amounts
+                                </div>
+                              )}
+                            </>
                           )}
-                        </>
-                      )}
 
-                      {/* Read-only nodes */}
-                      {isReadonly && (
-                        <>
-                          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)', marginBottom: 4 }}>{formatInr(displayAmount)}</div>
-                          <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)' }}>
-                            {kind === 'debt-item' && 'Manage debt on the Debt screen →'}
-                            {kind === 'goal-item' && 'Manage goals on the Journey screen →'}
-                            {kind === 'surplus' && 'Adjust in Settings → Surplus Reserve'}
-                            {kind === 'free-cash' && 'Disposable income after all allocations'}
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  );
-                })(), document.body)}
+                          {/* Read-only nodes */}
+                          {isReadonly && (
+                            <>
+                              <div
+                                style={{
+                                  fontSize: 'var(--text-sm)',
+                                  fontWeight: 'var(--font-weight-bold)',
+                                  color: 'var(--foreground)',
+                                  marginBottom: 4,
+                                }}
+                              >
+                                {formatInr(displayAmount)}
+                              </div>
+                              <div
+                                style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)' }}
+                              >
+                                {kind === 'debt-item' && 'Manage debt on the Debt screen →'}
+                                {kind === 'goal-item' && 'Manage goals on the Journey screen →'}
+                                {kind === 'surplus' && 'Adjust in Settings → Surplus Reserve'}
+                                {kind === 'free-cash' && 'Disposable income after all allocations'}
+                              </div>
+                            </>
+                          )}
+                        </motion.div>
+                      );
+                    })(),
+                    document.body,
+                  )}
 
                 {/* Link click popover — portalled at viewport cursor position */}
-                {activeLink && createPortal((() => {
-                  const link = sankeyData.links[activeLink.idx];
-                  if (!link) return null;
-                  const srcName = sankeyData.nodes[link.source]?.name ?? '';
-                  const tgtName = sankeyData.nodes[link.target]?.name ?? '';
-                  const pct = income?.total ? Math.round((link.value / income.total) * 100) : 0;
-                  return (
-                    <motion.div
-                      key={activeLink.idx}
-                      data-sankey-portal
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.12 }}
-                      style={{
-                        position: 'fixed',
-                        left: activeLink.x,
-                        top: activeLink.y - 10,
-                        transform: 'translateX(-50%) translateY(-100%)',
-                        background: 'var(--card-solid)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: 'var(--shadow-lg)',
-                        padding: '10px 14px',
-                        zIndex: 9999,
-                        minWidth: 160,
-                        maxWidth: 200,
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', fontWeight: 'var(--font-weight-semibold)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{srcName} → {tgtName}</div>
-                      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--foreground)', marginBottom: 2 }}>{formatInr(link.value)}</div>
-                      <div style={{ fontSize: 'var(--text-2xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--accent)' }}>{pct}% of income</div>
-                    </motion.div>
-                  );
-                })(), document.body)}
+                {activeLink &&
+                  createPortal(
+                    (() => {
+                      const link = sankeyData.links[activeLink.idx];
+                      if (!link) return null;
+                      const srcName = sankeyData.nodes[link.source]?.name ?? '';
+                      const tgtName = sankeyData.nodes[link.target]?.name ?? '';
+                      const pct = income?.total ? Math.round((link.value / income.total) * 100) : 0;
+                      return (
+                        <motion.div
+                          key={activeLink.idx}
+                          data-sankey-portal
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.12 }}
+                          style={{
+                            position: 'fixed',
+                            left: activeLink.x,
+                            top: activeLink.y - 10,
+                            transform: 'translateX(-50%) translateY(-100%)',
+                            background: 'var(--card-solid)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-md)',
+                            boxShadow: 'var(--shadow-lg)',
+                            padding: '10px 14px',
+                            zIndex: 9999,
+                            minWidth: 160,
+                            maxWidth: 200,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: 'var(--text-2xs)',
+                              color: 'var(--tertiary)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              marginBottom: 6,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {srcName} → {tgtName}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: 'var(--font-weight-bold)',
+                              color: 'var(--foreground)',
+                              marginBottom: 2,
+                            }}
+                          >
+                            {formatInr(link.value)}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-2xs)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--accent)',
+                            }}
+                          >
+                            {pct}% of income
+                          </div>
+                        </motion.div>
+                      );
+                    })(),
+                    document.body,
+                  )}
               </div>
             </div>
           ) : (
@@ -793,25 +1283,32 @@ export default function Cashflow() {
           {totalIncome > 0 && (
             <div className="mt-4 pt-4 border-t border-[var(--border)] flex flex-col gap-2">
               <p className="text-xs text-[var(--card-foreground)]">
-                <strong>Essential Expenses</strong> {formatInr(totalExpensesDeduped)} ({Math.round((totalExpensesDeduped / totalIncome) * 100)}% of income): Housing, Food, Transport, Other
+                <strong>Essential Expenses</strong> {formatInr(totalExpensesDeduped)} (
+                {Math.round((totalExpensesDeduped / totalIncome) * 100)}% of income): Housing, Food,
+                Transport, Other
               </p>
               {debtPayments > 0 && (
                 <p className="text-xs text-[var(--card-foreground)]">
-                  <strong>Debt</strong> {formatInr(debtPayments)} ({Math.round((debtPayments / totalIncome) * 100)}% of income): Debt Payments
+                  <strong>Debt</strong> {formatInr(debtPayments)} (
+                  {Math.round((debtPayments / totalIncome) * 100)}% of income): Debt Payments
                 </p>
               )}
               {goalAllocationsTotal > 0 && (
                 <p className="text-xs text-[var(--card-foreground)]">
-                  <strong>Goals</strong> {formatInr(goalAllocationsTotal)} ({Math.round((goalAllocationsTotal / totalIncome) * 100)}% of income): Goal Allocations
+                  <strong>Goals</strong> {formatInr(goalAllocationsTotal)} (
+                  {Math.round((goalAllocationsTotal / totalIncome) * 100)}% of income): Goal
+                  Allocations
                 </p>
               )}
               {surplusReserve > 0 && (
                 <p className="text-xs text-[var(--card-foreground)]">
-                  <strong>Surplus Reserve</strong> {formatInr(surplusReserve)} ({Math.round((surplusReserve / totalIncome) * 100)}% of income)
+                  <strong>Surplus Reserve</strong> {formatInr(surplusReserve)} (
+                  {Math.round((surplusReserve / totalIncome) * 100)}% of income)
                 </p>
               )}
               <p className="text-xs text-[var(--card-foreground)]">
-                <strong>Disposable</strong> {formatInr(disposable)} ({Math.round((disposable / totalIncome) * 100)}% of income): Unallocated free cash
+                <strong>Disposable</strong> {formatInr(disposable)} (
+                {Math.round((disposable / totalIncome) * 100)}% of income): Unallocated free cash
               </p>
             </div>
           )}
@@ -819,16 +1316,16 @@ export default function Cashflow() {
 
         {activeGoals.length > 0 && (
           <div className="bento-card">
-            <h3 className="text-heading slashed-zero text-[var(--card-foreground)] mb-4">Goal Allocations</h3>
+            <h3 className="text-heading slashed-zero text-[var(--card-foreground)] mb-4">
+              Goal Allocations
+            </h3>
             <div className="flex flex-col gap-2">
-              {activeGoals.map(g => (
+              {activeGoals.map((g) => (
                 <div
                   key={g.id}
                   className="flex items-center gap-4 p-2 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)]"
                 >
-                  <p className="text-xs font-semibold flex-1 min-w-0 truncate">
-                    {g.name}
-                  </p>
+                  <p className="text-xs font-semibold flex-1 min-w-0 truncate">{g.name}</p>
 
                   <div className="flex-[2] flex flex-col">
                     <div className="h-2 rounded-full bg-[var(--surface-tint)] overflow-hidden">
@@ -841,10 +1338,15 @@ export default function Cashflow() {
 
                   <div className="text-right min-w-20">
                     <p className="font-display text-xs font-bold leading-none slashed-zero">
-                      {formatInr(g.alloc)}<span className="font-body font-normal text-[var(--text-2xs)] text-[var(--neutral-400)]">/mo</span>
+                      {formatInr(g.alloc)}
+                      <span className="font-body font-normal text-[var(--text-2xs)] text-[var(--neutral-400)]">
+                        /mo
+                      </span>
                     </p>
                     {g.completionDate && (
-                      <p className="text-[var(--text-2xs)] text-[var(--neutral-400)] mt-0.5">{g.completionDate}</p>
+                      <p className="text-[var(--text-2xs)] text-[var(--neutral-400)] mt-0.5">
+                        {g.completionDate}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -859,17 +1361,25 @@ export default function Cashflow() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--penny-accent-subtle)] text-[var(--penny-accent)]">
               <Sparkles size={18} className="icon-wireframe" />
             </div>
-            <h3 className="text-heading slashed-zero text-[var(--card-foreground)]">Penny's Insight</h3>
+            <h3 className="text-heading slashed-zero text-[var(--card-foreground)]">
+              Penny's Insight
+            </h3>
           </div>
           {dti > 40 && (
             <div className="relative z-10 flex items-start gap-3 p-3 rounded-md text-sm bg-[var(--surface-hover)] border border-[var(--red)] text-[var(--red-text)]">
               <AlertTriangle size={18} className="icon-wireframe flex-shrink-0 mt-0.5" />
-              <span>High debt burden: DTI ratio is {dti}%. Consider reducing discretionary spending and prioritising high-interest debt payoff.</span>
+              <span>
+                High debt burden: DTI ratio is {dti}%. Consider reducing discretionary spending and
+                prioritising high-interest debt payoff.
+              </span>
             </div>
           )}
           <ul role="list" className="relative z-10 flex flex-col gap-3 list-none p-0 m-0">
             {cashflowInsights.map((tip, i) => (
-              <li key={i} className="flex items-start gap-3 p-3 rounded-md text-sm bg-[var(--surface-hover)] border border-[var(--border)] font-body text-[var(--card-foreground)]">
+              <li
+                key={i}
+                className="flex items-start gap-3 p-3 rounded-md text-sm bg-[var(--surface-hover)] border border-[var(--border)] font-body text-[var(--card-foreground)]"
+              >
                 <span className="text-[var(--penny-accent)] mt-0.5 font-bold">{i + 1}.</span>
                 <span>{tip}</span>
               </li>
@@ -893,7 +1403,7 @@ export default function Cashflow() {
           }}
         >
           <AnimatePresence>
-            {toasts.map(t => (
+            {toasts.map((t) => (
               <motion.div
                 key={t.id}
                 initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -916,13 +1426,21 @@ export default function Cashflow() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                <span style={{ color: 'var(--green)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--text-sm)' }}>✓</span>
+                <span
+                  style={{
+                    color: 'var(--green)',
+                    fontWeight: 'var(--font-weight-bold)',
+                    fontSize: 'var(--text-sm)',
+                  }}
+                >
+                  ✓
+                </span>
                 {t.message}
               </motion.div>
             ))}
           </AnimatePresence>
         </div>,
-        document.body
+        document.body,
       )}
     </motion.div>
   );

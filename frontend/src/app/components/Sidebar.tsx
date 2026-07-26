@@ -145,13 +145,14 @@ export default function Sidebar({ onPennyClick, mobileMenuOpen, setMobileMenuOpe
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="md:hidden"
+            aria-label="Close menu"
             style={{
               position: 'absolute',
               right: 12,
               top: '50%',
               transform: 'translateY(-50%)',
-              width: 24,
-              height: 24,
+              width: 44,
+              height: 44,
               borderRadius: 'var(--radius-base)',
               alignItems: 'center',
               justifyContent: 'center',

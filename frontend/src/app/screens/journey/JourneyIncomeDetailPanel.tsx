@@ -1,5 +1,5 @@
-import { X, Wallet, TrendingUp } from "lucide-react";
-import type { IncomeProfile } from "@/lib/types";
+import { X, Wallet, TrendingUp } from 'lucide-react';
+import type { IncomeProfile } from '@/lib/types';
 
 interface JourneyIncomeDetailPanelProps {
   income: IncomeProfile;
@@ -15,11 +15,11 @@ export default function JourneyIncomeDetailPanel({
   if (!income) return null;
 
   const activeSources = [
-    { label: "Primary", value: income.primary || 0 },
-    { label: "Secondary", value: income.secondary || 0 },
-    { label: "Passive", value: income.passive || 0 },
+    { label: 'Primary', value: income.primary || 0 },
+    { label: 'Secondary', value: income.secondary || 0 },
+    { label: 'Passive', value: income.passive || 0 },
     {
-      label: income.variablePercent > 0 ? `Variable (${income.variablePercent}%)` : "Variable",
+      label: income.variablePercent > 0 ? `Variable (${income.variablePercent}%)` : 'Variable',
       value: income.variable || 0,
     },
   ].filter((s) => s.value > 0);
@@ -40,7 +40,8 @@ export default function JourneyIncomeDetailPanel({
         </h3>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--card-foreground)] transition-colors"
+          className="w-11 h-11 rounded-full flex items-center justify-center text-[var(--secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--card-foreground)] transition-colors"
+          aria-label="Close"
         >
           <X size={18} />
         </button>
@@ -51,9 +52,9 @@ export default function JourneyIncomeDetailPanel({
         <div
           className="w-24 h-24 rounded-full flex items-center justify-center mb-5"
           style={{
-            background: "color-mix(in srgb, var(--accent) 15%, transparent)",
-            color: "var(--accent)",
-            boxShadow: "0 0 30px color-mix(in srgb, var(--accent) 30%, transparent)",
+            background: 'color-mix(in srgb, var(--accent) 15%, transparent)',
+            color: 'var(--accent)',
+            boxShadow: '0 0 30px color-mix(in srgb, var(--accent) 30%, transparent)',
           }}
         >
           <Wallet size={40} className="icon-wireframe" strokeWidth={1.5} />
@@ -63,7 +64,7 @@ export default function JourneyIncomeDetailPanel({
         </div>
         <div
           className="text-4xl font-extrabold slashed-zero tracking-tight font-display-family"
-          style={{ color: "var(--accent)" }}
+          style={{ color: 'var(--accent)' }}
         >
           {formatCurrency(total)}
         </div>
@@ -92,27 +93,50 @@ export default function JourneyIncomeDetailPanel({
       {activeSources.length > 1 && (
         <div className="p-4 rounded-2xl stat-card">
           <div className="text-xs font-medium mb-4 text-[var(--secondary)]">Income Breakdown</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {activeSources.map((s) => {
               const pct = total > 0 ? Math.round((s.value / total) * 100) : 0;
               return (
                 <div key={s.label}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontSize: "var(--text-2xs)", color: "var(--secondary)", fontWeight: "var(--font-weight-semibold)" }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--secondary)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                      }}
+                    >
                       {s.label}
                     </span>
-                    <span style={{ fontSize: "var(--text-2xs)", color: "var(--card-foreground)", fontWeight: "var(--font-weight-semibold)" }} className="slashed-zero">
-                      {formatCurrency(s.value)} <span style={{ color: "var(--secondary)" }}>({pct}%)</span>
+                    <span
+                      style={{
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--card-foreground)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                      }}
+                      className="slashed-zero"
+                    >
+                      {formatCurrency(s.value)}{' '}
+                      <span style={{ color: 'var(--secondary)' }}>({pct}%)</span>
                     </span>
                   </div>
-                  <div style={{ height: 6, borderRadius: "var(--radius-full)", background: "var(--progress-inactive)", overflow: "hidden" }}>
+                  <div
+                    style={{
+                      height: 6,
+                      borderRadius: 'var(--radius-full)',
+                      background: 'var(--progress-inactive)',
+                      overflow: 'hidden',
+                    }}
+                  >
                     <div
                       style={{
-                        height: "100%",
+                        height: '100%',
                         width: `${pct}%`,
-                        background: "var(--accent)",
-                        borderRadius: "var(--radius-full)",
-                        transition: "width 0.4s ease",
+                        background: 'var(--accent)',
+                        borderRadius: 'var(--radius-full)',
+                        transition: 'width 0.4s ease',
                       }}
                     />
                   </div>
@@ -123,7 +147,10 @@ export default function JourneyIncomeDetailPanel({
         </div>
       )}
 
-      <div className="text-center pt-2" style={{ fontSize: "var(--text-2xs)", color: "var(--secondary)" }}>
+      <div
+        className="text-center pt-2"
+        style={{ fontSize: 'var(--text-2xs)', color: 'var(--secondary)' }}
+      >
         Edit income in Settings or via onboarding.
       </div>
     </div>

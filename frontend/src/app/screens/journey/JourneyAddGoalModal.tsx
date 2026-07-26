@@ -59,7 +59,8 @@ export default function JourneyAddGoalModal({
           </h3>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--card-foreground)] hover:bg-[var(--surface-hover)]"
+            className="w-11 h-11 rounded-lg flex items-center justify-center text-[var(--card-foreground)] hover:bg-[var(--surface-hover)]"
+            aria-label="Close"
           >
             <X size={18} />
           </button>
