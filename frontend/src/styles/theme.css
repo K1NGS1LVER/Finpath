@@ -535,6 +535,47 @@
 }
 
 /* ═══════════════════════════════════════════════
+   REDUCED MOTION
+   Global fallback for every pure-CSS animation/transition in this file.
+   React/motion-driven effects already gate themselves via
+   useReducedMotion()/useMotionDuration(); this covers the rest.
+═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* .skeleton (shimmer) and .dot (dotBounce) communicate an in-progress
+     loading/typing state. Letting the blanket rule above collapse them to a
+     single frozen keyframe would either look identical to their resting
+     state (fine) or land on a dim, oddly-scaled frame (looks broken/stuck).
+     Pausing mid-cycle instead keeps a static "still working" look without
+     any motion. !important is required here because the un-scoped
+     `.skeleton`/`.dot` rules that set the `animation` shorthand appear later
+     in this file and would otherwise win the cascade and reset
+     animation-play-state back to `running`. */
+  .skeleton,
+  .dot {
+    animation-play-state: paused !important;
+  }
+
+  /* .node-float (JourneyGoalNode.tsx) already gates via useReducedMotion()
+     in JS, setting an inline `animationPlayState: paused` when the user
+     prefers reduced motion. That inline style controls a different
+     property than the blanket rule above (play-state vs. duration /
+     iteration-count), so there's no conflict - the JS pause takes effect,
+     and the duration/iteration overrides here are simply moot for it.
+     Intentionally no extra `.node-float` rule to avoid a second competing
+     mechanism for the same element. */
+}
+
+/* ═══════════════════════════════════════════════
    BENTO CARD SYSTEM
 ═══════════════════════════════════════════════ */
 
