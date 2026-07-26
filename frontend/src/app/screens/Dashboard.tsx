@@ -29,6 +29,7 @@ import type { Variants } from 'motion/react';
 import { useFinPathStore } from '@/lib/store';
 import { formatInr, formatInrCompact } from '@/lib/format';
 import { fireConfetti } from '@/lib/confetti';
+import { cardEntry, cappedStagger } from '@/app/components/motion-variants';
 import HealthScoreWidget from '@/app/components/HealthScoreWidget';
 import { buildCrossGoalInsights } from '@/lib/math/recommendations';
 import TabBar from '@/app/components/TabBar';
@@ -119,13 +120,15 @@ const CATEGORY_STYLE: Record<
   },
 };
 
+// Keyed initial/animate (not hidden/visible) so child `motion.div`s using the
+// shared `cardEntry` variant (also keyed initial/animate) actually receive
+// this container's propagated stagger — Framer Motion resolves a propagated
+// variant label by looking it up in the child's own `variants` object, so a
+// hidden/visible parent paired with an initial/animate child silently
+// no-ops the child's animation.
 const gridVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
-};
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } },
+  initial: {},
+  animate: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
 };
 
 function useCountUp(target: number) {
@@ -300,11 +303,11 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
           <motion.div
             className="dashboard-grid"
             variants={gridVariants}
-            initial="hidden"
-            animate="visible"
+            initial="initial"
+            animate="animate"
           >
             {/* ─ Active Goals (8 cols) ─ */}
-            <motion.div className="bento-card col-span-8" variants={cardVariants}>
+            <motion.div className="bento-card col-span-8" variants={cardEntry}>
               <h3 className="sr-only">Active Goals</h3>
               <div className="relative">
                 <div className="goals-header">
@@ -324,7 +327,15 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
                   </button>
                 </div>
 
-                <div className="goals-list">
+                <motion.div
+                  className="goals-list"
+                  initial="initial"
+                  animate="animate"
+                  variants={{
+                    initial: {},
+                    animate: { transition: cappedStagger(activeGoals.length) },
+                  }}
+                >
                   {activeGoals.map((g) => {
                     const cat = CATEGORY_STYLE[g.category] || CATEGORY_STYLE.default;
                     const GIcon = ICONS[cat.icon] || Target;
@@ -336,8 +347,9 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
                         (g.targetAmount - g.currentAmount) / Math.max(1, g.timelineMonths),
                       );
                     return (
-                      <div
+                      <motion.div
                         key={g.id}
+                        variants={cardEntry}
                         className="card-hover goal-row"
                         role="button"
                         tabIndex={0}
@@ -384,7 +396,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
                             / {formatInrCompact(g.targetAmount)}
                           </span>
                         </p>
-                      </div>
+                      </motion.div>
                     );
                   })}
 
@@ -399,12 +411,12 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
                       </button>
                     </div>
                   )}
-                </div>
+                </motion.div>
               </div>
             </motion.div>
 
             {/* ─ Next Step (4 cols) ─ */}
-            <motion.div className="bento-card col-span-4 flex flex-col" variants={cardVariants}>
+            <motion.div className="bento-card col-span-4 flex flex-col" variants={cardEntry}>
               <h3 className="sr-only">Your Next Step</h3>
               <p className="text-label mb-4">Your Next Step</p>
 
@@ -517,7 +529,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
             </motion.div>
 
             {/* ─ Health + Metrics (7 cols) ─ */}
-            <motion.div className="bento-card col-span-7 flex gap-6" variants={cardVariants}>
+            <motion.div className="bento-card col-span-7 flex gap-6" variants={cardEntry}>
               <h3 className="sr-only">Health and Metrics</h3>
 
               {/* Metrics column */}
@@ -552,7 +564,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
             </motion.div>
 
             {/* ─ Recent Activity (5 cols) ─ */}
-            <motion.div className="bento-card col-span-5" variants={cardVariants}>
+            <motion.div className="bento-card col-span-5" variants={cardEntry}>
               <h3 className="sr-only">Recent Activity</h3>
               <div className="activity-header">
                 <p className="text-label">Recent Activity</p>
@@ -595,7 +607,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
             </motion.div>
 
             {/* ─ Achievements (12 cols) ─ */}
-            <motion.div className="bento-card col-span-12" variants={cardVariants}>
+            <motion.div className="bento-card col-span-12" variants={cardEntry}>
               <h3 className="text-heading slashed-zero text-[var(--secondary)] mb-4">
                 Achievements
               </h3>
@@ -624,7 +636,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
             </motion.div>
 
             {/* ─ Penny Insights (12 cols) ─ */}
-            <motion.div className="bento-card penny-card col-span-12" variants={cardVariants}>
+            <motion.div className="bento-card penny-card col-span-12" variants={cardEntry}>
               <div className="penny-blob" />
 
               <div className="penny-insights-header">
