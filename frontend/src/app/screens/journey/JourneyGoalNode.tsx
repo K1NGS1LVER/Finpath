@@ -1,35 +1,40 @@
-import { memo, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { memo, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import type { Goal } from '@/lib/types';
-import { getGoalIcon } from "./icon-map";
-import { DRAG_CLICK_THRESHOLD } from "./constants";
+import { getGoalIcon } from './icon-map';
+import { DRAG_CLICK_THRESHOLD } from './constants';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const nodeVariants = {
   hidden: { opacity: 0, scale: 0.6 },
-  visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 22 } },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: 'spring' as const, stiffness: 300, damping: 22 },
+  },
   visibleStatic: { opacity: 1, scale: 1, transition: { duration: 0.18 } },
   exit: { opacity: 0, scale: 0.5, transition: { duration: 0.18 } },
 };
 
 export function getStatusColor(status: string) {
   switch (status) {
-    case "complete":
-      return "var(--accent)";
-    case "in-progress":
-      return "var(--amber)";
+    case 'complete':
+      return 'var(--accent)';
+    case 'in-progress':
+      return 'var(--amber)';
     default:
-      return "var(--tertiary-accent)";
+      return 'var(--tertiary-accent)';
   }
 }
 
 function getStatusGlow(status: string) {
   switch (status) {
-    case "complete":
-      return "var(--accent-glow)";
-    case "in-progress":
-      return "var(--amber-subtle)";
+    case 'complete':
+      return 'var(--accent-glow)';
+    case 'in-progress':
+      return 'var(--amber-subtle)';
     default:
-      return "var(--tertiary-accent-glow)";
+      return 'var(--tertiary-accent-glow)';
   }
 }
 
@@ -57,14 +62,15 @@ function JourneyGoalNode({
   const [ripple, setRipple] = useState<{ x: number; y: number; id: number } | null>(null);
   const rippleCounter = useRef(0);
   const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  // ponytail: clamp keeps the per-index float stagger under the 400ms cap regardless of goal count.
+  const floatDuration = Math.min(0.4, 0.3 + index * 0.02);
 
   const progress =
-    goal.targetAmount > 0
-      ? Math.round((goal.currentAmount / goal.targetAmount) * 100)
-      : 0;
+    goal.targetAmount > 0 ? Math.round((goal.currentAmount / goal.targetAmount) * 100) : 0;
   const statusColor = getStatusColor(goal.status);
   const statusGlow = getStatusGlow(goal.status);
-  const isActiveGoal = goal.status !== "complete";
+  const isActiveGoal = goal.status !== 'complete';
   const Icon = getGoalIcon(goal.icon);
 
   const handleRipple = (e: React.PointerEvent) => {
@@ -80,10 +86,14 @@ function JourneyGoalNode({
       style={{ left: x, top: y, width: 132 }}
       variants={nodeVariants}
       initial="hidden"
-      animate={isActiveGoal ? "visible" : "visibleStatic"}
+      animate={isActiveGoal ? 'visible' : 'visibleStatic'}
       exit="exit"
       whileHover={isDragging || !isActiveGoal ? undefined : { scale: 1.05 }}
-      whileTap={isDragging || !isActiveGoal ? undefined : { scale: 0.93, transition: { type: "spring", stiffness: 400, damping: 20 } }}
+      whileTap={
+        isDragging || !isActiveGoal
+          ? undefined
+          : { scale: 0.93, transition: { type: 'spring', stiffness: 400, damping: 20 } }
+      }
       onPointerDown={handleRipple}
       onMouseDown={(e) => {
         dragStartPos.current = { x: e.clientX, y: e.clientY };
@@ -97,7 +107,10 @@ function JourneyGoalNode({
       }}
       onClick={(e) => {
         if (dragStartPos.current) {
-          const moved = Math.hypot(e.clientX - dragStartPos.current.x, e.clientY - dragStartPos.current.y);
+          const moved = Math.hypot(
+            e.clientX - dragStartPos.current.x,
+            e.clientY - dragStartPos.current.y,
+          );
           dragStartPos.current = null;
           if (moved > DRAG_CLICK_THRESHOLD) return;
         }
@@ -106,7 +119,10 @@ function JourneyGoalNode({
       onTouchEnd={(e) => {
         if (dragStartPos.current && e.changedTouches.length > 0) {
           const t = e.changedTouches[0];
-          const moved = Math.hypot(t.clientX - dragStartPos.current.x, t.clientY - dragStartPos.current.y);
+          const moved = Math.hypot(
+            t.clientX - dragStartPos.current.x,
+            t.clientY - dragStartPos.current.y,
+          );
           dragStartPos.current = null;
           if (moved <= DRAG_CLICK_THRESHOLD) onClick();
         }
@@ -117,8 +133,9 @@ function JourneyGoalNode({
         className="node-float"
         style={{
           animationDelay: `${index * 0.35}s`,
-          animationDuration: `${3.5 + index * 0.4}s`,
-          animationPlayState: isDragging || !isActiveGoal ? "paused" : "running",
+          animationDuration: `${floatDuration}s`,
+          animationPlayState:
+            prefersReducedMotion || isDragging || !isActiveGoal ? 'paused' : 'running',
         }}
       >
         <div
@@ -126,10 +143,10 @@ function JourneyGoalNode({
           style={{
             border: `2px solid ${statusColor}`,
             boxShadow: isActiveGoal
-              ? "var(--shadow-md)"
+              ? 'var(--shadow-md)'
               : `0 0 20px ${statusGlow}, var(--shadow-md)`,
-            position: "relative",
-            overflow: "hidden",
+            position: 'relative',
+            overflow: 'hidden',
             minHeight: 168,
           }}
         >
@@ -141,24 +158,24 @@ function JourneyGoalNode({
               style={{
                 left: ripple.x,
                 top: ripple.y,
-                translateX: "-50%",
-                translateY: "-50%",
+                translateX: '-50%',
+                translateY: '-50%',
                 background: `radial-gradient(circle, ${statusColor}28, transparent 70%)`,
                 zIndex: 0,
               }}
               initial={{ width: 0, height: 0, opacity: 0.8 }}
               animate={{ width: 200, height: 200, opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               onAnimationComplete={() => setRipple(null)}
             />
           )}
 
           {/* Content — above ripple */}
-          <div style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center mb-2"
               style={{
-                background: "color-mix(in srgb, var(--surface-hover) 80%, transparent)",
+                background: 'color-mix(in srgb, var(--surface-hover) 80%, transparent)',
                 color: statusColor,
               }}
             >
@@ -173,7 +190,11 @@ function JourneyGoalNode({
             {isActiveGoal && (
               <div
                 className="font-medium mb-1 text-accent-color"
-                style={{ fontSize: 'var(--text-2xs)', letterSpacing: '0.04em', textTransform: 'uppercase' }}
+                style={{
+                  fontSize: 'var(--text-2xs)',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                }}
               >
                 Priority P{goal.priority}
               </div>
@@ -192,7 +213,7 @@ function JourneyGoalNode({
             </div>
             <div
               className="h-1 rounded-full overflow-hidden"
-              style={{ backgroundColor: "var(--progress-inactive)" }}
+              style={{ backgroundColor: 'var(--progress-inactive)' }}
             >
               <div
                 className="h-full rounded-full"
