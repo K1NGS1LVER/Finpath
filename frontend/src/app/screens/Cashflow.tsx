@@ -799,6 +799,7 @@ export default function Cashflow() {
                                   >
                                     <input
                                       inputMode="numeric"
+                                      aria-label={`${nodeName} amount`}
                                       style={{
                                         flex: 1,
                                         border: `1.5px solid ${isValid ? 'var(--border)' : 'var(--red)'}`,
