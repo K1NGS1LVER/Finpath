@@ -1,10 +1,13 @@
 import { X, Send, Loader2, Wrench, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router';
 import { useFinPathStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { apiFetch } from '@/lib/api';
 import { parseSse } from '@/lib/sse';
+import { useMotionDuration } from '@/lib/useReducedMotion';
+import { dropdownScale } from './motion-variants';
 import ProposalCard, { type Proposal } from './ProposalCard';
 
 interface PennyPanelProps {
@@ -70,6 +73,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
   const [hydratedForUser, setHydratedForUser] = useState<string | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const confirmDuration = useMotionDuration(0.2);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -371,45 +375,56 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
           </div>
         </div>
 
-        {showClearConfirm && (
-          <div
-            className="absolute inset-0 z-10 flex items-center justify-center p-6"
-            style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}
-            onClick={() => !isClearing && setShowClearConfirm(false)}
-          >
-            <div
-              className="bento-card w-full max-w-[300px] p-5"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="clear-chat-title"
+        <AnimatePresence>
+          {showClearConfirm && (
+            <motion.div
+              className="absolute inset-0 z-10 flex items-center justify-center p-6"
+              style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}
+              onClick={() => !isClearing && setShowClearConfirm(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: confirmDuration }}
             >
-              <h3 id="clear-chat-title" className="text-heading mb-2">
-                Clear chat history?
-              </h3>
-              <p className="text-sm text-[var(--secondary)] mb-4">
-                This permanently deletes every message between you and Penny. Can't be undone.
-              </p>
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => setShowClearConfirm(false)}
-                  disabled={isClearing}
-                  className="px-3 py-1.5 rounded-lg text-sm hover:bg-[var(--surface-hover)] disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleClearHistory}
-                  disabled={isClearing}
-                  className="px-3 py-1.5 rounded-lg text-sm font-semibold disabled:opacity-50"
-                  style={{ background: 'var(--red)', color: 'var(--on-accent, white)' }}
-                >
-                  {isClearing ? 'Clearing…' : 'Clear'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+              <motion.div
+                className="bento-card w-full max-w-[300px] p-5"
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="clear-chat-title"
+                variants={dropdownScale}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                transition={{ duration: confirmDuration, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <h3 id="clear-chat-title" className="text-heading mb-2">
+                  Clear chat history?
+                </h3>
+                <p className="text-sm text-[var(--secondary)] mb-4">
+                  This permanently deletes every message between you and Penny. Can't be undone.
+                </p>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowClearConfirm(false)}
+                    disabled={isClearing}
+                    className="px-3 py-1.5 rounded-lg text-sm hover:bg-[var(--surface-hover)] disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleClearHistory}
+                    disabled={isClearing}
+                    className="px-3 py-1.5 rounded-lg text-sm font-semibold disabled:opacity-50"
+                    style={{ background: 'var(--red)', color: 'var(--on-accent, white)' }}
+                  >
+                    {isClearing ? 'Clearing…' : 'Clear'}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {messages.map((msg) => (

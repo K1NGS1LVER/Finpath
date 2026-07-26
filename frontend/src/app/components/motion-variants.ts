@@ -80,3 +80,15 @@ export const drawerEntry: Variants = {
   hidden: { opacity: 0, x: 40 },
   visible: { opacity: 1, x: 0 },
 };
+
+/**
+ * Bottom-edge toast entrance — offsets on `y` by a small nudge (8px, not
+ * `drawerEntry`'s full-panel 40px) for feedback toasts that slide in from
+ * the edge they visually sit nearest. Pair with `AnimatePresence` for a
+ * symmetric exit and gate the transition duration through
+ * `useMotionDuration` so it collapses under reduced motion.
+ */
+export const toastSlide: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0 },
+};

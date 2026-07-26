@@ -11,9 +11,12 @@ import {
   FileDown,
   BadgeCheck,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import FinPathLogo from './FinPathLogo';
 import { useState, useEffect } from 'react';
 import { useFinPathStore } from '@/lib/store';
+import { useMotionDuration } from '@/lib/useReducedMotion';
+import { toastSlide } from './motion-variants';
 
 interface SidebarProps {
   onPennyClick: () => void;
@@ -28,6 +31,7 @@ export default function Sidebar({ onPennyClick, mobileMenuOpen, setMobileMenuOpe
   const onboarded = useFinPathStore((s) => s.onboarded);
   const [collapsed, setCollapsed] = useState(false);
   const [showPennyToast, setShowPennyToast] = useState(true);
+  const toastDuration = useMotionDuration(0.25);
 
   useEffect(() => {
     const handleResize = () => {
@@ -346,64 +350,71 @@ export default function Sidebar({ onPennyClick, mobileMenuOpen, setMobileMenuOpe
         </nav>
 
         {/* Penny Toast */}
-        {showPennyToast && (
-          <div
-            style={{
-              position: 'relative',
-              padding: `var(--space-1) var(--space-2)`,
-              margin: `0 var(--space-1) var(--space-2)`,
-              background: 'var(--accent-subtle)',
-              border: 'none',
-              borderRadius: 'var(--radius-sm)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 'var(--space-1)',
-            }}
-          >
-            {/* Comic-bubble tail — V cutout pointing down at Ask Penny button */}
-            <div
-              aria-hidden="true"
+        <AnimatePresence>
+          {showPennyToast && (
+            <motion.div
+              variants={toastSlide}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={{ duration: toastDuration, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                position: 'absolute',
-                bottom: -7,
-                left: '50%',
-                width: 14,
-                height: 8,
+                position: 'relative',
+                padding: `var(--space-1) var(--space-2)`,
+                margin: `0 var(--space-1) var(--space-2)`,
                 background: 'var(--accent-subtle)',
-                transform: 'translateX(-50%)',
-                clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
-              }}
-            />
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--accent-text)',
-                fontWeight: 'var(--font-weight-medium)',
-                lineHeight: 1.4,
-                flex: 1,
-              }}
-            >
-              Hi, I'm Penny — your AI assistant
-            </span>
-            <button
-              onClick={() => setShowPennyToast(false)}
-              style={{
-                background: 'transparent',
                 border: 'none',
-                cursor: 'pointer',
-                color: 'var(--accent-text)',
-                padding: 0,
+                borderRadius: 'var(--radius-sm)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+                justifyContent: 'space-between',
+                gap: 'var(--space-1)',
               }}
             >
-              <X size={14} />
-            </button>
-          </div>
-        )}
+              {/* Comic-bubble tail — V cutout pointing down at Ask Penny button */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  bottom: -7,
+                  left: '50%',
+                  width: 14,
+                  height: 8,
+                  background: 'var(--accent-subtle)',
+                  transform: 'translateX(-50%)',
+                  clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--accent-text)',
+                  fontWeight: 'var(--font-weight-medium)',
+                  lineHeight: 1.4,
+                  flex: 1,
+                }}
+              >
+                Hi, I'm Penny — your AI assistant
+              </span>
+              <button
+                onClick={() => setShowPennyToast(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--accent-text)',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <X size={14} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Export Plan Button — secondary pill, sits above the primary Ask Penny pill */}
         <div style={{ padding: '0 var(--space-2)', marginBottom: 'var(--space-1)' }}>
