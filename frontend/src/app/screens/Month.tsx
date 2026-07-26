@@ -1,12 +1,12 @@
-import { Check, AlertTriangle, Sparkles, Calendar } from "lucide-react";
-import { useState, useMemo, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
-import { motion } from "motion/react";
-import { useFinPathStore } from "@/lib/store";
-import { formatInr, formatInrCompact } from "@/lib/format";
-import { fireConfetti } from "@/lib/confetti";
-import { pageContainer, pageSection } from "@/app/components/motion-variants";
-import { AreaChart, Area, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
+import { Check, AlertTriangle, Sparkles, Calendar } from 'lucide-react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { motion } from 'motion/react';
+import { useFinPathStore } from '@/lib/store';
+import { formatInr, formatInrCompact } from '@/lib/format';
+import { fireConfetti } from '@/lib/confetti';
+import { pageContainer, pageSection } from '@/app/components/motion-variants';
+import { AreaChart, Area, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 
 interface MonthTask {
   id: string;
@@ -20,12 +20,11 @@ interface MonthTask {
   suffix?: string;
 }
 
-
 export default function Month() {
   const now = new Date();
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const daysLeft = daysInMonth - now.getDate();
-  const monthLabel = now.toLocaleString("en-IN", { month: "long", year: "numeric" });
+  const monthLabel = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
 
   const navigate = useNavigate();
   const income = useFinPathStore((s) => s.income);
@@ -39,23 +38,23 @@ export default function Month() {
   const activeGoals = useMemo(
     () =>
       goals
-        .filter((goal) => goal.status !== "complete")
+        .filter((goal) => goal.status !== 'complete')
         .slice()
         .sort((a, b) => a.priority - b.priority),
     [goals],
   );
 
-  const [lumpsumGoalId, setLumpsumGoalId] = useState("");
-  const [lumpsumAmount, setLumpsumAmount] = useState("");
-  const [lumpsumNotice, setLumpsumNotice] = useState("");
-  const debtGoal = activeGoals.find((goal) => goal.category === "debt");
+  const [lumpsumGoalId, setLumpsumGoalId] = useState('');
+  const [lumpsumAmount, setLumpsumAmount] = useState('');
+  const [lumpsumNotice, setLumpsumNotice] = useState('');
+  const debtGoal = activeGoals.find((goal) => goal.category === 'debt');
 
   const initialTasks = useMemo<MonthTask[]>(() => {
     const taskList: MonthTask[] = [];
 
     if (expenses.rent > 0) {
       taskList.push({
-        id: "rent",
+        id: 'rent',
         text: `Pay rent ${formatInr(expenses.rent)} by 5th`,
         done: false,
         isGoal: false,
@@ -64,23 +63,22 @@ export default function Month() {
 
     if (debts.totalMonthly > 0 && debtGoal) {
       taskList.push({
-        id: "debt-payment",
+        id: 'debt-payment',
         text: `Pay ${formatInr(debts.totalMonthly)} toward debt`,
         done: !!debtGoal.checkedThisMonth,
         isGoal: true,
         goalId: debtGoal.id,
         amount: debts.totalMonthly,
-        prefix: "Pay ₹",
-        suffix: "toward debt",
+        prefix: 'Pay ₹',
+        suffix: 'toward debt',
       });
     }
 
-    for (const goal of activeGoals.filter((g) => g.category !== "debt").slice(0, 2)) {
+    for (const goal of activeGoals.filter((g) => g.category !== 'debt').slice(0, 2)) {
       const monthly =
         goal.monthlyAllocation ||
         Math.round(
-          Math.max(0, goal.targetAmount - goal.currentAmount) /
-            Math.max(1, goal.timelineMonths),
+          Math.max(0, goal.targetAmount - goal.currentAmount) / Math.max(1, goal.timelineMonths),
         );
       if (monthly > 0) {
         taskList.push({
@@ -90,14 +88,24 @@ export default function Month() {
           isGoal: true,
           goalId: goal.id,
           amount: monthly,
-          prefix: "Add ₹",
+          prefix: 'Add ₹',
           suffix: `to ${goal.name} savings`,
         });
       }
     }
 
-    taskList.push({ id: "review", text: "Review subscription services", done: false, isGoal: false });
-    taskList.push({ id: "track",  text: "Track all expenses this week",  done: false, isGoal: false });
+    taskList.push({
+      id: 'review',
+      text: 'Review subscription services',
+      done: false,
+      isGoal: false,
+    });
+    taskList.push({
+      id: 'track',
+      text: 'Track all expenses this week',
+      done: false,
+      isGoal: false,
+    });
 
     return taskList;
   }, [expenses, activeGoals, debts.totalMonthly, debtGoal]);
@@ -118,10 +126,10 @@ export default function Month() {
       }
       return prev.map((pt, i) => {
         const backendAmountChanged = prevInitial[i]?.amount !== initialTasks[i].amount;
-        const backendDoneChanged   = prevInitial[i]?.done   !== initialTasks[i].done;
+        const backendDoneChanged = prevInitial[i]?.done !== initialTasks[i].done;
         return {
           ...initialTasks[i],
-          done:   backendDoneChanged   ? initialTasks[i].done   : pt.done,
+          done: backendDoneChanged ? initialTasks[i].done : pt.done,
           amount: backendAmountChanged ? initialTasks[i].amount : pt.amount,
         };
       });
@@ -134,12 +142,12 @@ export default function Month() {
 
   useEffect(() => {
     if (!lumpsumGoalId && activeGoals.length > 0) setLumpsumGoalId(activeGoals[0].id);
-    if (activeGoals.length === 0) setLumpsumGoalId("");
+    if (activeGoals.length === 0) setLumpsumGoalId('');
   }, [activeGoals, lumpsumGoalId]);
 
   useEffect(() => {
     if (!lumpsumNotice) return;
-    const id = setTimeout(() => setLumpsumNotice(""), 4000);
+    const id = setTimeout(() => setLumpsumNotice(''), 4000);
     return () => clearTimeout(id);
   }, [lumpsumNotice]);
 
@@ -164,25 +172,42 @@ export default function Month() {
         updateGoal(goal.id, {
           currentAmount: newAmount,
           checkedThisMonth: newDoneState,
-          status: justCompleted ? "complete" : newAmount > 0 ? "in-progress" : "not-started",
+          status: justCompleted ? 'complete' : newAmount > 0 ? 'in-progress' : 'not-started',
         });
 
         if (newDoneState) {
           const styles = getComputedStyle(document.documentElement);
-          const accent    = styles.getPropertyValue("--accent").trim();
-          const secondary = styles.getPropertyValue("--secondary-accent").trim();
-          const lime      = styles.getPropertyValue("--tertiary-accent").trim();
-          const green     = styles.getPropertyValue("--green").trim();
+          const accent = styles.getPropertyValue('--accent').trim();
+          const secondary = styles.getPropertyValue('--secondary-accent').trim();
+          const lime = styles.getPropertyValue('--tertiary-accent').trim();
+          const green = styles.getPropertyValue('--green').trim();
           if (justCompleted) {
             const end = Date.now() + 2000;
             const frame = () => {
-              void fireConfetti({ particleCount: 3, angle: 60,  spread: 55, origin: { x: 0, y: 0.7 }, colors: [accent, secondary, accent] });
-              void fireConfetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.7 }, colors: [accent, lime, green] });
+              void fireConfetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.7 },
+                colors: [accent, secondary, accent],
+              });
+              void fireConfetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.7 },
+                colors: [accent, lime, green],
+              });
               if (Date.now() < end) requestAnimationFrame(frame);
             };
             frame();
           } else {
-            void fireConfetti({ particleCount: 60, spread: 70, origin: { y: 0.7 }, colors: [accent, secondary, lime] });
+            void fireConfetti({
+              particleCount: 60,
+              spread: 70,
+              origin: { y: 0.7 },
+              colors: [accent, secondary, lime],
+            });
           }
         }
       }
@@ -206,36 +231,34 @@ export default function Month() {
     if (!lumpsumGoalId || amount <= 0) return;
     const goal = goals.find((g) => g.id === lumpsumGoalId);
     addLumpsum(lumpsumGoalId, amount);
-    setLumpsumAmount("");
-    setLumpsumNotice(goal ? `Added ${formatInr(amount)} to ${goal.name}` : "Lumpsum applied");
+    setLumpsumAmount('');
+    setLumpsumNotice(goal ? `Added ${formatInr(amount)} to ${goal.name}` : 'Lumpsum applied');
   };
 
   // ── Computed values ──────────────────────────────────────
-  const surplus          = income.total - expenses.total - debts.totalMonthly;
-  const reservedSurplus  = plan?.months?.[0]?.reservedSurplus || 0;
-  const pendingSurplus   = plan?.months?.[0]?.pendingSurplus  || 0;
+  const surplus = income.total - expenses.total - debts.totalMonthly;
+  const reservedSurplus = plan?.months?.[0]?.reservedSurplus || 0;
+  const pendingSurplus = plan?.months?.[0]?.pendingSurplus || 0;
   const goalSavingsTarget = tasks
     .filter((t) => t.isGoal && t.amount !== undefined)
     .reduce((sum, t) => {
       const g = activeGoals.find((g) => g.id === t.goalId);
-      if (g && g.category !== "debt") return sum + Math.max(0, t.amount || 0);
+      if (g && g.category !== 'debt') return sum + Math.max(0, t.amount || 0);
       return sum;
     }, 0);
   const savingsTarget = Math.max(0, goalSavingsTarget + reservedSurplus);
 
-  const doneTasks      = tasks.filter((t) => t.done).length;
-  const goalTasks      = tasks.filter((t) => t.isGoal);
-  const nonGoalTasks   = tasks.filter((t) => !t.isGoal);
-  const doneGoalTasks  = goalTasks.filter((t) => t.done).length;
-  const allDone        = doneTasks === tasks.length && tasks.length > 0;
+  const doneTasks = tasks.filter((t) => t.done).length;
+  const goalTasks = tasks.filter((t) => t.isGoal);
+  const nonGoalTasks = tasks.filter((t) => !t.isGoal);
+  const doneGoalTasks = goalTasks.filter((t) => t.done).length;
+  const allDone = doneTasks === tasks.length && tasks.length > 0;
   const totalGoalCommitted = goalTasks.reduce((s, t) => s + (t.amount || 0), 0);
 
   // ── Impact micro-row goals ───────────────────────────────
   const impactGoals = useMemo(
     () =>
-      activeGoals
-        .filter((g) => (g.monthlyAllocation || 0) > 0 || g.checkedThisMonth)
-        .slice(0, 4),
+      activeGoals.filter((g) => (g.monthlyAllocation || 0) > 0 || g.checkedThisMonth).slice(0, 4),
     [activeGoals],
   );
 
@@ -254,8 +277,8 @@ export default function Month() {
     surplus > 5000
       ? `You have ${formatInr(Math.round(surplus - savingsTarget - debts.totalMonthly))} unallocated this month. Redirecting it to your top goal accelerates your plan.`
       : debts.totalMonthly > 0
-        ? "Paying even ₹500 extra on your highest-rate debt each month compounds into significant savings over your timeline."
-        : "Consistency is the engine. Checking off all tasks this month keeps your streak alive and your goals on schedule.";
+        ? 'Paying even ₹500 extra on your highest-rate debt each month compounds into significant savings over your timeline.'
+        : 'Consistency is the engine. Checking off all tasks this month keeps your streak alive and your goals on schedule.';
 
   // ── Empty plan guard ─────────────────────────────────────
   if (!plan || !plan.months || plan.months.length === 0) {
@@ -298,9 +321,10 @@ export default function Month() {
               marginBottom: 'var(--space-5)',
             }}
           >
-            Add your first goal in Journey and FinPath will generate your month-by-month plan automatically.
+            Add your first goal in Journey and FinPath will generate your month-by-month plan
+            automatically.
           </p>
-          <button onClick={() => navigate("/journey")} className="btn-primary">
+          <button onClick={() => navigate('/journey')} className="btn-primary">
             Build Your Plan
           </button>
         </div>
@@ -312,7 +336,7 @@ export default function Month() {
     <motion.div className="month-page" variants={pageContainer} initial="hidden" animate="visible">
       {/* Header */}
       <motion.div className="month-header" variants={pageSection}>
-        <p className="text-label" style={{ color: "var(--tertiary)" }}>
+        <p className="text-label" style={{ color: 'var(--tertiary)' }}>
           {monthLabel} · {daysLeft} days left
         </p>
         <h2 className="month-title">This Month's Plan</h2>
@@ -325,7 +349,7 @@ export default function Month() {
           <div>
             <div className="debt-warning-title">Debt payments exceed your surplus</div>
             <span>
-              Monthly debt/EMI of {formatInr(debts.totalMonthly)} exceeds your surplus of{" "}
+              Monthly debt/EMI of {formatInr(debts.totalMonthly)} exceeds your surplus of{' '}
               {formatInr(Math.max(0, income.total - expenses.total))}. Consider negotiating lower
               payments or consolidating debt.
             </span>
@@ -336,24 +360,20 @@ export default function Month() {
       {/* ── Mission strip ── */}
       <motion.div className="bento-card mission-strip" variants={pageSection}>
         {/* Left: main content */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
           <div className="mission-eyebrow">Mission</div>
           <h2 className="mission-title slashed-zero">
             Save {formatInrCompact(savingsTarget)}
-            {debts.totalMonthly > 0 ? ` & pay ${formatInrCompact(debts.totalMonthly)} debt` : ""}
+            {debts.totalMonthly > 0 ? ` & pay ${formatInrCompact(debts.totalMonthly)} debt` : ''}
           </h2>
           <div className="mission-stats-row">
             <div>
               <div className="mission-stat-label">Goals + Surplus Reserve</div>
-              <div className="mission-stat-value slashed-zero">
-                {formatInr(savingsTarget)}
-              </div>
+              <div className="mission-stat-value slashed-zero">{formatInr(savingsTarget)}</div>
             </div>
             <div>
               <div className="mission-stat-label">Debt Payments</div>
-              <div className="mission-stat-value slashed-zero">
-                {formatInr(debts.totalMonthly)}
-              </div>
+              <div className="mission-stat-value slashed-zero">{formatInr(debts.totalMonthly)}</div>
             </div>
           </div>
           {pendingSurplus > 0 && (
@@ -364,27 +384,47 @@ export default function Month() {
         </div>
 
         {/* Vertical divider */}
-        <div style={{ width: 1, background: "var(--border)", alignSelf: "stretch", margin: "0 var(--space-3)" }} />
+        <div
+          style={{
+            width: 1,
+            background: 'var(--border)',
+            alignSelf: 'stretch',
+            margin: '0 var(--space-3)',
+          }}
+        />
 
         {/* Right: Days Left */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "var(--space-0_5)", minWidth: 72 }}>
-          <span style={{
-            fontSize: "var(--text-2xs)",
-            fontWeight: "var(--font-weight-medium)",
-            color: "var(--tertiary)",
-            textTransform: "uppercase",
-            letterSpacing: "var(--tracking-wider)",
-            fontFamily: "var(--font-body)",
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--space-0_5)',
+            minWidth: 72,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 'var(--text-2xs)',
+              fontWeight: 'var(--font-weight-medium)',
+              color: 'var(--tertiary)',
+              textTransform: 'uppercase',
+              letterSpacing: 'var(--tracking-wider)',
+              fontFamily: 'var(--font-body)',
+            }}
+          >
             Days Left
           </span>
-          <span style={{
-            fontSize: "var(--text-3xl)",
-            fontWeight: "var(--font-weight-bold)",
-            color: "var(--tertiary)",
-            fontFamily: "var(--font-display)",
-            lineHeight: 1,
-          }}>
+          <span
+            style={{
+              fontSize: 'var(--text-3xl)',
+              fontWeight: 'var(--font-weight-bold)',
+              color: 'var(--tertiary)',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 1,
+            }}
+          >
             {daysLeft}
           </span>
         </div>
@@ -421,16 +461,21 @@ export default function Month() {
                           {goal.name}
                           {isDone && <Check size={14} className="icon-wireframe" />}
                         </span>
-                        <span className={`impact-goal-score${isDone ? " done" : " pending"}`}>
+                        <span className={`impact-goal-score${isDone ? ' done' : ' pending'}`}>
                           {isDone
-                            ? goal.category === "debt" ? "Paid!" : "Funded!"
+                            ? goal.category === 'debt'
+                              ? 'Paid!'
+                              : 'Funded!'
                             : `+${formatInrCompact(addition)}`}
                         </span>
                       </div>
                       <div className="progress-bar-outer">
                         <div className="progress-fill" style={{ width: `${basePct}%` }} />
                         {!isDone && additionPct > 0 && (
-                          <div className="progress-fill-pending" style={{ width: `${additionPct}%` }} />
+                          <div
+                            className="progress-fill-pending"
+                            style={{ width: `${additionPct}%` }}
+                          />
                         )}
                       </div>
                       <div className="progress-bar-labels">
@@ -449,7 +494,13 @@ export default function Month() {
           {nwChartData.length > 0 && (
             <div className="bento-card bento-card-sm" style={{ flex: 1 }}>
               <p className="text-label">Net Worth Outlook</p>
-              <p style={{ fontSize: "var(--text-2xs)", color: "var(--tertiary)", marginBottom: "var(--space-2)" }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-2xs)',
+                  color: 'var(--tertiary)',
+                  marginBottom: 'var(--space-2)',
+                }}
+              >
                 6-month projection
               </p>
               <div role="img" aria-label="Net worth projection chart">
@@ -463,19 +514,23 @@ export default function Month() {
                     </defs>
                     <XAxis
                       dataKey="label"
-                      tick={{ fontSize: "var(--text-2xs)", fill: "var(--secondary)", fontFamily: "var(--font-body)" }}
+                      tick={{
+                        fontSize: 'var(--text-2xs)',
+                        fill: 'var(--secondary)',
+                        fontFamily: 'var(--font-body)',
+                      }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <RechartsTooltip
                       contentStyle={{
-                        background: "var(--card)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "var(--radius-base)",
-                        fontFamily: "var(--font-body)",
-                        color: "var(--card-foreground)",
+                        background: 'var(--card)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-base)',
+                        fontFamily: 'var(--font-body)',
+                        color: 'var(--card-foreground)',
                       }}
-                      formatter={(v: number) => [formatInr(v), "Net Worth"]}
+                      formatter={(v: number) => [formatInr(v), 'Net Worth']}
                     />
                     <Area
                       type="monotone"
@@ -505,9 +560,9 @@ export default function Month() {
                 {allDone && (
                   <span
                     style={{
-                      fontSize: "var(--text-xs)",
-                      color: "var(--secondary)",
-                      fontWeight: "var(--font-weight-semibold)",
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--secondary)',
+                      fontWeight: 'var(--font-weight-semibold)',
                     }}
                   >
                     complete
@@ -516,7 +571,7 @@ export default function Month() {
               </div>
               <div className="execution-bar-outer">
                 <div
-                  className={`execution-bar-inner${allDone ? " all-done" : ""}`}
+                  className={`execution-bar-inner${allDone ? ' all-done' : ''}`}
                   style={{ width: `${tasks.length ? (doneTasks / tasks.length) * 100 : 0}%` }}
                 />
               </div>
@@ -524,14 +579,14 @@ export default function Month() {
 
             {/* Goal Allocations */}
             {goalTasks.length > 0 && (
-              <div style={{ marginBottom: "var(--space-2)" }}>
+              <div style={{ marginBottom: 'var(--space-2)' }}>
                 <div className="execution-sub-label">
                   Goal Allocations
                   <span
                     style={{
-                      fontFamily: "var(--font-display)",
-                      color: "var(--tertiary)",
-                      fontWeight: "var(--font-weight-regular)",
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--tertiary)',
+                      fontWeight: 'var(--font-weight-regular)',
                     }}
                   >
                     {doneGoalTasks}/{goalTasks.length}
@@ -541,56 +596,53 @@ export default function Month() {
                 {goalTasks.map((task) => (
                   <div
                     key={task.id}
-                    className={`goal-check-row${task.done ? " is-done" : ""}`}
+                    className={`goal-check-row${task.done ? ' is-done' : ''}`}
                     onClick={() => toggleTask(task.id)}
                   >
-                    <div className={`goal-check-box${task.done ? " done" : ""}`}>
+                    <div className={`goal-check-box${task.done ? ' done' : ''}`}>
                       {task.done && (
-                        <Check size={10} style={{ color: "#fff", strokeWidth: 3 }} />
+                        <Check size={10} style={{ color: 'var(--on-accent)', strokeWidth: 3 }} />
                       )}
                     </div>
 
-                    <div
-                      className="goal-check-label-wrapper"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="goal-check-label-wrapper" onClick={(e) => e.stopPropagation()}>
                       {task.isGoal && task.amount !== undefined ? (
-                        <div className={`checklist-inline-row${task.done ? " done" : ""}`}>
+                        <div className={`checklist-inline-row${task.done ? ' done' : ''}`}>
                           <span
-                            className={task.done ? "done-text" : ""}
+                            className={task.done ? 'done-text' : ''}
                             onClick={() => toggleTask(task.id)}
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: 'pointer' }}
                           >
                             {task.prefix}
                           </span>
                           <input
                             type="text"
                             inputMode="numeric"
-                            value={task.amount === 0 ? "" : task.amount}
+                            value={task.amount === 0 ? '' : task.amount}
                             onChange={(e) =>
                               updateTaskAmount(task.id, parseInt(e.target.value) || 0)
                             }
                             disabled={task.done}
                             aria-label={`Amount for ${task.prefix}${task.suffix}`}
-                            className={`task-amount-input${task.done ? " done" : ""}`}
+                            className={`task-amount-input${task.done ? ' done' : ''}`}
                           />
                           <span
-                            className={task.done ? "done-text" : ""}
+                            className={task.done ? 'done-text' : ''}
                             onClick={() => toggleTask(task.id)}
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: 'pointer' }}
                           >
                             {task.suffix}
                           </span>
                         </div>
                       ) : (
-                        <span className={`goal-check-label${task.done ? " done" : ""}`}>
+                        <span className={`goal-check-label${task.done ? ' done' : ''}`}>
                           {task.text}
                         </span>
                       )}
                     </div>
 
                     {task.amount !== undefined && (
-                      <span className={`goal-check-amount${task.done ? " done" : ""}`}>
+                      <span className={`goal-check-amount${task.done ? ' done' : ''}`}>
                         {formatInr(task.amount)}
                       </span>
                     )}
@@ -611,14 +663,14 @@ export default function Month() {
                 <div className="execution-sub-label">Tasks</div>
                 <ul className="checklist-list" role="list">
                   {nonGoalTasks.map((task) => (
-                    <li key={task.id} className={`checklist-item${task.done ? " done" : ""}`}>
+                    <li key={task.id} className={`checklist-item${task.done ? ' done' : ''}`}>
                       <button
                         type="button"
                         role="checkbox"
                         aria-checked={task.done}
-                        aria-label={`${task.done ? "Uncheck" : "Check"} ${task.text}`}
+                        aria-label={`${task.done ? 'Uncheck' : 'Check'} ${task.text}`}
                         onClick={() => toggleTask(task.id)}
-                        className={`checklist-check${task.done ? " done" : ""}`}
+                        className={`checklist-check${task.done ? ' done' : ''}`}
                       >
                         {task.done && <Check size={14} className="icon-wireframe" />}
                       </button>
@@ -628,12 +680,12 @@ export default function Month() {
                           tabIndex={0}
                           onClick={() => toggleTask(task.id)}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
+                            if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
                               toggleTask(task.id);
                             }
                           }}
-                          className={`checklist-label${task.done ? " done" : ""}`}
+                          className={`checklist-label${task.done ? ' done' : ''}`}
                         >
                           {task.text}
                         </span>
@@ -647,16 +699,16 @@ export default function Month() {
             {allDone && (
               <div
                 style={{
-                  width: "100%",
-                  marginTop: "var(--space-2)",
-                  padding: "var(--space-2)",
-                  borderRadius: "var(--radius-base)",
-                  border: "1px solid var(--accent)",
-                  color: "var(--accent)",
-                  fontSize: "var(--text-sm)",
-                  fontWeight: "var(--font-weight-semibold)",
-                  fontFamily: "var(--font-display)",
-                  textAlign: "center",
+                  width: '100%',
+                  marginTop: 'var(--space-2)',
+                  padding: 'var(--space-2)',
+                  borderRadius: 'var(--radius-base)',
+                  border: '1px solid var(--accent)',
+                  color: 'var(--accent)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                  fontFamily: 'var(--font-display)',
+                  textAlign: 'center',
                 }}
               >
                 Month complete — great work!
@@ -668,10 +720,16 @@ export default function Month() {
 
       {/* ── Lumpsum card ── */}
       <motion.div className="bento-card" variants={pageSection}>
-        <h3 className="text-heading" style={{ marginBottom: "var(--space-0_5)" }}>
+        <h3 className="text-heading" style={{ marginBottom: 'var(--space-0_5)' }}>
           One-Time Boost
         </h3>
-        <p style={{ fontSize: "var(--text-xs)", color: "var(--secondary)", marginBottom: "var(--space-2)" }}>
+        <p
+          style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--secondary)',
+            marginBottom: 'var(--space-2)',
+          }}
+        >
           Add a one-time amount to fast-track a goal.
         </p>
         <div className="lumpsum-inline">
@@ -696,7 +754,7 @@ export default function Month() {
             type="text"
             inputMode="numeric"
             value={lumpsumAmount}
-            onChange={(e) => setLumpsumAmount(e.target.value.replace(/[^0-9]/g, ""))}
+            onChange={(e) => setLumpsumAmount(e.target.value.replace(/[^0-9]/g, ''))}
             placeholder="Amount (₹)"
             className="input-surface w-full px-4 py-3 rounded-xl outline-none"
             aria-label="Lumpsum amount in rupees"
@@ -721,12 +779,26 @@ export default function Month() {
       <motion.div className="bento-card penny-card" variants={pageSection} role="note">
         <div className="penny-insight-blob" />
         <div className="relative z-10 flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--penny-accent-subtle)", color: "var(--penny-accent)" }}>
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{ background: 'var(--penny-accent-subtle)', color: 'var(--penny-accent)' }}
+          >
             <Sparkles size={18} className="icon-wireframe" />
           </div>
-          <h3 className="text-heading" style={{ color: "var(--card-foreground)" }}>Penny's Tip</h3>
+          <h3 className="text-heading" style={{ color: 'var(--card-foreground)' }}>
+            Penny's Tip
+          </h3>
         </div>
-        <p className="relative z-10" style={{ fontSize: "var(--text-sm)", color: "var(--card-foreground)", fontFamily: "var(--font-body)", lineHeight: "var(--leading-relaxed)", margin: 0 }}>
+        <p
+          className="relative z-10"
+          style={{
+            fontSize: 'var(--text-sm)',
+            color: 'var(--card-foreground)',
+            fontFamily: 'var(--font-body)',
+            lineHeight: 'var(--leading-relaxed)',
+            margin: 0,
+          }}
+        >
           {pennyTipText}
         </p>
       </motion.div>

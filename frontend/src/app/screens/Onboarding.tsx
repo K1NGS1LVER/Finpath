@@ -117,7 +117,7 @@ export default function Onboarding({ isDark, setIsDark }: OnboardingProps) {
                     style={{
                       fontSize: 'var(--text-xs)',
                       background: completed || current ? 'var(--accent)' : 'var(--surface-tint)',
-                      color: completed || current ? '#fff' : 'var(--secondary)',
+                      color: completed || current ? 'var(--on-accent)' : 'var(--secondary)',
                     }}
                   >
                     {completed ? <Check size={14} /> : i + 1}

@@ -32,7 +32,6 @@ interface LandingProps {
 
 type PennyMsg = { role: 'user' | 'penny'; text: string };
 
-
 export default function Landing({ isDark, setIsDark }: LandingProps) {
   const navigate = useNavigate();
   const pageRef = useRef<HTMLDivElement>(null);
@@ -187,7 +186,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
 
   const gradBtn: React.CSSProperties = {
     background: 'linear-gradient(135deg, var(--accent) 40%, var(--secondary-accent) 140%)',
-    color: '#fff',
+    color: 'var(--on-accent)',
     border: 'none',
     cursor: 'pointer',
     borderRadius: 99,
@@ -1073,7 +1072,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                     marginBottom: 16,
                   }}
                 >
-                  <s.Icon size={20} strokeWidth={1.5} color="#fff" />
+                  <s.Icon size={20} strokeWidth={1.5} color="var(--on-accent)" />
                 </div>
                 <p
                   style={{
@@ -1236,7 +1235,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#fff',
+                  color: 'var(--on-accent)',
                   fontSize: 14,
                   fontWeight: 700,
                   flexShrink: 0,
@@ -1306,7 +1305,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                         borderRadius: '50%',
                         background:
                           'linear-gradient(135deg, var(--accent), var(--secondary-accent))',
-                        color: '#fff',
+                        color: 'var(--on-accent)',
                         fontSize: 11,
                         fontWeight: 700,
                         display: 'flex',
@@ -1327,7 +1326,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                       borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '4px 18px 18px 18px',
                       background: m.role === 'user' ? 'var(--accent)' : 'var(--surface-tint)',
                       border: m.role === 'penny' ? '1px solid var(--border)' : 'none',
-                      color: m.role === 'user' ? '#fff' : 'var(--secondary)',
+                      color: m.role === 'user' ? 'var(--on-accent)' : 'var(--secondary)',
                       boxShadow: m.role === 'user' ? '0 4px 14px var(--accent-glow)' : 'none',
                     }}
                   >
@@ -1343,7 +1342,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                       height: 28,
                       borderRadius: '50%',
                       background: 'linear-gradient(135deg, var(--accent), var(--secondary-accent))',
-                      color: '#fff',
+                      color: 'var(--on-accent)',
                       fontSize: 11,
                       fontWeight: 700,
                       display: 'flex',
@@ -1424,7 +1423,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
                   boxShadow: '0 4px 12px var(--accent-glow)',
                 }}
               >
-                <Send size={15} strokeWidth={2} color="#fff" />
+                <Send size={15} strokeWidth={2} color="var(--on-accent)" />
               </div>
             </div>
           </motion.div>

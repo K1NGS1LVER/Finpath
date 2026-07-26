@@ -164,7 +164,7 @@ export function FeatDebt() {
             top: 14,
             right: 14,
             background: 'var(--accent)',
-            color: '#fff',
+            color: 'var(--on-accent)',
             fontSize: 9,
             fontWeight: 700,
             padding: '3px 9px',
@@ -333,7 +333,7 @@ export function FeatPenny() {
             height: 28,
             borderRadius: '50%',
             background: 'linear-gradient(135deg, var(--accent), var(--secondary-accent))',
-            color: '#fff',
+            color: 'var(--on-accent)',
             fontSize: 11,
             fontWeight: 700,
             display: 'flex',
@@ -385,7 +385,7 @@ export function FeatPenny() {
             justifyContent: 'center',
           }}
         >
-          <Send size={14} strokeWidth={2} color="#fff" />
+          <Send size={14} strokeWidth={2} color="var(--on-accent)" />
         </div>
       </div>
     </div>
