@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { seedAndGo, SEEDED_STORE } from './fixtures/store-seed';
+import { seedAndGo } from './fixtures/store-seed';
 
 test.describe('auth routing', () => {
   test('landing page renders CTA button', async ({ page }) => {

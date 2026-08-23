@@ -95,7 +95,7 @@ export const SEEDED_STORE = {
         color: 'var(--green)',
       },
     ],
-    strategy: 'balanced',
+    strategy: 'avalanche',
     storageMode: 'local',
     monthlySurplusReserve: 0,
     chatHistory: [],
@@ -108,11 +108,10 @@ export const SEEDED_STORE = {
   version: 5,
 };
 
+import type { Page } from '@playwright/test';
+
 /** Call in beforeEach to inject seeded store and navigate to a route. */
-export async function seedAndGo(
-  page: import('@playwright/test').Page,
-  path = '/dashboard',
-) {
+export async function seedAndGo(page: Page, path = '/dashboard') {
   await page.addInitScript((seed) => {
     localStorage.setItem('finpath-store', JSON.stringify(seed));
   }, SEEDED_STORE);

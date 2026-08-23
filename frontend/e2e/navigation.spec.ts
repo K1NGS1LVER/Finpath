@@ -14,10 +14,11 @@ test.describe('navigation', () => {
     await expect(page.getByText('Total Outstanding')).toBeVisible();
   });
 
-  test('sidebar Scenarios link navigates to /scenarios', async ({ page }) => {
-    await page.getByRole('button', { name: 'Scenarios', exact: true }).click();
-    await expect(page).toHaveURL(/\/scenarios/);
-    await expect(page.getByRole('heading', { name: 'Scenarios' })).toBeVisible();
+  test('sidebar Cashflow link navigates to /cashflow', async ({ page }) => {
+    const sidebar = page.locator('aside');
+    await sidebar.getByRole('button', { name: 'Cashflow', exact: true }).click();
+    await expect(page).toHaveURL(/\/cashflow/);
+    await expect(page.getByRole('heading', { name: 'Cashflow' })).toBeVisible();
   });
 
   test('Penny panel opens and shows input', async ({ page }) => {
