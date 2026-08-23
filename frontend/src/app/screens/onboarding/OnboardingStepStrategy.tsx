@@ -1,4 +1,4 @@
-import { TrendingUp, Sparkles, Wallet, AlertTriangle, ArrowUpRight, Calendar } from "lucide-react";
+import { TrendingUp, Sparkles, Wallet, AlertTriangle, ArrowUpRight, Calendar } from 'lucide-react';
 import type { InvestmentStrategy } from '@/lib/types';
 
 interface OnboardingStepStrategyProps {
@@ -24,14 +24,16 @@ function StepUpToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () =>
       role="switch"
       aria-checked={enabled}
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onToggle(); }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onToggle();
+      }}
       style={{
-        background: enabled ? "var(--accent-glow)" : "var(--surface-tint)",
-        borderColor: enabled ? "var(--accent)" : "var(--border)",
+        background: enabled ? 'var(--accent-glow)' : 'var(--surface-tint)',
+        borderColor: enabled ? 'var(--accent)' : 'var(--border)',
       }}
     >
       <div
-        className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${enabled ? "step-up-icon-on" : "step-up-icon-off"}`}
+        className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${enabled ? 'step-up-icon-on' : 'step-up-icon-off'}`}
       >
         <ArrowUpRight size={22} className="icon-wireframe" />
       </div>
@@ -44,10 +46,10 @@ function StepUpToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () =>
         </p>
       </div>
       <div
-        className={`w-12 h-7 rounded-full transition-colors relative flex items-center flex-shrink-0 ${enabled ? "bg-[var(--accent)]" : "bg-[var(--surface-hover)]"}`}
+        className={`w-12 h-7 rounded-full transition-colors relative flex items-center flex-shrink-0 ${enabled ? 'bg-[var(--accent)]' : 'bg-[var(--surface-hover)]'}`}
       >
         <div
-          className={`w-5 h-5 rounded-full bg-white shadow-md absolute transition-transform ${enabled ? "translate-x-6" : "translate-x-1"}`}
+          className={`w-5 h-5 rounded-full bg-white shadow-md absolute transition-transform ${enabled ? 'translate-x-6' : 'translate-x-1'}`}
         />
       </div>
     </div>
@@ -60,7 +62,7 @@ function StrategyCard({
   icon,
   title,
   description,
-  accentColor,
+  accentColor: _accentColor,
   accentSubtle,
   accentText,
   accentGlow,
@@ -85,9 +87,9 @@ function StrategyCard({
       className="text-left p-5 md:p-6 rounded-xl md:rounded-2xl transition-all"
       aria-pressed={isSelected}
       style={{
-        background: isSelected ? accentSubtle : "var(--card)",
-        border: `2px solid ${isSelected ? borderColor : "var(--border)"}`,
-        boxShadow: isSelected ? `0 0 28px ${accentGlow}` : "none",
+        background: isSelected ? accentSubtle : 'var(--card)',
+        border: `2px solid ${isSelected ? borderColor : 'var(--border)'}`,
+        boxShadow: isSelected ? `0 0 28px ${accentGlow}` : 'none',
       }}
     >
       {/* Icon bg/color: accentSubtle/accentText are CSS var strings passed as props — kept inline */}
@@ -100,9 +102,7 @@ function StrategyCard({
       <div className="font-bold mb-1.5 text-[var(--card-foreground)] font-display-family">
         {title}
       </div>
-      <div className="text-xs md:text-sm leading-relaxed text-secondary-color">
-        {description}
-      </div>
+      <div className="text-xs md:text-sm leading-relaxed text-secondary-color">{description}</div>
     </button>
   );
 }
@@ -110,7 +110,7 @@ function StrategyCard({
 function SurplusReserveSection({
   surplusAmount,
   onChangeSurplusAmount,
-  availableForGoals,
+  availableForGoals: _availableForGoals,
   surplusNum,
   surplusExceedsAvailable,
   surplusExceedsIncome,
@@ -125,14 +125,14 @@ function SurplusReserveSection({
   remainingForGoals: number;
 }) {
   const hasWarning = surplusExceedsAvailable || surplusExceedsIncome;
-  const inputBorderColor = hasWarning ? "var(--red)" : "var(--border)";
+  const inputBorderColor = hasWarning ? 'var(--red)' : 'var(--border)';
 
   return (
     <div
       className="p-5 md:p-6 rounded-xl md:rounded-2xl space-y-4"
       style={{
-        background: "var(--surface-tint)",
-        border: `2px solid ${hasWarning ? "var(--red)" : "var(--border)"}`,
+        background: 'var(--surface-tint)',
+        border: `2px solid ${hasWarning ? 'var(--red)' : 'var(--border)'}`,
       }}
     >
       <div className="flex items-center gap-3">
@@ -154,44 +154,58 @@ function SurplusReserveSection({
         <input
           type="text"
           value={surplusAmount}
-          onChange={(e) => onChangeSurplusAmount(e.target.value.replace(/[^0-9]/g, ""))}
+          onChange={(e) => onChangeSurplusAmount(e.target.value.replace(/[^0-9]/g, ''))}
           placeholder="0"
           className="flex-1 px-5 py-3 text-lg md:text-xl font-bold rounded-xl outline-none slashed-zero text-[var(--card-foreground)] font-display-family"
           style={{
-            background: "var(--card)",
+            background: 'var(--card)',
             border: `2px solid ${inputBorderColor}`,
           }}
           inputMode="numeric"
           aria-label="Monthly surplus reserve amount"
         />
-        <span className="text-xs md:text-sm font-medium text-[var(--secondary)] flex-shrink-0">/month</span>
+        <span className="text-xs md:text-sm font-medium text-[var(--secondary)] flex-shrink-0">
+          /month
+        </span>
       </div>
 
       {surplusNum > 0 && (
         <div className="flex items-center gap-2 text-xs md:text-sm py-1 label-secondary">
           <Calendar size={14} className="flex-shrink-0" />
           <span>
-            <strong className="text-[var(--card-foreground)] slashed-zero">{remainingForGoals.toLocaleString("en-IN")}</strong> available for goals
-            {" · "}
-            <strong className="text-[var(--card-foreground)] slashed-zero">{surplusNum.toLocaleString("en-IN")}</strong> reserved
+            <strong className="text-[var(--card-foreground)] slashed-zero">
+              {remainingForGoals.toLocaleString('en-IN')}
+            </strong>{' '}
+            available for goals
+            {' · '}
+            <strong className="text-[var(--card-foreground)] slashed-zero">
+              {surplusNum.toLocaleString('en-IN')}
+            </strong>{' '}
+            reserved
           </span>
         </div>
       )}
 
       {surplusExceedsAvailable && !surplusExceedsIncome && (
-        <WarningBox type="error" text="This exceeds your available budget. Nothing will be left for your goals." />
+        <WarningBox
+          type="error"
+          text="This exceeds your available budget. Nothing will be left for your goals."
+        />
       )}
       {surplusExceedsIncome && (
-        <WarningBox type="error" text="This exceeds your total monthly income. Please enter a realistic amount." />
+        <WarningBox
+          type="error"
+          text="This exceeds your total monthly income. Please enter a realistic amount."
+        />
       )}
     </div>
   );
 }
 
-function WarningBox({ type, text }: { type: "error" | "warning"; text: string }) {
+function WarningBox({ type, text }: { type: 'error' | 'warning'; text: string }) {
   return (
     <div
-      className={`flex items-start gap-2.5 p-3 rounded-xl text-xs md:text-sm ${type === "error" ? "error-banner" : "warning-banner"}`}
+      className={`flex items-start gap-2.5 p-3 rounded-xl text-xs md:text-sm ${type === 'error' ? 'error-banner' : 'warning-banner'}`}
       role="alert"
     >
       <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
@@ -201,16 +215,27 @@ function WarningBox({ type, text }: { type: "error" | "warning"; text: string })
 }
 
 export default function OnboardingStepStrategy({
-  selectedStrategy, onChangeStrategy,
-  stepUpEnabled, onToggleStepUp,
-  surplusAmount, onChangeSurplusAmount,
-  incomeINR, availableForGoals, surplusNum,
-  surplusExceedsAvailable, surplusExceedsIncome, remainingForGoals,
+  selectedStrategy,
+  onChangeStrategy,
+  stepUpEnabled,
+  onToggleStepUp,
+  surplusAmount,
+  onChangeSurplusAmount,
+  incomeINR: _incomeINR,
+  availableForGoals,
+  surplusNum,
+  surplusExceedsAvailable,
+  surplusExceedsIncome,
+  remainingForGoals,
 }: OnboardingStepStrategyProps) {
   return (
     <div className="space-y-5 md:space-y-6">
       <div className="p-4 rounded-xl md:rounded-2xl text-xs md:text-sm info-banner">
-        You have <strong className="text-[var(--card-foreground)] slashed-zero">{availableForGoals.toLocaleString("en-IN")}</strong> available for goals after expenses and debt.
+        You have{' '}
+        <strong className="text-[var(--card-foreground)] slashed-zero">
+          {availableForGoals.toLocaleString('en-IN')}
+        </strong>{' '}
+        available for goals after expenses and debt.
       </div>
 
       <StepUpToggle enabled={stepUpEnabled} onToggle={onToggleStepUp} />
@@ -221,28 +246,41 @@ export default function OnboardingStepStrategy({
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           <StrategyCard
-            strategy="avalanche" isSelected={selectedStrategy === "avalanche"}
-            onClick={() => onChangeStrategy("avalanche")}
+            strategy="avalanche"
+            isSelected={selectedStrategy === 'avalanche'}
+            onClick={() => onChangeStrategy('avalanche')}
             icon={<TrendingUp size={22} className="icon-wireframe" />}
             title="Avalanche"
             description="Prioritize highest-impact goals first for maximum efficiency."
-            accentColor="var(--accent)" accentSubtle="var(--accent-glow)" accentText="var(--accent-text)" accentGlow="var(--accent-glow)" borderColor="var(--accent)"
+            accentColor="var(--accent)"
+            accentSubtle="var(--accent-glow)"
+            accentText="var(--accent-text)"
+            accentGlow="var(--accent-glow)"
+            borderColor="var(--accent)"
           />
           <StrategyCard
-            strategy="snowball" isSelected={selectedStrategy === "snowball"}
-            onClick={() => onChangeStrategy("snowball")}
+            strategy="snowball"
+            isSelected={selectedStrategy === 'snowball'}
+            onClick={() => onChangeStrategy('snowball')}
             icon={<Sparkles size={22} className="icon-wireframe" />}
             title="Snowball"
             description="Start with smaller goals for quick wins and momentum."
-            accentColor="var(--tertiary-accent)" accentSubtle="var(--tertiary-accent-subtle)" accentText="var(--tertiary-accent-text)" accentGlow="var(--tertiary-accent-glow)" borderColor="var(--tertiary-accent)"
+            accentColor="var(--tertiary-accent)"
+            accentSubtle="var(--tertiary-accent-subtle)"
+            accentText="var(--tertiary-accent-text)"
+            accentGlow="var(--tertiary-accent-glow)"
+            borderColor="var(--tertiary-accent)"
           />
         </div>
       </div>
 
       <SurplusReserveSection
-        surplusAmount={surplusAmount} onChangeSurplusAmount={onChangeSurplusAmount}
-        availableForGoals={availableForGoals} surplusNum={surplusNum}
-        surplusExceedsAvailable={surplusExceedsAvailable} surplusExceedsIncome={surplusExceedsIncome}
+        surplusAmount={surplusAmount}
+        onChangeSurplusAmount={onChangeSurplusAmount}
+        availableForGoals={availableForGoals}
+        surplusNum={surplusNum}
+        surplusExceedsAvailable={surplusExceedsAvailable}
+        surplusExceedsIncome={surplusExceedsIncome}
         remainingForGoals={remainingForGoals}
       />
     </div>

@@ -1,6 +1,6 @@
-import { Target, TrendingUp, Shield, Sparkles, Calendar, Lightbulb, Plus, X } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import type { GoalSelection } from "./useOnboardingForm";
+import { Target, TrendingUp, Shield, Sparkles, Calendar, Lightbulb, Plus, X } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import type { GoalSelection } from './useOnboardingForm';
 
 interface OnboardingStepGoalsProps {
   selectedGoals: Record<string, GoalSelection>;
@@ -25,46 +25,46 @@ interface GoalOptionDef {
 
 const GOAL_OPTIONS: GoalOptionDef[] = [
   {
-    name: "Dream Bike",
+    name: 'Dream Bike',
     icon: Target,
-    color: "var(--accent)",
-    colorText: "var(--accent-text)",
-    colorSubtle: "var(--accent-subtle)",
+    color: 'var(--accent)',
+    colorText: 'var(--accent-text)',
+    colorSubtle: 'var(--accent-subtle)',
   },
   {
-    name: "Investment",
+    name: 'Investment',
     icon: TrendingUp,
-    color: "var(--tertiary-accent)",
-    colorText: "var(--tertiary-accent-text)",
-    colorSubtle: "var(--tertiary-accent-subtle)",
+    color: 'var(--tertiary-accent)',
+    colorText: 'var(--tertiary-accent-text)',
+    colorSubtle: 'var(--tertiary-accent-subtle)',
   },
   {
-    name: "Emergency Fund",
+    name: 'Emergency Fund',
     icon: Shield,
-    color: "var(--tertiary-accent)",
-    colorText: "var(--tertiary-accent-text)",
-    colorSubtle: "var(--tertiary-accent-subtle)",
+    color: 'var(--tertiary-accent)',
+    colorText: 'var(--tertiary-accent-text)',
+    colorSubtle: 'var(--tertiary-accent-subtle)',
   },
   {
-    name: "Wedding",
+    name: 'Wedding',
     icon: Sparkles,
-    color: "var(--amber)",
-    colorText: "var(--amber-text)",
-    colorSubtle: "var(--amber-subtle)",
+    color: 'var(--amber)',
+    colorText: 'var(--amber-text)',
+    colorSubtle: 'var(--amber-subtle)',
   },
   {
-    name: "Vacation",
+    name: 'Vacation',
     icon: Calendar,
-    color: "var(--accent)",
-    colorText: "var(--accent-text)",
-    colorSubtle: "var(--accent-subtle)",
+    color: 'var(--accent)',
+    colorText: 'var(--accent-text)',
+    colorSubtle: 'var(--accent-subtle)',
   },
   {
-    name: "Upskill Course",
+    name: 'Upskill Course',
     icon: Lightbulb,
-    color: "var(--tertiary-accent)",
-    colorText: "var(--tertiary-accent-text)",
-    colorSubtle: "var(--tertiary-accent-subtle)",
+    color: 'var(--tertiary-accent)',
+    colorText: 'var(--tertiary-accent-text)',
+    colorSubtle: 'var(--tertiary-accent-subtle)',
   },
 ];
 
@@ -89,11 +89,11 @@ function GoalOptionCard({
 
   return (
     <div
-      className={`goal-option flex flex-col overflow-hidden rounded-xl md:rounded-2xl transition-all ${isSelected ? "selected" : ""}`}
+      className={`goal-option flex flex-col overflow-hidden rounded-xl md:rounded-2xl transition-all ${isSelected ? 'selected' : ''}`}
       style={{
-        background: "var(--card)",
-        border: isSelected ? "2px solid var(--accent)" : "2px solid var(--border)",
-        boxShadow: isSelected ? getPriorityGlow(priority) : "none",
+        background: 'var(--card)',
+        border: isSelected ? '2px solid var(--accent)' : '2px solid var(--border)',
+        boxShadow: isSelected ? getPriorityGlow(priority) : 'none',
       }}
     >
       <button
@@ -101,7 +101,7 @@ function GoalOptionCard({
         onClick={onToggle}
         className="p-4 md:p-5 font-medium flex flex-col items-center gap-2.5 md:gap-3 text-[var(--card-foreground)] w-full h-full font-body-family"
         aria-pressed={isSelected}
-        aria-label={`${goal.name}${isSelected ? ` — Priority ${priority}` : ""}`}
+        aria-label={`${goal.name}${isSelected ? ` — Priority ${priority}` : ''}`}
       >
         {/* Icon bg/color: goal.colorSubtle / goal.colorText are CSS var strings (runtime from data) — kept inline */}
         <div
@@ -159,13 +159,14 @@ function SelectedOrderChips({
             key={`rank-${name}`}
             className="px-3 py-1.5 rounded-full text-[10px] md:text-xs font-bold"
             style={{
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-              color: "var(--card-foreground)",
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              color: 'var(--card-foreground)',
               boxShadow: getPriorityGlow(data.priority),
             }}
           >
-            P{data.priority} · {name.startsWith("custom-") ? (data.customName || "Custom Goal") : name}
+            P{data.priority} ·{' '}
+            {name.startsWith('custom-') ? data.customName || 'Custom Goal' : name}
           </span>
         ))}
       </div>
@@ -177,7 +178,7 @@ function SelectedOrderChips({
 }
 
 function CustomGoalRow({
-  goalKey,
+  goalKey: _goalKey,
   customName,
   targetAmount,
   priority,
@@ -199,8 +200,8 @@ function CustomGoalRow({
     <div
       className="goal-option selected w-full rounded-xl md:rounded-2xl overflow-hidden transition-all flex flex-col"
       style={{
-        background: "var(--card)",
-        border: "2px solid var(--accent)",
+        background: 'var(--card)',
+        border: '2px solid var(--accent)',
         boxShadow: getPriorityGlow(priority),
       }}
     >
@@ -208,8 +209,8 @@ function CustomGoalRow({
         <div
           className="w-11 h-11 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0"
           style={{
-            backgroundColor: "var(--accent-glow)",
-            color: "var(--accent-text)",
+            backgroundColor: 'var(--accent-glow)',
+            color: 'var(--accent-text)',
           }}
         >
           <Target size={20} className="icon-wireframe md:w-6 md:h-6" />
@@ -233,8 +234,8 @@ function CustomGoalRow({
             type="button"
             onClick={onRemove}
             className="w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-            style={{ background: "var(--surface-tint)", color: "var(--secondary)" }}
-            aria-label={`Remove ${customName || "custom goal"}`}
+            style={{ background: 'var(--surface-tint)', color: 'var(--secondary)' }}
+            aria-label={`Remove ${customName || 'custom goal'}`}
           >
             <X size={14} className="icon-wireframe" />
           </button>
@@ -249,7 +250,7 @@ function CustomGoalRow({
           placeholder="Target amount (₹)"
           className="w-full py-2.5 px-3 text-sm md:text-base font-bold text-center rounded-lg outline-none slashed-zero breakdown-input"
           inputMode="numeric"
-          aria-label={`Target amount for ${customName || "custom goal"}`}
+          aria-label={`Target amount for ${customName || 'custom goal'}`}
         />
       </div>
     </div>
@@ -281,7 +282,11 @@ export default function OnboardingStepGoals({
 
       <SelectedOrderChips sortedGoals={sortedSelectedGoals} getPriorityGlow={getPriorityGlow} />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" role="group" aria-label="Goal options">
+      <div
+        className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+        role="group"
+        aria-label="Goal options"
+      >
         {GOAL_OPTIONS.map((goal) => {
           const selectedData = selectedGoals[goal.name];
           const isSelected = !!selectedData;
@@ -293,7 +298,7 @@ export default function OnboardingStepGoals({
               goal={goal}
               isSelected={isSelected}
               priority={priority}
-              targetAmount={selectedData?.targetAmount || ""}
+              targetAmount={selectedData?.targetAmount || ''}
               onToggle={() => onToggleGoal(goal.name)}
               onUpdateAmount={(amount) => onUpdateGoalAmount(goal.name, amount)}
               getPriorityGlow={getPriorityGlow}
@@ -306,7 +311,7 @@ export default function OnboardingStepGoals({
         <CustomGoalRow
           key={key}
           goalKey={key}
-          customName={data.customName || ""}
+          customName={data.customName || ''}
           targetAmount={data.targetAmount}
           priority={data.priority}
           onUpdateName={(name) => onUpdateGoalName(key, name)}
@@ -322,9 +327,9 @@ export default function OnboardingStepGoals({
           onClick={onAddCustomGoal}
           className="w-full py-3.5 rounded-xl md:rounded-2xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200"
           style={{
-            background: "var(--card)",
-            border: "2px dashed var(--border)",
-            color: "var(--accent)",
+            background: 'var(--card)',
+            border: '2px dashed var(--border)',
+            color: 'var(--accent)',
           }}
         >
           <Plus size={16} className="icon-wireframe" />

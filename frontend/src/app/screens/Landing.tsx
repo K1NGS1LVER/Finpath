@@ -1659,7 +1659,7 @@ export default function Landing({ isDark, setIsDark }: LandingProps) {
           <p
             style={{ fontSize: 17, color: 'var(--secondary)', marginBottom: 40, lineHeight: 1.65 }}
           >
-            Join thousands of Indian professionals who've stopped guessing and started knowing.
+            Join thousands of Indian professionals who&apos;ve stopped guessing and started knowing.
           </p>
           <button
             onClick={() => navigate('/auth')}

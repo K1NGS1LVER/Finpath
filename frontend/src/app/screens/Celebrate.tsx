@@ -15,11 +15,9 @@ import { captureNodeToPng, tryShareImage, type ShareOutcome } from '@/lib/share-
 
 export default function Celebrate() {
   const navigate = useNavigate();
-  const goals = useFinPathStore(s => s.goals);
-  const income = useFinPathStore(s => s.income);
-  const savings = useFinPathStore(s => s.savings);
-  const investments = useFinPathStore(s => s.investments);
-  const healthScore = useFinPathStore(s => s.healthScore);
+  const goals = useFinPathStore((s) => s.goals);
+  const savings = useFinPathStore((s) => s.savings);
+  const investments = useFinPathStore((s) => s.investments);
 
   const reduced = useReducedMotion();
   const [sharing, setSharing] = useState(false);
@@ -28,7 +26,7 @@ export default function Celebrate() {
   const shareCardRef = useRef<HTMLDivElement>(null);
   const heroCardRef = useRef<HTMLDivElement>(null);
 
-  const completedGoals = goals.filter(g => g.status === 'complete');
+  const completedGoals = goals.filter((g) => g.status === 'complete');
   const totalSaved = completedGoals.reduce((sum, g) => sum + g.targetAmount, 0);
   const isEmpty = completedGoals.length === 0;
 
@@ -82,9 +80,7 @@ export default function Celebrate() {
   }, [reduced, isEmpty, lockInDelay]);
   const heroGoal = completedGoals[0];
   const totalTimeline = completedGoals.reduce((sum, g) => sum + (g.timelineMonths || 0), 0);
-  const aggregateMonthly = totalTimeline > 0
-    ? Math.round(totalSaved / totalTimeline)
-    : 0;
+  const aggregateMonthly = totalTimeline > 0 ? Math.round(totalSaved / totalTimeline) : 0;
   const netWorthToday = savings + investments + totalSaved;
   const dateLabel = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -102,8 +98,7 @@ export default function Celebrate() {
       const card = shareCardRef.current;
       if (!card) throw new Error('ShareCard not mounted');
       const cardBg =
-        getComputedStyle(document.documentElement).getPropertyValue('--card').trim() ||
-        '#ffffff';
+        getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#ffffff';
       const blob = await captureNodeToPng(card, { pixelRatio: 2, backgroundColor: cardBg });
       const outcome = await tryShareImage(blob, {
         title: 'I hit a savings milestone with FinPath',
@@ -132,16 +127,28 @@ export default function Celebrate() {
       <div className="text-center py-8 md:py-12 relative z-10">
         <motion.div
           className="inline-flex w-28 h-28 md:w-32 md:h-32 rounded-full items-center justify-center mb-6"
-          style={{ background: 'var(--accent)', boxShadow: '0 0 72px var(--secondary-accent-glow)' }}
+          style={{
+            background: 'var(--accent)',
+            boxShadow: '0 0 72px var(--secondary-accent-glow)',
+          }}
           initial={{ scale: 0, rotate: -15 }}
           animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.1 }}
         >
-          <Trophy size={56} className="md:w-16 md:h-16" style={{ color: 'var(--on-secondary-accent)' }} />
+          <Trophy
+            size={56}
+            className="md:w-16 md:h-16"
+            style={{ color: 'var(--on-secondary-accent)' }}
+          />
         </motion.div>
         <motion.h1
           className="text-3xl md:text-5xl font-bold mb-3"
-          style={{ fontFamily: 'var(--font-display)', background: 'linear-gradient(135deg, var(--accent), var(--accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          style={{
+            fontFamily: 'var(--font-display)',
+            background: 'linear-gradient(135deg, var(--accent), var(--accent))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
@@ -159,7 +166,8 @@ export default function Celebrate() {
             'Keep going — your first celebration is just around the corner.'
           ) : (
             <>
-              You've completed {completedGoals.length} goal{completedGoals.length > 1 ? 's' : ''} and saved{' '}
+              You&apos;ve completed {completedGoals.length} goal
+              {completedGoals.length > 1 ? 's' : ''} and saved{' '}
               <CountUp value={totalSaved} format={fmt} delay={0.5} />!
             </>
           )}
@@ -190,15 +198,29 @@ export default function Celebrate() {
                 ref={i === 0 ? heroCardRef : undefined}
                 className="bento-card relative overflow-hidden border-2 border-[var(--accent)]"
                 style={{ boxShadow: '0 0 32px var(--secondary-accent-glow)' }}
-                variants={{ hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } } }}
+                variants={{
+                  hidden: { opacity: 0, x: -24 },
+                  visible: {
+                    opacity: 1,
+                    x: 0,
+                    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+                  },
+                }}
               >
                 <div className="penny-insight-blob absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-[var(--accent)] opacity-20 blur-[60px] rounded-full pointer-events-none" />
 
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <div className="text-xs font-semibold tracking-wider text-[var(--secondary-accent-text)] uppercase mb-1">Goal Complete</div>
-                      <h3 className="text-2xl font-bold text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>{goal.name}</h3>
+                      <div className="text-xs font-semibold tracking-wider text-[var(--secondary-accent-text)] uppercase mb-1">
+                        Goal Complete
+                      </div>
+                      <h3
+                        className="text-2xl font-bold text-[var(--card-foreground)]"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        {goal.name}
+                      </h3>
                       <div
                         className="inline-flex items-center gap-1 mt-2 pill"
                         style={{
@@ -210,31 +232,66 @@ export default function Celebrate() {
                           fontWeight: 'var(--font-weight-semibold)',
                         }}
                       >
-                        <Award size={12} style={{ color: 'var(--accent)' }} />
-                        +{computeSparks(goal.targetAmount, goal.priority).toLocaleString('en-IN')} sparks
+                        <Award size={12} style={{ color: 'var(--accent)' }} />+
+                        {computeSparks(goal.targetAmount, goal.priority).toLocaleString('en-IN')}{' '}
+                        sparks
                       </div>
                     </div>
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'var(--accent)', color: 'var(--on-secondary-accent)' }}>
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                      style={{ background: 'var(--accent)', color: 'var(--on-secondary-accent)' }}
+                    >
                       <Sparkles size={28} />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                     <div className="p-3 rounded-xl" style={{ background: 'var(--surface-hover)' }}>
-                      <div className="text-xs text-[var(--secondary)] mb-1" style={{ fontFamily: 'var(--font-body)' }}>Amount Saved</div>
-                      <div className="text-lg font-bold slashed-zero text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>
+                      <div
+                        className="text-xs text-[var(--secondary)] mb-1"
+                        style={{ fontFamily: 'var(--font-body)' }}
+                      >
+                        Amount Saved
+                      </div>
+                      <div
+                        className="text-lg font-bold slashed-zero text-[var(--card-foreground)]"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
                         <CountUp value={goal.targetAmount} format={fmt} delay={baseDelay + 0.1} />
                       </div>
                     </div>
                     <div className="p-3 rounded-xl" style={{ background: 'var(--surface-hover)' }}>
-                      <div className="text-xs text-[var(--secondary)] mb-1" style={{ fontFamily: 'var(--font-body)' }}>Timeline</div>
-                      <div className="text-lg font-bold slashed-zero text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>
-                        <CountUp value={goal.timelineMonths} format={(n) => `${Math.round(n)} months`} delay={baseDelay + 0.15} />
+                      <div
+                        className="text-xs text-[var(--secondary)] mb-1"
+                        style={{ fontFamily: 'var(--font-body)' }}
+                      >
+                        Timeline
+                      </div>
+                      <div
+                        className="text-lg font-bold slashed-zero text-[var(--card-foreground)]"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        <CountUp
+                          value={goal.timelineMonths}
+                          format={(n) => `${Math.round(n)} months`}
+                          delay={baseDelay + 0.15}
+                        />
                       </div>
                     </div>
-                    <div className="p-3 rounded-xl hidden md:block" style={{ background: 'var(--surface-hover)' }}>
-                      <div className="text-xs text-[var(--secondary)] mb-1" style={{ fontFamily: 'var(--font-body)' }}>Monthly Saved</div>
-                      <div className="text-lg font-bold slashed-zero text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>
+                    <div
+                      className="p-3 rounded-xl hidden md:block"
+                      style={{ background: 'var(--surface-hover)' }}
+                    >
+                      <div
+                        className="text-xs text-[var(--secondary)] mb-1"
+                        style={{ fontFamily: 'var(--font-body)' }}
+                      >
+                        Monthly Saved
+                      </div>
+                      <div
+                        className="text-lg font-bold slashed-zero text-[var(--card-foreground)]"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
                         <CountUp value={monthly} format={fmt} delay={baseDelay + 0.2} />
                       </div>
                     </div>
@@ -254,21 +311,51 @@ export default function Celebrate() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1], delay: 0.6 }}
         >
-          <h3 className="text-xl font-bold mb-6 text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>Your Journey So Far</h3>
+          <h3
+            className="text-xl font-bold mb-6 text-[var(--card-foreground)]"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Your Journey So Far
+          </h3>
           <div className="grid grid-cols-2 gap-6">
             <div className="text-center">
-              <div className="text-xs font-medium text-[var(--secondary)] mb-2">When You Started</div>
-              <div className="text-2xl md:text-3xl font-bold slashed-zero text-[var(--card-foreground)]" style={{ fontFamily: 'var(--font-display)' }}>₹0</div>
+              <div className="text-xs font-medium text-[var(--secondary)] mb-2">
+                When You Started
+              </div>
+              <div
+                className="text-2xl md:text-3xl font-bold slashed-zero text-[var(--card-foreground)]"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                ₹0
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xs font-medium text-[var(--secondary)] mb-2">Today</div>
-              <div className="text-2xl md:text-3xl font-bold slashed-zero" style={{ fontFamily: 'var(--font-display)', color: 'var(--secondary-accent-text)' }}>
-                <CountUp value={savings + investments + totalSaved} format={fmt} delay={lockInDelay} />
+              <div
+                className="text-2xl md:text-3xl font-bold slashed-zero"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--secondary-accent-text)' }}
+              >
+                <CountUp
+                  value={savings + investments + totalSaved}
+                  format={fmt}
+                  delay={lockInDelay}
+                />
               </div>
             </div>
           </div>
-          <div className="mt-6 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--progress-inactive)' }}>
-            <div className="h-full rounded-full" style={{ width: '100%', background: 'linear-gradient(90deg, var(--accent), var(--accent) 60%, var(--accent) 100%)', transition: 'width 2s ease' }} />
+          <div
+            className="mt-6 h-2 rounded-full overflow-hidden"
+            style={{ backgroundColor: 'var(--progress-inactive)' }}
+          >
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: '100%',
+                background:
+                  'linear-gradient(90deg, var(--accent), var(--accent) 60%, var(--accent) 100%)',
+                transition: 'width 2s ease',
+              }}
+            />
           </div>
         </motion.div>
       )}
@@ -281,11 +368,21 @@ export default function Celebrate() {
           initial="initial"
           animate="animate"
         >
-          <Trophy size={64} className="mx-auto mb-4" style={{ color: 'var(--secondary)', opacity: 0.4 }} />
-          <h2 className="font-bold mb-2 text-[var(--card-foreground)]" style={{ fontSize: 'var(--text-2xl)', fontFamily: 'var(--font-display)' }}>
+          <Trophy
+            size={64}
+            className="mx-auto mb-4"
+            style={{ color: 'var(--secondary)', opacity: 0.4 }}
+          />
+          <h2
+            className="font-bold mb-2 text-[var(--card-foreground)]"
+            style={{ fontSize: 'var(--text-2xl)', fontFamily: 'var(--font-display)' }}
+          >
             No milestones yet
           </h2>
-          <p className="text-[var(--secondary)] mb-6" style={{ fontSize: 'var(--text-base)', fontFamily: 'var(--font-body)' }}>
+          <p
+            className="text-[var(--secondary)] mb-6"
+            style={{ fontSize: 'var(--text-base)', fontFamily: 'var(--font-body)' }}
+          >
             Complete a goal in your Journey to unlock celebrations.
           </p>
           <button

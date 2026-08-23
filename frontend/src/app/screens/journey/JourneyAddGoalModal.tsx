@@ -32,7 +32,7 @@ export default function JourneyAddGoalModal({
   existingMonthlyNeed,
   budgetRemaining,
   addGoalError,
-  setAddGoalError,
+  setAddGoalError: _setAddGoalError,
   customName,
   setCustomName,
   customTarget,
@@ -71,7 +71,7 @@ export default function JourneyAddGoalModal({
             <div className="flex items-start gap-2 p-3 rounded-xl text-xs md:text-sm mb-4 error-banner">
               <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
               <div>
-                <div className="font-semibold mb-0.5">You're over budget</div>
+                <div className="font-semibold mb-0.5">You&apos;re over budget</div>
                 <span>
                   Your existing goals already need ₹{existingMonthlyNeed.toLocaleString('en-IN')}/mo
                   but you only have ₹{Math.max(0, monthlySurplus).toLocaleString('en-IN')}/mo

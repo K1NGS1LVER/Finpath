@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sun, Moon, Menu, LogOut, User, Settings as SettingsIcon, Award } from 'lucide-react';
+import { Sun, Moon, Menu, LogOut, Settings as SettingsIcon, Award } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
 import { useFinPathStore } from '@/lib/store';
 import { formatInr } from '@/lib/format';

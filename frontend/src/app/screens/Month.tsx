@@ -339,7 +339,7 @@ export default function Month() {
         <p className="text-label" style={{ color: 'var(--tertiary)' }}>
           {monthLabel} · {daysLeft} days left
         </p>
-        <h2 className="month-title">This Month's Plan</h2>
+        <h2 className="month-title">This Month&apos;s Plan</h2>
       </motion.div>
 
       {/* Debt warning */}
@@ -436,7 +436,7 @@ export default function Month() {
         <div className="month-left-col">
           {/* Impact card (full — progress bars per goal) */}
           <div className="bento-card bento-card-sm">
-            <p className="text-label">This Month's Impact</p>
+            <p className="text-label">This Month&apos;s Impact</p>
             <div className="impact-goals-list">
               {impactGoals.length === 0 ? (
                 <div className="month-impact-empty">
@@ -786,7 +786,7 @@ export default function Month() {
             <Sparkles size={18} className="icon-wireframe" />
           </div>
           <h3 className="text-heading" style={{ color: 'var(--card-foreground)' }}>
-            Penny's Tip
+            Penny&apos;s Tip
           </h3>
         </div>
         <p

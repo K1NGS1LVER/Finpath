@@ -394,7 +394,7 @@ export default function Sidebar({ onPennyClick, mobileMenuOpen, setMobileMenuOpe
                   flex: 1,
                 }}
               >
-                Hi, I'm Penny — your AI assistant
+                Hi, I&apos;m Penny — your AI assistant
               </span>
               <button
                 onClick={() => setShowPennyToast(false)}

@@ -399,7 +399,7 @@ export default function Debt({ onPennyClick }: { onPennyClick?: () => void }) {
                     <Target size={16} className="flex-shrink-0 mt-0.5 icon-wireframe" />
                     <span>
                       <strong>Note:</strong> No monthly surplus to distribute. Switching strategies
-                      won't change your checklist amounts right now.
+                      won&apos;t change your checklist amounts right now.
                     </span>
                   </div>
                 );
@@ -601,7 +601,7 @@ export default function Debt({ onPennyClick }: { onPennyClick?: () => void }) {
                   <Sparkles size={18} className="icon-wireframe" />
                 </div>
                 <div>
-                  <h3 className="penny-insights-title">Penny's Insights</h3>
+                  <h3 className="penny-insights-title">Penny&apos;s Insights</h3>
                   <p className="penny-insights-sub">Personalized for your current plan</p>
                 </div>
                 <button

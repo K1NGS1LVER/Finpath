@@ -51,7 +51,6 @@ export default function Cashflow() {
 
   const [hoveredNode, setHoveredNode] = useState<NodePos | null>(null);
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
   const [mousePosViewport, setMousePosViewport] = useState<{ x: number; y: number } | null>(null);
   const [activeNode, setActiveNode] = useState<NodePos | null>(null);
   const [activeLink, setActiveLink] = useState<{ idx: number; x: number; y: number } | null>(null);
@@ -97,7 +96,7 @@ export default function Cashflow() {
       ? Math.floor(emergencyFund / (totalExpenses + debtPayments))
       : 0;
 
-  function computeViewport(x: number, y: number, w: number, h: number) {
+  function computeViewport(x: number, y: number, w: number, _h: number) {
     const rect = sankeyWrapRef.current?.getBoundingClientRect();
     if (!rect) return { vx: 0, vy: 0 };
     return {
@@ -350,12 +349,9 @@ export default function Cashflow() {
                 style={{ position: 'relative' }}
                 onMouseMove={(e) => {
                   if (!sankeyWrapRef.current) return;
-                  const rect = sankeyWrapRef.current.getBoundingClientRect();
-                  setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
                   setMousePosViewport({ x: e.clientX, y: e.clientY });
                 }}
                 onMouseLeave={() => {
-                  setMousePos(null);
                   setHoveredLink(null);
                   setMousePosViewport(null);
                 }}
@@ -1363,7 +1359,7 @@ export default function Cashflow() {
               <Sparkles size={18} className="icon-wireframe" />
             </div>
             <h3 className="text-heading slashed-zero text-[var(--card-foreground)]">
-              Penny's Insight
+              Penny&apos;s Insight
             </h3>
           </div>
           {dti > 40 && (

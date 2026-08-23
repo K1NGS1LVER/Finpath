@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import FinPathLogo from "../FinPathLogo";
-import type { ThemeTokens } from "@/lib/theme-tokens";
+import type { ReactNode } from 'react';
+import FinPathLogo from '../FinPathLogo';
+import type { ThemeTokens } from '@/lib/theme-tokens';
 
 export const PDF_PAGE_WIDTH = 794;
 export const PDF_PAGE_HEIGHT = 1123;
@@ -35,19 +35,19 @@ export default function PdfPage({
         backgroundColor: tokens.card,
         color: tokens.cardFg,
         fontFamily: tokens.fontBody,
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
         flexShrink: 0,
       }}
     >
       <header
         style={{
           padding: `${PDF_PAGE_MARGIN}px ${PDF_PAGE_MARGIN}px 18px`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           flexShrink: 0,
         }}
       >
@@ -58,8 +58,8 @@ export default function PdfPage({
             fontFamily: tokens.fontBody,
             fontSize: 12,
             fontWeight: 600,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
             color: tokens.tertiary,
           }}
         >
@@ -83,8 +83,8 @@ export default function PdfPage({
         style={{
           flex: 1,
           padding: `28px ${PDF_PAGE_MARGIN}px 24px`,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           minHeight: 0,
         }}
       >
@@ -95,9 +95,9 @@ export default function PdfPage({
         style={{
           padding: `14px ${PDF_PAGE_MARGIN}px ${PDF_PAGE_MARGIN - 16}px`,
           borderTop: `1px solid ${tokens.border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           flexShrink: 0,
         }}
       >
@@ -117,7 +117,7 @@ export default function PdfPage({
             fontSize: 11,
             color: tokens.tertiary,
             fontFamily: tokens.fontBody,
-            fontVariantNumeric: "tabular-nums",
+            fontVariantNumeric: 'tabular-nums',
           }}
         >
           Page {pageIndex + 1} of {totalPages}
