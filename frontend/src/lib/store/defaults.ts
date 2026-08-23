@@ -54,27 +54,54 @@ export const defaultProfile: FinancialProfile = {
   ageYears: undefined,
 };
 
+const memoryStorage = new Map<string, string>();
+
+const isLocalStorageAvailable = (): boolean => {
+  try {
+    return (
+      typeof window !== 'undefined' &&
+      typeof window.localStorage !== 'undefined' &&
+      window.localStorage !== null
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const safeStorage = createJSONStorage(() => ({
-  getItem: (name: string) => {
+  getItem: (name: string): string | null => {
     try {
-      return localStorage.getItem(name);
+      if (isLocalStorageAvailable()) {
+        return window.localStorage.getItem(name);
+      }
     } catch (e) {
-      console.warn('localStorage.getItem failed', e);
-      return null;
+      console.warn('localStorage.getItem failed, falling back to memory storage', e);
     }
+    return memoryStorage.get(name) ?? null;
   },
-  setItem: (name: string, value: string) => {
+  setItem: (name: string, value: string): void => {
     try {
-      localStorage.setItem(name, value);
+      if (isLocalStorageAvailable()) {
+        window.localStorage.setItem(name, value);
+        return;
+      }
     } catch (e) {
-      console.warn('localStorage.setItem failed (quota exceeded?)', e);
+      console.warn(
+        'localStorage.setItem failed (quota exceeded?), falling back to memory storage',
+        e,
+      );
     }
+    memoryStorage.set(name, value);
   },
-  removeItem: (name: string) => {
+  removeItem: (name: string): void => {
     try {
-      localStorage.removeItem(name);
+      if (isLocalStorageAvailable()) {
+        window.localStorage.removeItem(name);
+        return;
+      }
     } catch (e) {
       console.warn('localStorage.removeItem failed', e);
     }
+    memoryStorage.delete(name);
   },
 }));
