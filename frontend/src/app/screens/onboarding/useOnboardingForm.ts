@@ -284,7 +284,6 @@ export function useOnboardingForm() {
   }, [
     incomeItems,
     incomeCurrency,
-    totalIncomeINR,
     expenseBreakdown,
     expensesCurrency,
     totalExpenses,
@@ -412,12 +411,12 @@ export function useOnboardingForm() {
           type: result.success ? 'success' : 'error',
           message: result.summary,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         setIsExtracting(false);
         setExtractionPopup({
           show: true,
           type: 'error',
-          message: `Error processing document: ${error.message || 'Unknown error'}. Please enter details manually.`,
+          message: `Error processing document: ${error instanceof Error ? error.message : 'Unknown error'}. Please enter details manually.`,
         });
       }
 

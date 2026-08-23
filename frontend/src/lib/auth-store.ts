@@ -42,7 +42,11 @@ interface AuthState {
   error: string | null;
 
   initialize: () => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (
+    email: string,
+    password: string,
+    name?: string,
+  ) => Promise<{ success: boolean; error?: string }>;
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   clearError: () => void;
@@ -58,17 +62,17 @@ let authListenerInitialized = false;
 async function migrateLocalToCloud(userId: string): Promise<void> {
   if (!isSupabaseConfigured) return;
 
-  let local: any = null;
+  let local: Record<string, unknown> | null = null;
   try {
     const raw = localStorage.getItem(LOCAL_STORE_KEY);
     if (!raw) return;
-    local = JSON.parse(raw);
+    local = JSON.parse(raw) as Record<string, unknown>;
   } catch {
     return;
   }
 
   // Only migrate genuine onboarded local data.
-  const profileData = local?.state ?? local;
+  const profileData = (local?.state ?? local) as Record<string, unknown> | null;
   if (!profileData || !profileData.onboarded) return;
 
   const { data: existing, error: fetchErr } = await supabase
@@ -85,14 +89,12 @@ async function migrateLocalToCloud(userId: string): Promise<void> {
   const remoteEmpty = !existing || !existing.data || Object.keys(existing.data).length === 0;
 
   if (remoteEmpty) {
-    const { error: upsertErr } = await supabase
-      .from('profiles')
-      .upsert({
-        user_id: userId,
-        data: profileData,
-        storage_mode: 'local',
-        schema_version: 3,
-      });
+    const { error: upsertErr } = await supabase.from('profiles').upsert({
+      user_id: userId,
+      data: profileData,
+      storage_mode: 'local',
+      schema_version: 3,
+    });
     if (upsertErr) {
       console.error('[auth] migrate upsert error:', upsertErr.message);
     }
@@ -102,7 +104,10 @@ async function migrateLocalToCloud(userId: string): Promise<void> {
   // Both sides have data — keep cloud, archive local.
   const today = new Date().toISOString().slice(0, 10);
   try {
-    localStorage.setItem(`${LOCAL_STORE_KEY}.local-backup-${today}`, localStorage.getItem(LOCAL_STORE_KEY) ?? '');
+    localStorage.setItem(
+      `${LOCAL_STORE_KEY}.local-backup-${today}`,
+      localStorage.getItem(LOCAL_STORE_KEY) ?? '',
+    );
   } catch {
     // ignore quota errors; cloud is authoritative
   }
@@ -169,7 +174,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { success: true };
     }
     if (!isSupabaseConfigured) {
-      return { success: false, error: 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.' };
+      return {
+        success: false,
+        error:
+          'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.',
+      };
     }
     set({ loading: true, error: null });
     const { data, error } = await supabase.auth.signUp({
@@ -199,7 +208,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { success: true };
     }
     if (!isSupabaseConfigured) {
-      return { success: false, error: 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.' };
+      return {
+        success: false,
+        error:
+          'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.',
+      };
     }
     set({ loading: true, error: null });
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });

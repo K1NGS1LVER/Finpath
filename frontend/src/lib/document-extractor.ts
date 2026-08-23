@@ -61,7 +61,11 @@ async function extractTextFromPDF(file: File): Promise<string> {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     const pageText = content.items
-      .map((item: any) => item.str)
+      .map((item) =>
+        'str' in (item as Record<string, unknown>)
+          ? String((item as Record<string, unknown>).str)
+          : '',
+      )
       .join(' ');
     fullText += pageText + '\n';
   }
@@ -73,18 +77,18 @@ async function extractTextFromPDF(file: File): Promise<string> {
 async function extractTextFromImage(file: File): Promise<string> {
   // Dynamic import to avoid loading tesseract eagerly
   const Tesseract = await import('tesseract.js');
-  
+
   const imageUrl = URL.createObjectURL(file);
-  
+
   try {
     const result = await Tesseract.recognize(imageUrl, 'eng', {
-      logger: (m: any) => {
+      logger: (m: { status?: string; progress?: number }) => {
         if (m.status === 'recognizing text') {
           console.log(`[OCR] Progress: ${Math.round((m.progress || 0) * 100)}%`);
         }
       },
     });
-    
+
     return result.data.text;
   } finally {
     URL.revokeObjectURL(imageUrl);
@@ -96,15 +100,15 @@ async function extractTextFromImage(file: File): Promise<string> {
 /** Parse Indian number formats: 1,20,000 or 120000 or 1.2L */
 function parseIndianNumber(str: string): number {
   if (!str) return 0;
-  
+
   // Handle lakh notation: "1.5L" or "1.5 Lakh"
   const lakhMatch = str.match(/([\d.]+)\s*(?:L|lakh|lac)/i);
   if (lakhMatch) return parseFloat(lakhMatch[1]) * 100000;
-  
+
   // Handle crore notation
   const croreMatch = str.match(/([\d.]+)\s*(?:Cr|crore)/i);
   if (croreMatch) return parseFloat(croreMatch[1]) * 10000000;
-  
+
   // Remove currency symbols and commas
   const cleaned = str.replace(/[₹$,\s]/g, '').replace(/Rs\.?/gi, '');
   const num = parseFloat(cleaned);
@@ -114,7 +118,7 @@ function parseIndianNumber(str: string): number {
 /** Extract all currency amounts from text */
 function extractAmounts(text: string): { label: string; amount: number }[] {
   const results: { label: string; amount: number }[] = [];
-  
+
   // Pattern: "Label ... ₹XX,XXX" or "Label ... Rs. XX,XXX" or "Label: XX,XXX"
   // Label class is anchored on a leading letter and bounded to 60 chars to
   // prevent catastrophic backtracking (ReDoS) on adversarial inputs.
@@ -126,7 +130,7 @@ function extractAmounts(text: string): { label: string; amount: number }[] {
     // Label followed by number (common in tables)
     /([A-Za-z][A-Za-z\s/\-().]{0,58})[\s:]+(\d{1,3}(?:,\d{2,3})*(?:\.\d{1,2})?)\b/g,
   ];
-  
+
   for (const pattern of patterns) {
     let match;
     while ((match = pattern.exec(text)) !== null) {
@@ -137,35 +141,64 @@ function extractAmounts(text: string): { label: string; amount: number }[] {
       }
     }
   }
-  
+
   return results;
 }
 
 /** Try to detect if this is a salary slip */
 function detectSalarySlip(text: string): ExtractionResult['data'] | null {
   const lower = text.toLowerCase();
-  
+
   // Check for salary-related keywords
   const salaryKeywords = [
-    'salary', 'pay slip', 'payslip', 'pay stub', 'earnings', 'gross',
-    'net pay', 'take home', 'basic pay', 'ctc', 'allowance', 'hra',
-    'dearness', 'conveyance', 'provident fund', 'pf', 'esi',
-    'professional tax', 'tds', 'income tax', 'employer', 'employee',
-    'designation', 'department', 'employee id', 'emp id',
-    'net salary', 'taxable salary', 'total', 'net income', 'remuneration',
-    'stipend', 'wages', 'compensation', 'in hand', 'in-hand',
+    'salary',
+    'pay slip',
+    'payslip',
+    'pay stub',
+    'earnings',
+    'gross',
+    'net pay',
+    'take home',
+    'basic pay',
+    'ctc',
+    'allowance',
+    'hra',
+    'dearness',
+    'conveyance',
+    'provident fund',
+    'pf',
+    'esi',
+    'professional tax',
+    'tds',
+    'income tax',
+    'employer',
+    'employee',
+    'designation',
+    'department',
+    'employee id',
+    'emp id',
+    'net salary',
+    'taxable salary',
+    'total',
+    'net income',
+    'remuneration',
+    'stipend',
+    'wages',
+    'compensation',
+    'in hand',
+    'in-hand',
   ];
-  
-  const matchedKeywords = salaryKeywords.filter(kw => lower.includes(kw));
+
+  const matchedKeywords = salaryKeywords.filter((kw) => lower.includes(kw));
   if (matchedKeywords.length < 2) return null; // Need at least 2 keywords
-  
+
   const amounts = extractAmounts(text);
   const data: ExtractionResult['data'] = {};
-  
+
   // Try to find specific salary components
   for (const { label, amount } of amounts) {
     const l = label.toLowerCase();
-    
+
     if (/gross\s*(salary|pay|earning|total)/i.test(l) || /total\s*earning/i.test(l)) {
       data.income = amount;
     } else if (/net\s*(salary|pay|take|amount)/i.test(l) || /take\s*home/i.test(l)) {
@@ -181,24 +214,24 @@ function detectSalarySlip(text: string): ExtractionResult['data'] | null {
       data.isAnnual = true;
     }
   }
-  
+
   // If we found net pay but not gross, use net pay as income
   if (!data.income && data.netPay) {
     data.income = data.netPay;
   }
-  
+
   // If we found basic but not gross, estimate gross as basic * 2 (rough CTC estimate)
   if (!data.income && data.basicSalary) {
     data.income = data.basicSalary;
   }
-  
+
   // Last resort: find the largest reasonable amount in the document
   if (!data.income && amounts.length > 0) {
     // Filter for amounts that could be a salary (between 5K and 50L monthly, or up to 6Cr annual)
     const candidateAmounts = amounts
-      .filter(a => a.amount >= 5000 && a.amount <= 60000000)
+      .filter((a) => a.amount >= 5000 && a.amount <= 60000000)
       .sort((a, b) => b.amount - a.amount);
-    
+
     if (candidateAmounts.length > 0) {
       // The largest amount in a salary slip is usually gross salary or CTC
       data.income = candidateAmounts[0].amount;
@@ -208,30 +241,56 @@ function detectSalarySlip(text: string): ExtractionResult['data'] | null {
       }
     }
   }
-  
+
   return data.income ? data : null;
 }
 
 /** Try to detect if this is a loan / debt document */
 function detectLoanDocument(text: string): ExtractionResult['data'] | null {
   const lower = text.toLowerCase();
-  
+
   const loanKeywords = [
-    'loan', 'emi', 'equated monthly', 'installment', 'principal',
-    'outstanding', 'disbursement', 'repayment', 'tenure', 'interest rate',
-    'rate of interest', 'sanction', 'mortgage', 'home loan', 'car loan',
-    'personal loan', 'education loan', 'credit card', 'statement',
-    'minimum due', 'total due', 'balance', 'overdue', 'expenditure',
-    'debt', 'liability', 'obligation', 'borrowing', 'payoff', 'settlement',
-    'due date', 'amount due', 'outstanding balance',
+    'loan',
+    'emi',
+    'equated monthly',
+    'installment',
+    'principal',
+    'outstanding',
+    'disbursement',
+    'repayment',
+    'tenure',
+    'interest rate',
+    'rate of interest',
+    'sanction',
+    'mortgage',
+    'home loan',
+    'car loan',
+    'personal loan',
+    'education loan',
+    'credit card',
+    'statement',
+    'minimum due',
+    'total due',
+    'balance',
+    'overdue',
+    'expenditure',
+    'debt',
+    'liability',
+    'obligation',
+    'borrowing',
+    'payoff',
+    'settlement',
+    'due date',
+    'amount due',
+    'outstanding balance',
   ];
-  
-  const matchedKeywords = loanKeywords.filter(kw => lower.includes(kw));
+
+  const matchedKeywords = loanKeywords.filter((kw) => lower.includes(kw));
   if (matchedKeywords.length < 2) return null;
-  
+
   const amounts = extractAmounts(text);
   const data: ExtractionResult['data'] = {};
-  
+
   // Detect loan type
   if (/home\s*loan|housing\s*loan|mortgage/i.test(lower)) data.loanType = 'Home Loan';
   else if (/car\s*loan|auto\s*loan|vehicle/i.test(lower)) data.loanType = 'Car Loan';
@@ -239,10 +298,10 @@ function detectLoanDocument(text: string): ExtractionResult['data'] | null {
   else if (/education\s*loan|student/i.test(lower)) data.loanType = 'Education Loan';
   else if (/credit\s*card/i.test(lower)) data.loanType = 'Credit Card';
   else data.loanType = 'Loan';
-  
+
   for (const { label, amount } of amounts) {
     const l = label.toLowerCase();
-    
+
     if (/emi|monthly\s*(installment|payment|amount)/i.test(l) || /equated/i.test(l)) {
       data.emi = amount;
     } else if (/principal|loan\s*amount|sanction|disburs/i.test(l)) {
@@ -253,23 +312,23 @@ function detectLoanDocument(text: string): ExtractionResult['data'] | null {
       if (!data.loanAmount) data.loanAmount = amount;
     }
   }
-  
+
   // Try to find interest rate from pattern like "X.XX%" or "X.XX % p.a."
   const rateMatch = text.match(/(\d{1,2}(?:\.\d{1,2})?)\s*%\s*(?:p\.?a\.?|per\s*annum)?/i);
   if (rateMatch && !data.interestRate) {
     data.interestRate = parseFloat(rateMatch[1]);
   }
-  
-  return (data.emi || data.loanAmount) ? data : null;
+
+  return data.emi || data.loanAmount ? data : null;
 }
 
 // ── Main Extraction Function ────────────────────────────
 export async function extractFromDocument(
   file: File,
-  context: 'income' | 'debt'
+  context: 'income' | 'debt',
 ): Promise<ExtractionResult> {
   let rawText = '';
-  
+
   try {
     // Step 0: Check file size
     const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB limit
@@ -286,7 +345,7 @@ export async function extractFromDocument(
     // Step 1: Extract text based on file type
     const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     const isImage = file.type.startsWith('image/');
-    
+
     if (isPDF) {
       rawText = await extractTextFromPDF(file);
     } else if (isImage) {
@@ -300,34 +359,37 @@ export async function extractFromDocument(
         summary: 'Unsupported file format. Please upload a PDF or image file.',
       };
     }
-    
+
     // Step 2: Clean up text
     rawText = rawText.replace(/\s+/g, ' ').trim();
-    
+
     if (rawText.length < 10) {
       return {
         success: false,
         type: 'unknown',
         data: {},
         rawText,
-        summary: 'Could not extract any readable text from this document. The file may be scanned poorly or empty.',
+        summary:
+          'Could not extract any readable text from this document. The file may be scanned poorly or empty.',
       };
     }
-    
+
     // Step 3: Try to identify document type and extract data
     if (context === 'income') {
       // Try salary first, then loan
       const salaryData = detectSalarySlip(rawText);
       if (salaryData && salaryData.income) {
-        const monthlyIncome = salaryData.isAnnual 
-          ? Math.round(salaryData.income / 12) 
+        const monthlyIncome = salaryData.isAnnual
+          ? Math.round(salaryData.income / 12)
           : salaryData.income;
-        
+
         let summary = `Extracted monthly income of ₹${monthlyIncome.toLocaleString('en-IN')}`;
-        if (salaryData.isAnnual) summary += ` (from annual CTC of ₹${salaryData.income.toLocaleString('en-IN')})`;
-        if (salaryData.basicSalary) summary += `. Basic: ₹${salaryData.basicSalary.toLocaleString('en-IN')}`;
+        if (salaryData.isAnnual)
+          summary += ` (from annual CTC of ₹${salaryData.income.toLocaleString('en-IN')})`;
+        if (salaryData.basicSalary)
+          summary += `. Basic: ₹${salaryData.basicSalary.toLocaleString('en-IN')}`;
         if (salaryData.hra) summary += `, HRA: ₹${salaryData.hra.toLocaleString('en-IN')}`;
-        
+
         return {
           success: true,
           type: 'salary',
@@ -337,16 +399,17 @@ export async function extractFromDocument(
         };
       }
     }
-    
+
     if (context === 'debt') {
       const loanData = detectLoanDocument(rawText);
       if (loanData && (loanData.emi || loanData.loanAmount)) {
         let summary = '';
         if (loanData.loanType) summary += `${loanData.loanType} detected. `;
         if (loanData.emi) summary += `Monthly EMI: ₹${loanData.emi.toLocaleString('en-IN')}. `;
-        if (loanData.loanAmount) summary += `Principal: ₹${loanData.loanAmount.toLocaleString('en-IN')}. `;
+        if (loanData.loanAmount)
+          summary += `Principal: ₹${loanData.loanAmount.toLocaleString('en-IN')}. `;
         if (loanData.interestRate) summary += `Interest: ${loanData.interestRate}% p.a.`;
-        
+
         return {
           success: true,
           type: 'debt',
@@ -356,12 +419,12 @@ export async function extractFromDocument(
         };
       }
     }
-    
+
     // Try both types as a fallback
     const salaryFallback = detectSalarySlip(rawText);
     if (salaryFallback && salaryFallback.income) {
-      const monthlyIncome = salaryFallback.isAnnual 
-        ? Math.round(salaryFallback.income / 12) 
+      const monthlyIncome = salaryFallback.isAnnual
+        ? Math.round(salaryFallback.income / 12)
         : salaryFallback.income;
       return {
         success: true,
@@ -371,7 +434,7 @@ export async function extractFromDocument(
         summary: `Found income data: ₹${monthlyIncome.toLocaleString('en-IN')}/month`,
       };
     }
-    
+
     const loanFallback = detectLoanDocument(rawText);
     if (loanFallback) {
       return {
@@ -382,17 +445,17 @@ export async function extractFromDocument(
         summary: `Found loan data: EMI ₹${(loanFallback.emi || 0).toLocaleString('en-IN')}/month`,
       };
     }
-    
+
     // Nothing found
     return {
       success: false,
       type: 'unknown',
       data: {},
       rawText,
-      summary: 'Penny could not find salary or loan details in this document. Please check the file or enter your details manually.',
+      summary:
+        'Penny could not find salary or loan details in this document. Please check the file or enter your details manually.',
     };
-    
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[DocumentExtractor] Error:', error);
     return {
       success: false,

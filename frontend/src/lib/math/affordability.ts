@@ -1,4 +1,4 @@
-import { pmt, fv } from './finance';
+import { pmt } from './finance';
 
 // ── FOIR table (pp2 #3 — single source of truth) ────────────────────────────
 // All verdict and lever logic must call foirBandFor(); no inline cap math elsewhere.
@@ -235,7 +235,7 @@ export function runAffordability(input: AffordabilityInput): AffordabilityResult
     netMonthlyIncome,
     monthlyExpenses,
     monthlyReserve,
-    existingEmiTotal,
+    existingEmiTotal: _existingEmiTotal,
     investmentReturnRate,
     annualInterestRate = 9,
     tenureMonths = 60,

@@ -6,10 +6,10 @@
 // auth-store sign-in flow and the Settings panel.
 // ============================================================
 
-import type { FinancialProfile } from "./types";
-import { useFinPathStore } from "./store";
-import { useAuthStore } from "./auth-store";
-import { apiFetch } from "./api";
+import type { FinancialProfile } from './types';
+import { useFinPathStore } from './store';
+import { useAuthStore } from './auth-store';
+import { apiFetch } from './api';
 
 /**
  * Keys persisted to the cloud `profiles.data` jsonb column. We deliberately
@@ -17,44 +17,46 @@ import { apiFetch } from "./api";
  * `healthScore` (recomputed on hydrate), and `pendingGoalDecisions` (UI-local).
  */
 const SYNCED_KEYS: (keyof FinancialProfile)[] = [
-  "onboarded",
-  "income",
-  "expenses",
-  "debts",
-  "savings",
-  "investments",
-  "emergencyFund",
-  "goals",
-  "currency",
-  "strategy",
-  "monthlySurplusReserve",
-  "lastUpdated",
-  "stepUpEnabled",
-  "investmentReturnRate",
-  "storageMode",
+  'onboarded',
+  'income',
+  'expenses',
+  'debts',
+  'savings',
+  'investments',
+  'emergencyFund',
+  'goals',
+  'currency',
+  'strategy',
+  'monthlySurplusReserve',
+  'lastUpdated',
+  'stepUpEnabled',
+  'investmentReturnRate',
+  'storageMode',
 ];
 
 function serializeProfile(state: FinancialProfile): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const key of SYNCED_KEYS) {
-    out[key as string] = (state as any)[key];
+    out[key as string] = (state as unknown as Record<string, unknown>)[key as string];
   }
   return out;
 }
 
 const DEBOUNCE_MS = 2000;
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-let lastSerialized = "";
+let lastSerialized = '';
 let lastPushedAt = 0;
 let subscribed = false;
-let hydrateInFlight: Promise<"no-auth" | "no-remote" | "remote-newer" | "local-newer" | "equal" | "error"> | null = null;
+let hydrateInFlight: Promise<
+  'no-auth' | 'no-remote' | 'remote-newer' | 'local-newer' | 'equal' | 'error'
+> | null = null;
 
 function isAuthed(): boolean {
   return !!useAuthStore.getState().user;
 }
 
 function shouldSync(state: FinancialProfile): boolean {
-  return state.storageMode === "cloud" && isAuthed();
+  return state.storageMode === 'cloud' && isAuthed();
 }
 
 async function pushNow(opts: { force?: boolean } = {}): Promise<boolean> {
@@ -66,8 +68,8 @@ async function pushNow(opts: { force?: boolean } = {}): Promise<boolean> {
   if (!opts.force && serialized === lastSerialized) return false;
 
   try {
-    const res = await apiFetch("/api/profile", {
-      method: "PUT",
+    const res = await apiFetch('/api/profile', {
+      method: 'PUT',
       body: JSON.stringify({
         data: body,
         storage_mode: state.storageMode,
@@ -76,9 +78,9 @@ async function pushNow(opts: { force?: boolean } = {}): Promise<boolean> {
     });
     if (!res.ok) {
       if (res.status === 409) {
-        console.warn("[cloud-sync] remote newer — skipping push (409).");
+        console.warn('[cloud-sync] remote newer — skipping push (409).');
       } else {
-        console.warn("[cloud-sync] PUT /api/profile failed:", res.status);
+        console.warn('[cloud-sync] PUT /api/profile failed:', res.status);
       }
       return false;
     }
@@ -86,7 +88,7 @@ async function pushNow(opts: { force?: boolean } = {}): Promise<boolean> {
     lastPushedAt = Date.now();
     return true;
   } catch (e) {
-    console.warn("[cloud-sync] PUT error:", e);
+    console.warn('[cloud-sync] PUT error:', e);
     return false;
   }
 }
@@ -113,31 +115,33 @@ export async function flushCloudSync(opts: { force?: boolean } = {}): Promise<bo
  * (compared by `data.lastUpdated`). Returns the action taken.
  */
 export async function hydrateFromRemote(): Promise<
-  "no-auth" | "no-remote" | "remote-newer" | "local-newer" | "equal" | "error"
+  'no-auth' | 'no-remote' | 'remote-newer' | 'local-newer' | 'equal' | 'error'
 > {
   if (hydrateInFlight) return hydrateInFlight;
   hydrateInFlight = _hydrateFromRemote();
-  try { return await hydrateInFlight; } finally { hydrateInFlight = null; }
+  try {
+    return await hydrateInFlight;
+  } finally {
+    hydrateInFlight = null;
+  }
 }
 
 async function _hydrateFromRemote(): Promise<
-  "no-auth" | "no-remote" | "remote-newer" | "local-newer" | "equal" | "error"
+  'no-auth' | 'no-remote' | 'remote-newer' | 'local-newer' | 'equal' | 'error'
 > {
-  if (!isAuthed()) return "no-auth";
+  if (!isAuthed()) return 'no-auth';
   try {
-    const res = await apiFetch("/api/profile");
-    if (!res.ok) return "error";
+    const res = await apiFetch('/api/profile');
+    if (!res.ok) return 'error';
     const remote = await res.json();
-    if (!remote || remote._ephemeral || !remote.data) return "no-remote";
+    if (!remote || remote._ephemeral || !remote.data) return 'no-remote';
 
     const local = useFinPathStore.getState();
     const localTs = Number(local.lastUpdated || 0);
     const remoteTs = Number(remote.data.lastUpdated || 0);
 
     if (remoteTs > localTs) {
-      const remoteMode = (remote.storage_mode === "cloud" ? "cloud" : "local") as
-        | "cloud"
-        | "local";
+      const remoteMode = (remote.storage_mode === 'cloud' ? 'cloud' : 'local') as 'cloud' | 'local';
       useFinPathStore.getState().replaceProfile({
         ...remote.data,
         storageMode: remoteMode,
@@ -146,13 +150,13 @@ async function _hydrateFromRemote(): Promise<
       // re-push the same content we just pulled.
       lastSerialized = JSON.stringify(serializeProfile(useFinPathStore.getState()));
       lastPushedAt = Date.now();
-      return "remote-newer";
+      return 'remote-newer';
     }
-    if (localTs > remoteTs) return "local-newer";
-    return "equal";
+    if (localTs > remoteTs) return 'local-newer';
+    return 'equal';
   } catch (e) {
-    console.warn("[cloud-sync] hydrate error:", e);
-    return "error";
+    console.warn('[cloud-sync] hydrate error:', e);
+    return 'error';
   }
 }
 
@@ -171,7 +175,7 @@ export function initCloudSync(): void {
 
 /** Reset cached comparison state (e.g., on sign-out). */
 export function resetCloudSyncCache(): void {
-  lastSerialized = "";
+  lastSerialized = '';
   lastPushedAt = 0;
   if (debounceTimer) {
     clearTimeout(debounceTimer);

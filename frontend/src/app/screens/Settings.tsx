@@ -150,7 +150,7 @@ export default function Settings() {
     const state = useFinPathStore.getState();
     const payload: Record<string, unknown> = { schemaVersion: 5 };
     for (const key of EXPORT_KEYS) {
-      payload[key as string] = (state as any)[key];
+      payload[key as string] = (state as unknown as Record<string, unknown>)[key as string];
     }
     const stamp = new Date().toISOString().slice(0, 10);
     downloadJson(`finpath-export-${stamp}.json`, payload);
@@ -167,7 +167,7 @@ export default function Settings() {
     setBusy('import');
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text);
+      const parsed = JSON.parse(text) as Record<string, unknown>;
       if (!parsed || typeof parsed !== 'object') {
         throw new Error('Import file is not a JSON object.');
       }
@@ -188,7 +188,7 @@ export default function Settings() {
 
       const next: Partial<FinancialProfile> = {};
       for (const key of EXPORT_KEYS) {
-        if (key in parsed) (next as any)[key] = parsed[key as string];
+        if (key in parsed) (next as Record<string, unknown>)[key as string] = parsed[key as string];
       }
       // Preserve current storageMode unless the file explicitly overrides.
       if (!('storageMode' in parsed)) next.storageMode = storageMode;
@@ -199,10 +199,10 @@ export default function Settings() {
         await flushCloudSync({ force: true });
       }
       setStatus({ kind: 'success', text: 'Profile imported.' });
-    } catch (e: any) {
+    } catch (e: unknown) {
       setStatus({
         kind: 'error',
-        text: `Import failed: ${e?.message || 'invalid JSON'}`,
+        text: `Import failed: ${e instanceof Error ? e.message : 'invalid JSON'}`,
       });
     } finally {
       setBusy(null);
@@ -605,7 +605,7 @@ export default function Settings() {
           }}
         >
           Export a JSON snapshot to back up locally. Import to restore — if the file is older than
-          your current data, you'll be asked to confirm.
+          your current data, you&apos;ll be asked to confirm.
         </p>
 
         <div
