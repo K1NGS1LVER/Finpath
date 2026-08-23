@@ -26,6 +26,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import type { Variants } from 'motion/react';
+import type { FinancialProfile } from '@/lib/types';
 import { useFinPathStore } from '@/lib/store';
 import { formatInr, formatInrCompact } from '@/lib/format';
 import { fireConfetti } from '@/lib/confetti';
@@ -145,7 +146,8 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
   const income = useFinPathStore((s) => s.income);
   const expenses = useFinPathStore((s) => s.expenses);
   const debts = useFinPathStore((s) => s.debts);
-  const goals = useFinPathStore((s) => s.goals) || [];
+  const rawGoals = useFinPathStore((s) => s.goals);
+  const goals = useMemo(() => rawGoals || [], [rawGoals]);
   const savings = useFinPathStore((s) => s.savings);
   const healthScore = useFinPathStore((s) => s.healthScore);
   const updateGoal = useFinPathStore((s) => s.updateGoal);
@@ -159,7 +161,6 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
 
   const totalDebt = debts.totalMonthly || 0;
   const surplus = income.total - expenses.total - totalDebt;
-  const health = healthScore?.overall ?? 0;
 
   const now = new Date();
   const periodMonths = period === 'This month' ? 1 : period === 'Quarter' ? 3 : now.getMonth() + 1;
@@ -254,7 +255,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
         investmentReturnRate: 12,
         storageMode: 'local',
         milestones: [],
-      } as import('@/lib/types').FinancialProfile),
+      } as FinancialProfile),
     [
       income,
       expenses,
@@ -580,7 +581,6 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
 
               <div className="activity-list">
                 {goals.slice(0, 5).map((g) => {
-                  const cat = CATEGORY_STYLE[g.category] || CATEGORY_STYLE.default;
                   const monthly =
                     g.monthlyAllocation ||
                     Math.round((g.targetAmount - g.currentAmount) / Math.max(1, g.timelineMonths));
@@ -644,7 +644,7 @@ export default function Dashboard({ onPennyClick }: { onPennyClick: () => void }
                   <Sparkles size={18} className="icon-wireframe" />
                 </div>
                 <div>
-                  <h3 className="penny-insights-title">Penny's Insights</h3>
+                  <h3 className="penny-insights-title">Penny&apos;s Insights</h3>
                   <p className="penny-insights-sub">Personalized for your current plan</p>
                 </div>
                 <button

@@ -214,7 +214,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       for await (const ev of parseSse(response)) {
-        let data: any;
+        let data: Record<string, unknown> | string | null = null;
         try {
           data = JSON.parse(ev.data);
         } catch {
@@ -232,10 +232,11 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
               ];
             return prev.map((m) => (m.id === assistantId ? { ...m, text: m.text + chunk } : m));
           });
-        } else if (ev.event === 'tool_call') {
+        } else if (ev.event === 'tool_call' && typeof data === 'object' && data !== null) {
+          const d = data as { name?: string; input?: Record<string, unknown> };
           setMessages((prev) => {
             const exists = prev.some((m) => m.id === assistantId);
-            const tc = { name: data.name, input: data.input };
+            const tc = { name: d.name ?? '', input: d.input ?? {} };
             if (!exists)
               return [
                 ...prev,
@@ -246,7 +247,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
             );
           });
         } else if (ev.event === 'proposal') {
-          const prop = data as Proposal;
+          const prop = data as unknown as Proposal;
           setMessages((prev) => [
             ...prev,
             { id: `proposal-${prop.id}`, role: 'penny', text: '', proposal: prop },
@@ -265,8 +266,12 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
             );
           });
         } else if (ev.event === 'done') {
-          if (data?.reply) {
-            const cleaned = stripFunctionTags(String(data.reply));
+          const reply =
+            typeof data === 'object' && data !== null && 'reply' in data
+              ? String((data as { reply?: unknown }).reply ?? '')
+              : '';
+          if (reply) {
+            const cleaned = stripFunctionTags(reply);
             setMessages((prev) => {
               const exists = prev.some((m) => m.id === assistantId);
               if (!exists)
@@ -279,8 +284,8 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
           }
         }
       }
-    } catch (err: any) {
-      const isTimeout = err?.name === 'AbortError';
+    } catch (err: unknown) {
+      const isTimeout = err instanceof Error && err.name === 'AbortError';
       const text = isTimeout
         ? 'That took too long — my thinking timed out. Try a simpler question, or try again in a moment!'
         : "Oops, I couldn't connect right now. Please check your connection and try again!";
@@ -308,6 +313,7 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
     goals,
     healthScore,
     strategy,
+    demoMode,
     monthlySurplusReserve,
     messages,
     route,
@@ -402,7 +408,8 @@ export default function PennyPanel({ open, onClose }: PennyPanelProps) {
                   Clear chat history?
                 </h3>
                 <p className="text-sm text-[var(--secondary)] mb-4">
-                  This permanently deletes every message between you and Penny. Can't be undone.
+                  This permanently deletes every message between you and Penny. Can&apos;t be
+                  undone.
                 </p>
                 <div className="flex justify-end gap-2">
                   <button

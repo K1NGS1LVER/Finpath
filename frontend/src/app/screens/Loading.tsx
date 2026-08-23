@@ -19,12 +19,11 @@ export default function Loading() {
   const location = useLocation();
   const fromOnboarding = (location.state as { fromOnboarding?: boolean } | null)?.fromOnboarding;
   const [completed, setCompleted] = useState<number[]>([]);
-  const computeHealthScore = useFinPathStore(s => s.computeHealthScore);
-  const generatePlan = useFinPathStore(s => s.generatePlan);
-  const goals = useFinPathStore(s => s.goals);
-  const plan = useFinPathStore(s => s.plan);
-  const healthScore = useFinPathStore(s => s.healthScore);
-
+  const computeHealthScore = useFinPathStore((s) => s.computeHealthScore);
+  const generatePlan = useFinPathStore((s) => s.generatePlan);
+  const goals = useFinPathStore((s) => s.goals);
+  const plan = useFinPathStore((s) => s.plan);
+  const healthScore = useFinPathStore((s) => s.healthScore);
 
   useEffect(() => {
     if (!fromOnboarding) {
@@ -34,21 +33,29 @@ export default function Loading() {
 
     const timers: number[] = [];
     STEPS.forEach((_, i) => {
-      const t = window.setTimeout(() => {
-        setCompleted(prev => [...prev, i]);
-        if (i === 2) computeHealthScore();
-        if (i === 3) generatePlan();
-      }, (i + 1) * STEP_INTERVAL_MS);
+      const t = window.setTimeout(
+        () => {
+          setCompleted((prev) => [...prev, i]);
+          if (i === 2) computeHealthScore();
+          if (i === 3) generatePlan();
+        },
+        (i + 1) * STEP_INTERVAL_MS,
+      );
       timers.push(t);
     });
 
-    const redirect = window.setTimeout(() => {
-      navigate('/dashboard');
-    }, STEPS.length * STEP_INTERVAL_MS + TAIL_DELAY_MS);
+    const redirect = window.setTimeout(
+      () => {
+        navigate('/dashboard');
+      },
+      STEPS.length * STEP_INTERVAL_MS + TAIL_DELAY_MS,
+    );
     timers.push(redirect);
 
-    return () => { timers.forEach(clearTimeout); };
-  }, []);
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [computeHealthScore, fromOnboarding, generatePlan, navigate]);
 
   const insight = useMemo(() => {
     if (healthScore?.actions && healthScore.actions.length > 0) return healthScore.actions[0];
@@ -58,9 +65,9 @@ export default function Loading() {
   const firstGoalLine = useMemo(() => {
     if (!plan || !goals.length) return null;
     const sortedGoals = [...goals]
-      .filter(g => g.status !== 'complete' && g.category !== 'debt')
+      .filter((g) => g.status !== 'complete' && g.category !== 'debt')
       .sort((a, b) => (a.priority || 99) - (b.priority || 99));
-    const target = sortedGoals.find(g => plan.goalCompletionDates[g.id]);
+    const target = sortedGoals.find((g) => plan.goalCompletionDates[g.id]);
     if (!target) {
       const longTerm = sortedGoals[0];
       if (!longTerm) return null;
@@ -70,25 +77,52 @@ export default function Loading() {
     const compDate = new Date(`1 ${compStr}`);
     if (isNaN(compDate.getTime())) return `Your ${target.name} target is locked in — ${compStr}.`;
     const now = new Date();
-    const months = Math.max(1, (compDate.getFullYear() - now.getFullYear()) * 12 + (compDate.getMonth() - now.getMonth()));
+    const months = Math.max(
+      1,
+      (compDate.getFullYear() - now.getFullYear()) * 12 + (compDate.getMonth() - now.getMonth()),
+    );
     return `Your ${target.name} looks achievable in ${months} ${months === 1 ? 'month' : 'months'} — ${compStr}.`;
   }, [plan, goals]);
 
   return (
-    <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-4 md:p-8 relative" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+    <div
+      className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-4 md:p-8 relative"
+      style={{ background: 'var(--background)', color: 'var(--foreground)' }}
+    >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-15 blur-3xl animate-pulse" style={{ backgroundColor: 'var(--accent)' }} />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-15 blur-3xl animate-pulse"
+          style={{ backgroundColor: 'var(--accent)' }}
+        />
       </div>
       <div className="max-w-md w-full space-y-5 md:space-y-6 relative z-10">
         <div className="text-center space-y-3 md:space-y-4">
           <div className="flex justify-center mb-4">
             <FinPathLogo size={56} showWordmark wordmarkSize="24px" wordmarkGap={14} />
           </div>
-          <div className="w-12 h-12 md:w-14 md:h-14 mx-auto rounded-full flex items-center justify-center animate-float relative" style={{ backgroundColor: 'color-mix(in srgb, var(--accent) 20%, transparent)', color: 'var(--accent)' }}>
+          <div
+            className="w-12 h-12 md:w-14 md:h-14 mx-auto rounded-full flex items-center justify-center animate-float relative"
+            style={{
+              backgroundColor: 'color-mix(in srgb, var(--accent) 20%, transparent)',
+              color: 'var(--accent)',
+            }}
+          >
             <div className="w-9 h-9 md:w-10 md:h-10 border-4 border-current border-t-transparent rounded-full animate-spin relative z-10" />
-            <div className="absolute inset-0 rounded-full animate-pulse blur-md" style={{ backgroundColor: 'var(--accent)', opacity: 0.3 }} />
+            <div
+              className="absolute inset-0 rounded-full animate-pulse blur-md"
+              style={{ backgroundColor: 'var(--accent)', opacity: 0.3 }}
+            />
           </div>
-          <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--secondary)', fontSize: 'var(--text-lg)', fontWeight: 'var(--font-weight-medium)' }}>Creating your FinPath...</h2>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              color: 'var(--secondary)',
+              fontSize: 'var(--text-lg)',
+              fontWeight: 'var(--font-weight-medium)',
+            }}
+          >
+            Creating your FinPath...
+          </h2>
         </div>
 
         <div className="space-y-2">
@@ -115,9 +149,21 @@ export default function Loading() {
                     boxShadow: isDone ? '0 0 12px var(--secondary-accent-glow)' : 'none',
                   }}
                 >
-                  {isDone ? <Check size={14} /> : <span style={{ fontSize: 'var(--text-xs)' }}>{i + 1}</span>}
+                  {isDone ? (
+                    <Check size={14} />
+                  ) : (
+                    <span style={{ fontSize: 'var(--text-xs)' }}>{i + 1}</span>
+                  )}
                 </div>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)' }}>{step}</span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 'var(--font-weight-medium)',
+                  }}
+                >
+                  {step}
+                </span>
               </div>
             );
           })}
