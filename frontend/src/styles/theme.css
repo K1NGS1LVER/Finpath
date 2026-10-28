@@ -1364,7 +1364,7 @@ a.bento-card:hover,
 
 /* ── Penny Panel shell ── */
 .penny-panel {
-  background: var(--surface-tint);
+  background: var(--card);
   border-left: 1px solid var(--border);
   backdrop-filter: blur(var(--blur-sidebar));
   -webkit-backdrop-filter: blur(var(--blur-sidebar));
