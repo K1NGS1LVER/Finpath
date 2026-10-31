@@ -2,6 +2,8 @@
 
 FastAPI proxy for Penny AI. Phase 0 — replaces the Vite dev middleware so Penny works in production.
 
+Production instance: https://finpath-ai-financial-planner.onrender.com (Render).
+
 ## Requirements
 
 - Python 3.11+

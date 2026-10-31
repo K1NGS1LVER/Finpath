@@ -60,7 +60,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
       <button
         onClick={onMenuClick}
         aria-label="Open menu"
-        className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95 md:hidden text-foreground bg-surface-hover"
+        className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:opacity-105 active:scale-95 md:hidden text-foreground bg-surface-hover"
       >
         <Menu size={20} className="icon-wireframe" />
       </button>
@@ -69,7 +69,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
         <button
           onClick={() => navigate('/journey?tab=progress')}
           title={`${levelInfo.label} · ${totalSparks.toLocaleString('en-IN')} sparks`}
-          className="hidden md:inline-flex items-center gap-2 rounded-full transition-transform hover:scale-105 active:scale-95"
+          className="hidden md:inline-flex items-center gap-2 rounded-full transition-transform hover:opacity-105 active:scale-95"
           style={{
             padding: 'var(--space-1) var(--space-2)',
             background: 'var(--surface-tint)',
@@ -101,7 +101,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
 
         <button
           onClick={() => setIsDark(!isDark)}
-          className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-90 text-foreground bg-surface-hover ${isDark ? 'shadow-[0_0_15px_var(--accent-glow)]' : ''}`}
+          className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all hover:opacity-110 active:scale-90 text-foreground bg-surface-hover ${isDark ? 'shadow-[0_0_15px_var(--border)]' : ''}`}
           aria-label="Toggle Theme"
         >
           <Sun
@@ -128,7 +128,7 @@ export default function Header({ isDark, setIsDark, onMenuClick }: HeaderProps) 
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg slashed-zero bg-[var(--accent)] text-[var(--on-accent)] shadow-[0_4px_16px_var(--accent-glow)] transition-transform hover:scale-105 active:scale-95"
+            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg slashed-zero bg-[var(--accent)] text-[var(--on-accent)] shadow-[0_4px_16px_var(--border)] transition-transform hover:opacity-105 active:scale-95"
             title={userName || 'Account'}
             aria-haspopup="menu"
             aria-expanded={dropdownOpen}

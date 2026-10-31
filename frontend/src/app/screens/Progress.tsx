@@ -543,7 +543,7 @@ export default function Progress({ onPennyClick }: { onPennyClick?: () => void }
                   strokeWidth="3"
                   strokeLinecap="round"
                   className="draw-line-long"
-                  style={{ filter: 'drop-shadow(0 4px 8px var(--accent-glow))' }}
+                  style={{ filter: 'drop-shadow(0 4px 8px var(--border))' }}
                 />
                 {chart.dashedPath && (
                   <path

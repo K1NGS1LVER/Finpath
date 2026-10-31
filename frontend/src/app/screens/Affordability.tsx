@@ -454,7 +454,7 @@ export default function Affordability({ onPennyClick }: { onPennyClick?: () => v
                     color: activeChip === label ? 'var(--accent)' : 'var(--secondary)',
                     fontSize: 'var(--text-sm)',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
+                    transition: 'color 0.15s ease',
                   }}
                 >
                   <Icon size={13} />
@@ -478,7 +478,7 @@ export default function Affordability({ onPennyClick }: { onPennyClick?: () => v
                   color: activeChip === 'Custom' ? 'var(--accent)' : 'var(--secondary)',
                   fontSize: 'var(--text-sm)',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease',
+                  transition: 'color 0.15s ease',
                 }}
               >
                 <Pencil size={13} />
@@ -566,7 +566,7 @@ export default function Affordability({ onPennyClick }: { onPennyClick?: () => v
                     borderRadius: 99,
                     fontSize: 'var(--text-sm)',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
+                    transition: 'color 0.15s ease',
                     border: `1px solid ${route === r ? 'var(--accent)' : 'var(--border)'}`,
                     background: route === r ? 'var(--accent-subtle)' : 'transparent',
                     color: route === r ? 'var(--accent)' : 'var(--secondary)',

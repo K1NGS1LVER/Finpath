@@ -192,9 +192,9 @@ export function useOnboardingForm() {
           : 'Priority set complete. Bright glow = P1, medium = P2, soft = P3.';
 
   function getPriorityGlow(priority: number) {
-    if (priority === 1) return '0 0 42px var(--accent-glow)';
-    if (priority === 2) return '0 0 28px var(--accent-glow)';
-    return '0 0 16px var(--accent-glow)';
+    if (priority === 1) return '0 0 42px var(--border)';
+    if (priority === 2) return '0 0 28px var(--border)';
+    return '0 0 16px var(--border)';
   }
 
   const canAdvance = (): boolean => {

@@ -76,7 +76,7 @@ export function FeatGoals() {
       pct: 45,
       color: 'var(--accent)',
       subtle: 'var(--accent-subtle)',
-      glow: 'var(--accent-glow)',
+      glow: 'var(--border)',
       monthly: '₹8,500',
     },
     {
@@ -85,7 +85,7 @@ export function FeatGoals() {
       pct: 12,
       color: 'var(--secondary-accent)',
       subtle: 'var(--secondary-accent-subtle)',
-      glow: 'var(--secondary-accent-glow)',
+      glow: 'var(--border)',
       monthly: '₹15,000',
     },
     {
@@ -94,7 +94,7 @@ export function FeatGoals() {
       pct: 67,
       color: 'var(--tertiary-accent)',
       subtle: 'var(--tertiary-accent-subtle)',
-      glow: 'var(--tertiary-accent-glow)',
+      glow: 'var(--border)',
       monthly: '₹6,000',
     },
   ];
@@ -154,7 +154,7 @@ export function FeatDebt() {
           padding: 18,
           borderRadius: 16,
           background: 'var(--accent-subtle)',
-          border: '1px solid var(--accent-glow)',
+          border: '1px solid var(--border)',
           position: 'relative',
         }}
       >
@@ -180,7 +180,7 @@ export function FeatDebt() {
               height: 32,
               borderRadius: 8,
               background: 'var(--accent-subtle)',
-              border: '1px solid var(--accent-glow)',
+              border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -248,7 +248,7 @@ export function FeatDebt() {
               height: 32,
               borderRadius: 8,
               background: 'var(--secondary-accent-subtle)',
-              border: '1px solid var(--secondary-accent-glow)',
+              border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

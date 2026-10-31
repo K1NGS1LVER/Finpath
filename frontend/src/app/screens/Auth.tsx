@@ -71,7 +71,7 @@ export default function Auth({ isDark, setIsDark }: AuthScreenProps) {
     <div className="h-[100dvh] w-full relative overflow-hidden bg-background">
       <style>{`
         input::placeholder { color: var(--secondary); opacity: 0.5; }
-        .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--border); }
       `}</style>
 
       {/* Background blobs — matches Onboarding pattern */}
@@ -85,7 +85,7 @@ export default function Auth({ isDark, setIsDark }: AuthScreenProps) {
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="absolute top-4 left-4 md:top-6 md:left-6 px-4 py-2 md:px-5 md:py-2.5 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 z-40 text-xs md:text-sm font-semibold bg-surface-tint shadow-sm border border-border text-secondary"
+        className="absolute top-4 left-4 md:top-6 md:left-6 px-4 py-2 md:px-5 md:py-2.5 rounded-full flex items-center gap-2 transition-all duration-300 hover:opacity-105 active:scale-95 z-40 text-xs md:text-sm font-semibold bg-surface-tint shadow-sm border border-border text-secondary"
       >
         <ArrowLeft size={16} className="icon-wireframe" />
         Back
@@ -95,7 +95,7 @@ export default function Auth({ isDark, setIsDark }: AuthScreenProps) {
       <button
         type="button"
         onClick={() => setIsDark(!isDark)}
-        className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 z-40 bg-card shadow-sm border border-border text-card-foreground"
+        className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-500 hover:opacity-110 active:scale-95 z-40 bg-card shadow-sm border border-border text-card-foreground"
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
         {isDark ? (
@@ -279,11 +279,11 @@ export default function Auth({ isDark, setIsDark }: AuthScreenProps) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 md:py-4 rounded-full font-bold flex items-center justify-center gap-2 button-press disabled:opacity-60 disabled:hover:scale-100 font-body"
+                  className="w-full py-3.5 md:py-4 rounded-full font-bold flex items-center justify-center gap-2 button-press disabled:opacity-60 disabled:hover:opacity-100 font-body"
                   style={{
                     backgroundColor: 'var(--accent)',
                     color: 'var(--on-accent)',
-                    boxShadow: '0 10px 40px var(--accent-glow)',
+                    boxShadow: '0 10px 40px var(--border)',
                     border: '2px solid transparent',
                   }}
                 >

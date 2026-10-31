@@ -2,6 +2,8 @@
 
 FinPath is a premium financial planning and journey-tracking application for Indian professionals. It moves beyond static budgeting with a dynamic, goal-focused roadmap that adapts to real-time financial changes, backed by a LangGraph-bound AI companion (Penny).
 
+**Live:** https://getfinpath.vercel.app
+
 <p align="center">
   <img src="docs/screenshots/landing.png" width="800" alt="FinPath landing page">
 </p>
@@ -14,6 +16,7 @@ FinPath is a premium financial planning and journey-tracking application for Ind
 - [Repository Layout](#repository-layout)
 - [See It Running in 60 Seconds](#see-it-running-in-60-seconds) — no API keys needed
 - [Full Setup](#full-setup) — real auth, real AI, real data
+- [Deployment](#deployment)
 - [Script Reference](#script-reference)
 - [Rerunning Just One Setup Step](#rerunning-just-one-setup-step)
 - [Troubleshooting](#troubleshooting)
@@ -156,6 +159,23 @@ Boots:
 - Frontend → `http://localhost:5173` (proxies `/api/*` to the backend)
 
 Or run separately in two terminals: `pnpm dev:backend` and `pnpm dev`.
+
+## Deployment
+
+Three platforms, one chain:
+
+| Piece | Platform | URL |
+|---|---|---|
+| Frontend (Vite SPA) | Vercel | https://getfinpath.vercel.app |
+| Backend (FastAPI) | Render | https://finpath-ai-financial-planner.onrender.com |
+| Auth + Postgres (RLS) | Supabase | project ref `frudffxrwgsjdkfkozkf` — free tier, pauses after ~a week idle |
+
+The old `finpathuiuxdesign-rsbi.vercel.app` domain 308-redirects to the URL above.
+
+Env vars that must line up whenever you redeploy:
+
+- **Vercel (build time, `VITE_*`)** — `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_BACKEND_URL=https://finpath-ai-financial-planner.onrender.com`. Vite inlines these at build, so changing them needs a rebuild.
+- **Render** — `GROQ_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `AUTH_MOCK=false`, and `ALLOWED_ORIGINS` — this must list the frontend origin (e.g. `https://getfinpath.vercel.app`) or the browser blocks every `/api/*` call with a CORS error.
 
 ## Script Reference
 

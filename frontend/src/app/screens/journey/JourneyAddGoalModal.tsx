@@ -99,7 +99,7 @@ export default function JourneyAddGoalModal({
                   <button
                     key={preset.name}
                     onClick={() => onAddPreset(preset)}
-                    className={`p-4 rounded-xl text-left transition-all preset-card ${wouldExceed ? 'opacity-60' : 'hover:scale-[1.02] active:scale-[0.98]'}`}
+                    className={`p-4 rounded-xl text-left transition-all preset-card ${wouldExceed ? 'opacity-60' : 'hover:opacity-[1.02] active:scale-[0.98]'}`}
                     style={wouldExceed ? { border: '1px solid var(--red)' } : undefined}
                   >
                     {/* Icon color: conditional on wouldExceed (runtime) — kept inline */}
@@ -228,7 +228,7 @@ export default function JourneyAddGoalModal({
             <button
               onClick={onAddCustom}
               disabled={!customName.trim() || !customTarget.trim()}
-              className="w-full py-3 rounded-xl font-bold button-press disabled:opacity-40 disabled:hover:scale-100 btn-complete-goal"
+              className="w-full py-3 rounded-xl font-bold button-press disabled:opacity-40 disabled:hover:opacity-100 btn-complete-goal"
             >
               Add Custom Goal
             </button>

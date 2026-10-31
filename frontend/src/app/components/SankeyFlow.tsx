@@ -16,17 +16,20 @@ export function resolveCssVar(name: string): string {
 }
 
 export function usePalette() {
-  return useMemo(() => ({
-    blue: resolveCssVar('--accent'),
-    'blue-mid': resolveCssVar('--accent-mid'),
-    'blue-soft': resolveCssVar('--accent-soft'),
-    lime: resolveCssVar('--tertiary-accent'),
-    red: resolveCssVar('--red'),
-    amber: resolveCssVar('--amber'),
-    green: resolveCssVar('--green'),
-    purple: resolveCssVar('--secondary-accent'),
-    slate: resolveCssVar('--tertiary'),
-  }), []);
+  return useMemo(
+    () => ({
+      blue: resolveCssVar('--accent'),
+      'blue-mid': resolveCssVar('--accent-mid'),
+      'blue-soft': resolveCssVar('--accent-soft'),
+      lime: resolveCssVar('--tertiary-accent'),
+      red: resolveCssVar('--red'),
+      amber: resolveCssVar('--amber'),
+      green: resolveCssVar('--green'),
+      purple: resolveCssVar('--secondary-accent'),
+      slate: resolveCssVar('--tertiary'),
+    }),
+    [],
+  );
 }
 
 export interface CustomNodeProps {
@@ -44,22 +47,22 @@ export interface CustomNodeProps {
 }
 
 const NODE_COLOR_KEYS: Record<string, keyof ReturnType<typeof usePalette>> = {
-  'Income':              'blue',
-  'Primary Income':      'blue',
-  'Secondary Income':    'blue-mid',
-  'Passive Income':      'blue-soft',
-  'Variable Income':     'blue-soft',
-  'Total Income':        'blue',
-  'Essential Expenses':  'amber',
-  'Disposable':          'green',
+  Income: 'blue',
+  'Primary Income': 'blue',
+  'Secondary Income': 'blue-mid',
+  'Passive Income': 'blue-soft',
+  'Variable Income': 'blue-soft',
+  'Total Income': 'blue',
+  'Essential Expenses': 'amber',
+  Disposable: 'green',
   'Housing & Utilities': 'amber',
-  'Food':                'amber',
-  'Transport':           'amber',
-  'Other Expenses':      'amber',
-  'Debt':                'red',
-  'Goals':               'lime',
-  'Surplus Reserve':     'purple',
-  'Free Cash':           'green',
+  Food: 'amber',
+  Transport: 'amber',
+  'Other Expenses': 'amber',
+  Debt: 'red',
+  Goals: 'lime',
+  'Surplus Reserve': 'purple',
+  'Free Cash': 'green',
 };
 
 export function CustomNode({
@@ -77,8 +80,7 @@ export function CustomNode({
 }: CustomNodeProps) {
   const colorKey =
     NODE_COLOR_KEYS[payload.name] ??
-    (payload.kind === 'goal-item' ? 'lime' :
-     payload.kind === 'debt-item' ? 'red' : 'slate');
+    (payload.kind === 'goal-item' ? 'lime' : payload.kind === 'debt-item' ? 'red' : 'slate');
   const color = palette[colorKey];
   const isLeft = x < 280;
 
@@ -86,7 +88,7 @@ export function CustomNode({
   const isDimmed = hoveredNodeIdx !== null && !isHovered;
 
   const rectStyle: React.CSSProperties = {
-    transition: 'all 0.15s ease',
+    transition: 'color 0.15s ease',
     ...(isHovered
       ? {
           filter: `drop-shadow(0 0 8px ${color})`,
@@ -122,7 +124,12 @@ export function CustomNode({
           y={y + height / 2 - 7}
           textAnchor={isLeft ? 'end' : 'start'}
           dominantBaseline="middle"
-          style={{ fill: 'var(--card-foreground)', fontSize: 'var(--text-xs)', fontWeight: 'var(--font-weight-semibold)', fontFamily: 'var(--font-body)' }}
+          style={{
+            fill: 'var(--card-foreground)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 'var(--font-weight-semibold)',
+            fontFamily: 'var(--font-body)',
+          }}
         >
           {payload.name}
         </text>
@@ -131,7 +138,11 @@ export function CustomNode({
           y={y + height / 2 + 9}
           textAnchor={isLeft ? 'end' : 'start'}
           dominantBaseline="middle"
-          style={{ fill: 'var(--secondary)', fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-body)' }}
+          style={{
+            fill: 'var(--secondary)',
+            fontSize: 'var(--text-2xs)',
+            fontFamily: 'var(--font-body)',
+          }}
         >
           {formatInr(payload.value ?? 0)}
         </text>
@@ -215,19 +226,21 @@ export function CustomLink({
   // Recharts may pass source/target as node objects with .index or as numbers
   const rawSrc = payload.source;
   const rawTgt = payload.target;
-  const sourceIdx: number | null = rawSrc == null
-    ? null
-    : typeof rawSrc === 'object' && 'index' in rawSrc
-      ? (rawSrc.index ?? null)
-      : (rawSrc as unknown as number);
-  const targetIdx: number | null = rawTgt == null
-    ? null
-    : typeof rawTgt === 'object' && 'index' in rawTgt
-      ? (rawTgt.index ?? null)
-      : (rawTgt as unknown as number);
+  const sourceIdx: number | null =
+    rawSrc == null
+      ? null
+      : typeof rawSrc === 'object' && 'index' in rawSrc
+        ? (rawSrc.index ?? null)
+        : (rawSrc as unknown as number);
+  const targetIdx: number | null =
+    rawTgt == null
+      ? null
+      : typeof rawTgt === 'object' && 'index' in rawTgt
+        ? (rawTgt.index ?? null)
+        : (rawTgt as unknown as number);
 
-  const isActive = hoveredNodeIdx !== null &&
-    (sourceIdx === hoveredNodeIdx || targetIdx === hoveredNodeIdx);
+  const isActive =
+    hoveredNodeIdx !== null && (sourceIdx === hoveredNodeIdx || targetIdx === hoveredNodeIdx);
   const isClickedLink = activeLinkIdx !== null && activeLinkIdx === index;
 
   const fillOpacity = isClickedLink
