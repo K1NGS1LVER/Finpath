@@ -57,9 +57,9 @@ export default function Celebrate() {
           {
             scale: [1, 1.04, 1],
             boxShadow: [
-              '0 0 32px var(--secondary-accent-glow)',
-              '0 0 56px var(--accent-glow)',
-              '0 0 32px var(--secondary-accent-glow)',
+              '0 0 32px var(--border)',
+              '0 0 56px var(--border)',
+              '0 0 32px var(--border)',
             ],
           },
           { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
@@ -129,7 +129,7 @@ export default function Celebrate() {
           className="inline-flex w-28 h-28 md:w-32 md:h-32 rounded-full items-center justify-center mb-6"
           style={{
             background: 'var(--accent)',
-            boxShadow: '0 0 72px var(--secondary-accent-glow)',
+            boxShadow: '0 0 72px var(--border)',
           }}
           initial={{ scale: 0, rotate: -15 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -197,7 +197,7 @@ export default function Celebrate() {
                 key={goal.id}
                 ref={i === 0 ? heroCardRef : undefined}
                 className="bento-card relative overflow-hidden border-2 border-[var(--accent)]"
-                style={{ boxShadow: '0 0 32px var(--secondary-accent-glow)' }}
+                style={{ boxShadow: '0 0 32px var(--border)' }}
                 variants={{
                   hidden: { opacity: 0, x: -24 },
                   visible: {
@@ -391,7 +391,7 @@ export default function Celebrate() {
             style={{
               backgroundColor: 'var(--accent)',
               color: 'var(--on-secondary-accent)',
-              boxShadow: '0 8px 24px var(--secondary-accent-glow)',
+              boxShadow: '0 8px 24px var(--border)',
             }}
           >
             Open Journey
@@ -417,7 +417,7 @@ export default function Celebrate() {
               backgroundColor: 'var(--accent)',
               color: 'var(--on-secondary-accent)',
               fontFamily: 'var(--font-body)',
-              boxShadow: '0 8px 24px var(--secondary-accent-glow)',
+              boxShadow: '0 8px 24px var(--border)',
             }}
           >
             {sharing ? (

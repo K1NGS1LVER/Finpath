@@ -30,11 +30,11 @@ export function getStatusColor(status: string) {
 function getStatusGlow(status: string) {
   switch (status) {
     case 'complete':
-      return 'var(--accent-glow)';
+      return 'var(--border)';
     case 'in-progress':
       return 'var(--amber-subtle)';
     default:
-      return 'var(--tertiary-accent-glow)';
+      return 'var(--border)';
   }
 }
 

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(which netlify render supabase gh node pnpm python3 2>&1; echo \"---VERSIONS---\"; netlify --version 2>&1 | head -3; echo \"---render---\"; render --version 2>&1 | head -3; echo \"---supabase---\"; supabase --version 2>&1 | head -3)",
+      "Shell(vercel:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

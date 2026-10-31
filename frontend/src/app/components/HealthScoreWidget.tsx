@@ -118,7 +118,7 @@ export default function HealthScoreWidget({ variant }: Props) {
           strokeLinecap="round"
           style={{
             transition: 'stroke-dashoffset 1500ms cubic-bezier(0.22,1,0.36,1)',
-            filter: 'drop-shadow(0 0 var(--space-1) var(--accent-glow))',
+            filter: 'drop-shadow(0 0 var(--space-1) var(--border))',
           }}
         />
       </svg>
@@ -270,7 +270,7 @@ export default function HealthScoreWidget({ variant }: Props) {
               strokeLinecap="round"
               style={{
                 transition: 'stroke-dashoffset 1500ms cubic-bezier(0.22,1,0.36,1)',
-                filter: 'drop-shadow(0 0 var(--space-1) var(--accent-glow))',
+                filter: 'drop-shadow(0 0 var(--space-1) var(--border))',
               }}
             />
           </svg>

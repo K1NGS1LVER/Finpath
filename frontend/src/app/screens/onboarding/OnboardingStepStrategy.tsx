@@ -28,7 +28,7 @@ function StepUpToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () =>
         if (e.key === 'Enter' || e.key === ' ') onToggle();
       }}
       style={{
-        background: enabled ? 'var(--accent-glow)' : 'var(--surface-tint)',
+        background: enabled ? 'var(--border)' : 'var(--surface-tint)',
         borderColor: enabled ? 'var(--accent)' : 'var(--border)',
       }}
     >
@@ -253,9 +253,9 @@ export default function OnboardingStepStrategy({
             title="Avalanche"
             description="Prioritize highest-impact goals first for maximum efficiency."
             accentColor="var(--accent)"
-            accentSubtle="var(--accent-glow)"
+            accentSubtle="var(--border)"
             accentText="var(--accent-text)"
-            accentGlow="var(--accent-glow)"
+            accentGlow="var(--border)"
             borderColor="var(--accent)"
           />
           <StrategyCard
@@ -268,7 +268,7 @@ export default function OnboardingStepStrategy({
             accentColor="var(--tertiary-accent)"
             accentSubtle="var(--tertiary-accent-subtle)"
             accentText="var(--tertiary-accent-text)"
-            accentGlow="var(--tertiary-accent-glow)"
+            accentGlow="var(--border)"
             borderColor="var(--tertiary-accent)"
           />
         </div>

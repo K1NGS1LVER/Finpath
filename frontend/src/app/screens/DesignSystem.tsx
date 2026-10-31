@@ -95,20 +95,38 @@ const RADIUS_ENTRIES = [
 
 // ─── Sub-components ─────────────────────────────────────────────────────────
 
-function SectionHeader({ icon: Icon, title, subtitle }: { icon: LucideIcon; title: string; subtitle: string }) {
+function SectionHeader({
+  icon: Icon,
+  title,
+  subtitle,
+}: {
+  icon: LucideIcon;
+  title: string;
+  subtitle: string;
+}) {
   return (
     <div style={{ marginBottom: 'var(--space-3)' }}>
       <div className="flex items-center gap-2" style={{ marginBottom: 'var(--space-1)' }}>
         <Icon size={16} className="icon-wireframe" />
         <span
           className="uppercase tracking-wider"
-          style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-body)', color: 'var(--secondary)', letterSpacing: '0.08em' }}
+          style={{
+            fontSize: 'var(--text-2xs)',
+            fontFamily: 'var(--font-body)',
+            color: 'var(--secondary)',
+            letterSpacing: '0.08em',
+          }}
         >
           {subtitle}
         </span>
       </div>
       <h2
-        style={{ fontSize: 'var(--text-2xl)', fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-bold)', color: 'var(--card-foreground)' }}
+        style={{
+          fontSize: 'var(--text-2xl)',
+          fontFamily: 'var(--font-display)',
+          fontWeight: 'var(--font-weight-bold)',
+          color: 'var(--card-foreground)',
+        }}
       >
         {title}
       </h2>
@@ -138,9 +156,26 @@ export default function DesignSystem() {
       <motion.div className="relative z-10" variants={pageSection}>
         <p className="text-label">Reference</p>
         <h1 className="text-title text-secondary tracking-[0.15em] mb-2">Design System</h1>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--secondary)', fontFamily: 'var(--font-body)' }}>
-          Live tokens, type scale, spacing, radius, and components — all sourced from <code style={{ fontSize: 'var(--text-xs)', background: 'var(--surface-hover)', padding: '1px 6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>theme.css</code>.
-          Toggle light/dark from the header to see values update in realtime.
+        <p
+          style={{
+            fontSize: 'var(--text-sm)',
+            color: 'var(--secondary)',
+            fontFamily: 'var(--font-body)',
+          }}
+        >
+          Live tokens, type scale, spacing, radius, and components — all sourced from{' '}
+          <code
+            style={{
+              fontSize: 'var(--text-xs)',
+              background: 'var(--surface-hover)',
+              padding: '1px 6px',
+              borderRadius: 'var(--radius-xs)',
+              border: '1px solid var(--border)',
+            }}
+          >
+            theme.css
+          </code>
+          . Toggle light/dark from the header to see values update in realtime.
         </p>
       </motion.div>
 
@@ -150,7 +185,17 @@ export default function DesignSystem() {
 
         {/* Buttons */}
         <div style={{ marginBottom: 'var(--space-4)' }}>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', marginBottom: 'var(--space-2)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <p
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--tertiary)',
+              fontFamily: 'var(--font-body)',
+              marginBottom: 'var(--space-2)',
+              fontWeight: 'var(--font-weight-semibold)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+            }}
+          >
             Buttons
           </p>
           <div className="flex flex-wrap items-center gap-3">
@@ -183,7 +228,11 @@ export default function DesignSystem() {
             >
               Pill Filled
             </button>
-            <button disabled className="btn-primary" style={{ opacity: 0.4, cursor: 'not-allowed' }}>
+            <button
+              disabled
+              className="btn-primary"
+              style={{ opacity: 0.4, cursor: 'not-allowed' }}
+            >
               Disabled
             </button>
           </div>
@@ -191,28 +240,70 @@ export default function DesignSystem() {
 
         {/* Cards */}
         <div style={{ marginBottom: 'var(--space-4)' }}>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', marginBottom: 'var(--space-2)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <p
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--tertiary)',
+              fontFamily: 'var(--font-body)',
+              marginBottom: 'var(--space-2)',
+              fontWeight: 'var(--font-weight-semibold)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+            }}
+          >
             Cards
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Bento card */}
-            <motion.div
-              className="bento-card card-hover p-5"
-              variants={reduced ? {} : cardEntry}
-            >
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>bento-card</p>
-              <p style={{ fontSize: 'var(--text-lg)', fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-bold)', color: 'var(--card-foreground)' }}>
+            <motion.div className="bento-card card-hover p-5" variants={reduced ? {} : cardEntry}>
+              <p
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--secondary)',
+                  fontFamily: 'var(--font-body)',
+                  marginBottom: 4,
+                }}
+              >
+                bento-card
+              </p>
+              <p
+                style={{
+                  fontSize: 'var(--text-lg)',
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 'var(--font-weight-bold)',
+                  color: 'var(--card-foreground)',
+                }}
+              >
                 ₹1,40,000
               </p>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', marginTop: 4 }}>Monthly income · +12%</p>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', marginTop: 4 }}>
+                Monthly income · +12%
+              </p>
             </motion.div>
 
             {/* Penny card */}
             <div className="bento-card penny-card p-5 relative overflow-hidden">
               <div className="penny-blob" />
               <div className="relative z-10">
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--penny-accent)', fontFamily: 'var(--font-body)', marginBottom: 4, fontWeight: 'var(--font-weight-semibold)' }}>penny-card</p>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--secondary)', fontFamily: 'var(--font-body)', lineHeight: 1.5 }}>
+                <p
+                  style={{
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--penny-accent)',
+                    fontFamily: 'var(--font-body)',
+                    marginBottom: 4,
+                    fontWeight: 'var(--font-weight-semibold)',
+                  }}
+                >
+                  penny-card
+                </p>
+                <p
+                  style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--secondary)',
+                    fontFamily: 'var(--font-body)',
+                    lineHeight: 1.5,
+                  }}
+                >
                   Penny insight card with radial glow background and tinted border.
                 </p>
               </div>
@@ -220,14 +311,59 @@ export default function DesignSystem() {
 
             {/* Chip variants */}
             <div className="bento-card p-5 flex flex-col gap-3 justify-center">
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--tertiary)',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                }}
+              >
                 Status chips
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="pill" style={{ background: 'var(--green-subtle)', color: 'var(--green-text)', border: '1px solid var(--green)' }}>On track</span>
-                <span className="pill" style={{ background: 'var(--amber-subtle)', color: 'var(--amber-text)', border: '1px solid var(--amber)' }}>At risk</span>
-                <span className="pill" style={{ background: 'var(--red-subtle)', color: 'var(--red-text)', border: '1px solid var(--red)' }}>Overdue</span>
-                <span className="pill" style={{ background: 'var(--accent-subtle)', color: 'var(--accent-text)', border: '1px solid var(--accent-glow)' }}>Active</span>
+                <span
+                  className="pill"
+                  style={{
+                    background: 'var(--green-subtle)',
+                    color: 'var(--green-text)',
+                    border: '1px solid var(--green)',
+                  }}
+                >
+                  On track
+                </span>
+                <span
+                  className="pill"
+                  style={{
+                    background: 'var(--amber-subtle)',
+                    color: 'var(--amber-text)',
+                    border: '1px solid var(--amber)',
+                  }}
+                >
+                  At risk
+                </span>
+                <span
+                  className="pill"
+                  style={{
+                    background: 'var(--red-subtle)',
+                    color: 'var(--red-text)',
+                    border: '1px solid var(--red)',
+                  }}
+                >
+                  Overdue
+                </span>
+                <span
+                  className="pill"
+                  style={{
+                    background: 'var(--accent-subtle)',
+                    color: 'var(--accent-text)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  Active
+                </span>
               </div>
             </div>
           </div>
@@ -242,10 +378,50 @@ export default function DesignSystem() {
             border: '1px solid var(--border)',
           }}
         >
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--secondary)', fontFamily: 'var(--font-body)' }}>
-            All motion uses <code style={{ fontSize: 'var(--text-2xs)', background: 'var(--surface-hover)', padding: '1px 5px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>motion/react</code> with shared variants from{' '}
-            <code style={{ fontSize: 'var(--text-2xs)', background: 'var(--surface-hover)', padding: '1px 5px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>motion-variants.ts</code>.
-            Respects <code style={{ fontSize: 'var(--text-2xs)', background: 'var(--surface-hover)', padding: '1px 5px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>prefers-reduced-motion</code> — instant fallbacks for all sequences.
+          <p
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--secondary)',
+              fontFamily: 'var(--font-body)',
+            }}
+          >
+            All motion uses{' '}
+            <code
+              style={{
+                fontSize: 'var(--text-2xs)',
+                background: 'var(--surface-hover)',
+                padding: '1px 5px',
+                borderRadius: 'var(--radius-xs)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              motion/react
+            </code>{' '}
+            with shared variants from{' '}
+            <code
+              style={{
+                fontSize: 'var(--text-2xs)',
+                background: 'var(--surface-hover)',
+                padding: '1px 5px',
+                borderRadius: 'var(--radius-xs)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              motion-variants.ts
+            </code>
+            . Respects{' '}
+            <code
+              style={{
+                fontSize: 'var(--text-2xs)',
+                background: 'var(--surface-hover)',
+                padding: '1px 5px',
+                borderRadius: 'var(--radius-xs)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              prefers-reduced-motion
+            </code>{' '}
+            — instant fallbacks for all sequences.
           </p>
         </div>
       </motion.section>
@@ -256,7 +432,15 @@ export default function DesignSystem() {
         <div className="space-y-6">
           {COLOR_FAMILIES.map((family) => (
             <div key={family.label}>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', marginBottom: 'var(--space-1)', fontWeight: 'var(--font-weight-semibold)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--tertiary)',
+                  fontFamily: 'var(--font-body)',
+                  marginBottom: 'var(--space-1)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                }}
+              >
                 {family.label}
               </p>
               <div className="flex flex-wrap gap-3">
@@ -264,7 +448,12 @@ export default function DesignSystem() {
                   <motion.div
                     key={token}
                     variants={reduced ? {} : cardEntry}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 6,
+                    }}
                   >
                     <div
                       style={{
@@ -278,10 +467,25 @@ export default function DesignSystem() {
                       }}
                     />
                     <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-body)', color: 'var(--card-foreground)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>
+                      <p
+                        style={{
+                          fontSize: 'var(--text-2xs)',
+                          fontFamily: 'var(--font-body)',
+                          color: 'var(--card-foreground)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
                         {name}
                       </p>
-                      <p style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)', color: 'var(--tertiary)', whiteSpace: 'nowrap' }}>
+                      <p
+                        style={{
+                          fontSize: 'var(--text-2xs)',
+                          fontFamily: 'var(--font-mono)',
+                          color: 'var(--tertiary)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
                         {token}
                       </p>
                     </div>
@@ -299,7 +503,17 @@ export default function DesignSystem() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
           {/* Display column */}
           <div>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', marginBottom: 'var(--space-2)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <p
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--tertiary)',
+                fontFamily: 'var(--font-body)',
+                marginBottom: 'var(--space-2)',
+                fontWeight: 'var(--font-weight-semibold)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}
+            >
               Display · {'{--font-display}'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
@@ -307,7 +521,10 @@ export default function DesignSystem() {
                 <div
                   key={size}
                   className="flex items-baseline gap-4"
-                  style={{ paddingBottom: 'var(--space-0_5)', borderBottom: '1px solid var(--border)' }}
+                  style={{
+                    paddingBottom: 'var(--space-0_5)',
+                    borderBottom: '1px solid var(--border)',
+                  }}
                 >
                   <span
                     style={{
@@ -321,7 +538,15 @@ export default function DesignSystem() {
                   >
                     {sample}
                   </span>
-                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-2xs)',
+                      color: 'var(--tertiary)',
+                      fontFamily: 'var(--font-mono)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                    }}
+                  >
                     {label}
                   </span>
                 </div>
@@ -331,7 +556,17 @@ export default function DesignSystem() {
 
           {/* Body column */}
           <div className="mt-6 lg:mt-0">
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-body)', marginBottom: 'var(--space-2)', fontWeight: 'var(--font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <p
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--tertiary)',
+                fontFamily: 'var(--font-body)',
+                marginBottom: 'var(--space-2)',
+                fontWeight: 'var(--font-weight-semibold)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}
+            >
               Body · {'{--font-body}'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
@@ -339,7 +574,10 @@ export default function DesignSystem() {
                 <div
                   key={size}
                   className="flex items-baseline gap-4"
-                  style={{ paddingBottom: 'var(--space-0_5)', borderBottom: '1px solid var(--border)' }}
+                  style={{
+                    paddingBottom: 'var(--space-0_5)',
+                    borderBottom: '1px solid var(--border)',
+                  }}
                 >
                   <span
                     style={{
@@ -353,7 +591,15 @@ export default function DesignSystem() {
                   >
                     {sample}
                   </span>
-                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--tertiary)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-2xs)',
+                      color: 'var(--tertiary)',
+                      fontFamily: 'var(--font-mono)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                    }}
+                  >
                     {label}
                   </span>
                 </div>
@@ -364,7 +610,10 @@ export default function DesignSystem() {
       </motion.section>
 
       {/* ── 4. Spacing + Radius ── */}
-      <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative z-10" variants={pageSection}>
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative z-10"
+        variants={pageSection}
+      >
         {/* Spacing */}
         <div className="bento-card p-6">
           <SectionHeader icon={Ruler} title="Spacing" subtitle="8px grid" />
@@ -382,7 +631,14 @@ export default function DesignSystem() {
                     minWidth: px <= 4 ? 4 : undefined,
                   }}
                 />
-                <span style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)', color: 'var(--tertiary)', whiteSpace: 'nowrap' }}>
+                <span
+                  style={{
+                    fontSize: 'var(--text-2xs)',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--tertiary)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {token} · {label}
                 </span>
               </div>
@@ -395,7 +651,10 @@ export default function DesignSystem() {
           <SectionHeader icon={Square} title="Border Radius" subtitle="Radius scale" />
           <div className="flex flex-wrap gap-4">
             {RADIUS_ENTRIES.map(({ token, label }) => (
-              <div key={token} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+              <div
+                key={token}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
+              >
                 <div
                   style={{
                     width: 40,
@@ -405,7 +664,14 @@ export default function DesignSystem() {
                     borderRadius: `var(${token})`,
                   }}
                 />
-                <span style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)', color: 'var(--tertiary)', textAlign: 'center' }}>
+                <span
+                  style={{
+                    fontSize: 'var(--text-2xs)',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--tertiary)',
+                    textAlign: 'center',
+                  }}
+                >
                   {label.split(' · ')[0]}
                   <br />
                   <span style={{ color: 'var(--secondary)' }}>{label.split(' · ')[1]}</span>

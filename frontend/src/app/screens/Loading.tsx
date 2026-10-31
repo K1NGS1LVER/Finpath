@@ -91,7 +91,7 @@ export default function Loading() {
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-15 blur-3xl animate-pulse"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-15 blur-3xl "
           style={{ backgroundColor: 'var(--accent)' }}
         />
       </div>
@@ -109,7 +109,7 @@ export default function Loading() {
           >
             <div className="w-9 h-9 md:w-10 md:h-10 border-4 border-current border-t-transparent rounded-full animate-spin relative z-10" />
             <div
-              className="absolute inset-0 rounded-full animate-pulse blur-md"
+              className="absolute inset-0 rounded-full  blur-md"
               style={{ backgroundColor: 'var(--accent)', opacity: 0.3 }}
             />
           </div>
@@ -137,7 +137,7 @@ export default function Loading() {
                   transform: isDone ? 'scale(1) translateX(0)' : 'scale(0.98) translateX(-4px)',
                   background: isDone ? 'var(--surface-tint)' : 'transparent',
                   borderRadius: 'var(--radius-base)',
-                  boxShadow: isDone ? '0 8px 24px -8px var(--secondary-accent-glow)' : 'none',
+                  boxShadow: isDone ? '0 8px 24px -8px var(--border)' : 'none',
                 }}
               >
                 <div
@@ -146,7 +146,7 @@ export default function Loading() {
                     backgroundColor: isDone ? 'var(--accent)' : 'var(--border)',
                     color: isDone ? 'var(--on-secondary-accent)' : 'var(--secondary)',
                     transform: isDone ? 'scale(1.1)' : 'scale(1)',
-                    boxShadow: isDone ? '0 0 12px var(--secondary-accent-glow)' : 'none',
+                    boxShadow: isDone ? '0 0 12px var(--border)' : 'none',
                   }}
                 >
                   {isDone ? (
@@ -176,7 +176,7 @@ export default function Loading() {
             background: 'var(--surface-tint)',
             borderRadius: 'var(--radius-base)',
             border: '1px solid var(--border)',
-            boxShadow: '0 8px 24px -12px var(--secondary-accent-glow)',
+            boxShadow: '0 8px 24px -12px var(--border)',
           }}
         >
           <div className="flex items-start gap-2.5">

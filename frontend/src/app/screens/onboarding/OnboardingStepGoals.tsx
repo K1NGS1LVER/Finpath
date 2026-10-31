@@ -209,7 +209,7 @@ function CustomGoalRow({
         <div
           className="w-11 h-11 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0"
           style={{
-            backgroundColor: 'var(--accent-glow)',
+            backgroundColor: 'var(--border)',
             color: 'var(--accent-text)',
           }}
         >
@@ -233,7 +233,7 @@ function CustomGoalRow({
           <button
             type="button"
             onClick={onRemove}
-            className="w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all hover:opacity-110 active:scale-95"
             style={{ background: 'var(--surface-tint)', color: 'var(--secondary)' }}
             aria-label={`Remove ${customName || 'custom goal'}`}
           >

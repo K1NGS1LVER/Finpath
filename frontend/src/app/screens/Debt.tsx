@@ -805,7 +805,7 @@ export default function Debt({ onPennyClick }: { onPennyClick?: () => void }) {
                 type="button"
                 onClick={onPennyClick}
                 aria-label="Add a debt with Penny"
-                className="px-5 py-3 rounded-xl flex items-center gap-2 justify-center transition-transform hover:scale-105 shadow-lg bg-accent text-on-accent"
+                className="px-5 py-3 rounded-xl flex items-center gap-2 justify-center transition-transform hover:opacity-105 shadow-lg bg-accent text-on-accent"
               >
                 <Plus size={18} />
                 <span className="font-semibold text-sm font-body">Add a debt</span>

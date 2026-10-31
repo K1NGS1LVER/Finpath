@@ -448,7 +448,7 @@ export default function JourneyGoalDetailPanel({
                     fontSize: 'var(--text-xs)',
                     cursor: 'pointer',
                     fontFamily: 'var(--font-display)',
-                    transition: 'all 200ms ease',
+                    transition: 'color 200ms ease',
                   }}
                 >
                   <Pencil size={12} className="icon-wireframe" />
@@ -471,7 +471,7 @@ export default function JourneyGoalDetailPanel({
                     fontSize: 'var(--text-xs)',
                     cursor: 'pointer',
                     fontFamily: 'var(--font-display)',
-                    transition: 'all 200ms ease',
+                    transition: 'color 200ms ease',
                   }}
                 >
                   <BadgeCheck size={12} className="icon-wireframe" />
@@ -707,7 +707,7 @@ export default function JourneyGoalDetailPanel({
               background: isDraftValid ? 'var(--accent)' : 'var(--surface-tint)',
               border: isDraftValid ? 'none' : '1px solid var(--border)',
               color: isDraftValid ? 'var(--on-accent)' : 'var(--tertiary)',
-              transition: 'all 200ms ease',
+              transition: 'color 200ms ease',
             }}
           >
             Update Goal
@@ -725,7 +725,7 @@ export default function JourneyGoalDetailPanel({
               fontSize: 'var(--text-xs)',
               cursor: 'pointer',
               fontFamily: 'var(--font-display)',
-              transition: 'all 200ms ease',
+              transition: 'color 200ms ease',
             }}
           >
             Cancel
@@ -772,7 +772,7 @@ export default function JourneyGoalDetailPanel({
               fontSize: 'var(--text-sm)',
               fontWeight: 'var(--font-weight-semibold)',
               cursor: 'pointer',
-              transition: 'all 200ms ease',
+              transition: 'color 200ms ease',
               background: confirmComplete ? 'var(--green-subtle)' : 'transparent',
               border: `1px solid ${confirmComplete ? 'color-mix(in srgb, var(--green) 33%, transparent)' : 'color-mix(in srgb, var(--accent) 40%, transparent)'}`,
               color: confirmComplete ? 'var(--green-text)' : 'var(--accent)',
@@ -808,7 +808,7 @@ export default function JourneyGoalDetailPanel({
             fontSize: 'var(--text-xs)',
             cursor: 'pointer',
             fontFamily: 'var(--font-display)',
-            transition: 'all 200ms ease',
+            transition: 'color 200ms ease',
           }}
         >
           <Trash2 size={12} className="icon-wireframe" />
